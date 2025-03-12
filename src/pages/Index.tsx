@@ -14,7 +14,7 @@ const initialData: ChecklistGroupData[] = [
     title: 'Identification',
     items: [
       { id: '101', title: 'Your Name', isCompleted: false, category: 'identification' },
-      { id: '102', title: 'Check emails', isCompleted: true, category: 'work' },
+      { id: '102', title: 'Date of Issuance', isCompleted: false, category: 'identification' },
       { id: '103', title: 'Team meeting', isCompleted: false, category: 'work' }
     ]
   },
@@ -33,14 +33,14 @@ const Index = () => {
   const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
   const [streak, setStreak] = useState(3);
 
-  const handleToggleItem = (groupId: string, itemId: string, completed: boolean) => {
+  const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
     setChecklists(prevChecklists => 
       prevChecklists.map(group => {
         if (group.id === groupId) {
           return {
             ...group,
             items: group.items.map(item => 
-              item.id === itemId ? { ...item, isCompleted: completed } : item
+              item.id === itemId ? { ...item, isCompleted: completed, value: value || item.value } : item
             )
           };
         }
@@ -49,7 +49,7 @@ const Index = () => {
     );
 
     // Show toast when completing an item
-    if (completed) {
+    if (completed && !value) {
       toast("Task completed!", {
         description: "Keep up the good work!",
         position: "top-center",

@@ -13,7 +13,7 @@ export interface ChecklistGroupData {
 
 interface ChecklistGroupProps {
   group: ChecklistGroupData;
-  onToggleItem: (groupId: string, itemId: string, completed: boolean) => void;
+  onToggleItem: (groupId: string, itemId: string, completed: boolean, value?: string | Date) => void;
 }
 
 const ChecklistGroup: React.FC<ChecklistGroupProps> = ({ group, onToggleItem }) => {
@@ -23,8 +23,8 @@ const ChecklistGroup: React.FC<ChecklistGroupProps> = ({ group, onToggleItem }) 
   const completedCount = items.filter(item => item.isCompleted).length;
   const progress = items.length > 0 ? Math.round((completedCount / items.length) * 100) : 0;
 
-  const handleToggleItem = (itemId: string, completed: boolean) => {
-    onToggleItem(id, itemId, completed);
+  const handleToggleItem = (itemId: string, completed: boolean, value?: string | Date) => {
+    onToggleItem(id, itemId, completed, value);
   };
 
   return (
