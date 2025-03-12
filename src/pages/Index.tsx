@@ -13,7 +13,7 @@ const initialData: ChecklistGroupData[] = [
     id: '1',
     title: 'Identification',
     items: [
-      { id: '101', title: 'Morning workout', isCompleted: false, category: 'health' },
+      { id: '101', title: 'License Name', isCompleted: false, category: 'identification' },
       { id: '102', title: 'Check emails', isCompleted: true, category: 'work' },
       { id: '103', title: 'Team meeting', isCompleted: false, category: 'work' }
     ]
