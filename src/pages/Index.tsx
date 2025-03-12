@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -10,7 +11,7 @@ import { toast } from "sonner";
 const initialData: ChecklistGroupData[] = [
   {
     id: '1',
-    title: 'Daily Tasks',
+    title: 'Identification',
     items: [
       { id: '101', title: 'Morning workout', isCompleted: false, category: 'health' },
       { id: '102', title: 'Check emails', isCompleted: true, category: 'work' },
