@@ -4,6 +4,7 @@ import { Check, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
+import CertificateNumberDialog from './CertificateNumberDialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -24,6 +25,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const [animating, setAnimating] = useState(false);
   const [nameDialogOpen, setNameDialogOpen] = useState(false);
   const [dateDialogOpen, setDateDialogOpen] = useState(false);
+  const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
 
   const handleToggle = () => {
     if (item.title === 'Your Name') {
@@ -33,6 +35,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     
     if (item.title === 'Date of Issuance') {
       setDateDialogOpen(true);
+      return;
+    }
+
+    if (item.title === 'Certificate Number') {
+      setCertificateDialogOpen(true);
       return;
     }
 
@@ -51,6 +58,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const handleSaveIssuanceDate = (date: Date) => {
     toast.success(`Date of issuance saved: ${format(date, 'MMMM d, yyyy')}`);
     onToggleComplete(item.id, true, date);
+  };
+
+  const handleSaveCertificateNumber = (number: string) => {
+    toast.success(`Certificate number saved: ${number}`);
+    onToggleComplete(item.id, true, number);
   };
 
   const getCategoryColor = (category?: string) => {
@@ -128,6 +140,14 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           isOpen={dateDialogOpen}
           onClose={() => setDateDialogOpen(false)}
           onSave={handleSaveIssuanceDate}
+        />
+      )}
+
+      {item.title === 'Certificate Number' && (
+        <CertificateNumberDialog
+          isOpen={certificateDialogOpen}
+          onClose={() => setCertificateDialogOpen(false)}
+          onSave={handleSaveCertificateNumber}
         />
       )}
     </>
