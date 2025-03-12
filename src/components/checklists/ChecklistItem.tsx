@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Check, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
 
   const handleToggle = () => {
-    if (item.title === 'Your Name') {
+    if (item.title === 'Name as it appears on License') {
       setNameDialogOpen(true);
       return;
     }
@@ -127,7 +126,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         </Button>
       </div>
 
-      {item.title === 'Your Name' && (
+      {item.title === 'Name as it appears on License' && (
         <LicenseNameDialog
           isOpen={nameDialogOpen}
           onClose={() => setNameDialogOpen(false)}

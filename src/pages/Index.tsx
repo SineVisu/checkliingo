@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -16,7 +15,7 @@ const initialData: ChecklistGroupData[] = [
     id: '1',
     title: 'Identification',
     items: [
-      { id: '101', title: 'Your Name', isCompleted: false, category: 'identification' },
+      { id: '101', title: 'Name as it appears on License', isCompleted: false, category: 'identification' },
       { id: '102', title: 'Date of Issuance', isCompleted: false, category: 'identification' },
       { id: '103', title: 'Certificate Number', isCompleted: false, category: 'identification' }
     ]
