@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ChecklistGroup, { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 import StreakCounter from '@/components/common/StreakCounter';
 import EmptyState from '@/components/ui/EmptyState';
-import { toast } from '@/components/ui/sonner';
+import { toast } from "sonner";
 
 // Sample data to start with
 const initialData: ChecklistGroupData[] = [
