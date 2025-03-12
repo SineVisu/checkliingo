@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Check, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -72,7 +73,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           
           <div className="flex-1">
             <p className={`font-medium transition-all duration-300 ${
-              item.isCompleted ? 'line-through text-gray-400' : 'text-gray-800'
+              item.isCompleted ? 'text-gray-800' : 'text-gray-800'
             }`}>
               {item.title}
             </p>
