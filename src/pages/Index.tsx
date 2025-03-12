@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -6,6 +5,9 @@ import ChecklistGroup, { ChecklistGroupData } from '@/components/checklists/Chec
 import StreakCounter from '@/components/common/StreakCounter';
 import EmptyState from '@/components/ui/EmptyState';
 import { toast } from "sonner";
+import { Button } from '@/components/ui/button';
+import { Camera } from 'lucide-react';
+import LicenseCapture from '@/components/checklists/LicenseCapture';
 
 // Sample data to start with
 const initialData: ChecklistGroupData[] = [
@@ -33,6 +35,7 @@ const initialData: ChecklistGroupData[] = [
 const Index = () => {
   const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
   const [streak, setStreak] = useState(3);
+  const [licenseCaptureOpen, setLicenseCaptureOpen] = useState(false);
 
   const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
     setChecklists(prevChecklists => 
@@ -49,7 +52,6 @@ const Index = () => {
       })
     );
 
-    // Show toast when completing an item
     if (completed && !value) {
       toast("Task completed!", {
         description: "Keep up the good work!",
@@ -81,7 +83,44 @@ const Index = () => {
     });
   };
 
-  // Calculate overall progress
+  const handleCaptureLicense = () => {
+    setLicenseCaptureOpen(true);
+  };
+
+  const handleLicenseCaptureComplete = (data: {
+    name?: string;
+    date?: Date;
+    certificateNumber?: string;
+  }) => {
+    setChecklists(prevChecklists => 
+      prevChecklists.map(group => {
+        if (group.id === '1') {
+          return {
+            ...group,
+            items: group.items.map(item => {
+              if (item.id === '101' && data.name) {
+                return { ...item, isCompleted: true, value: data.name };
+              }
+              else if (item.id === '102' && data.date) {
+                return { ...item, isCompleted: true, value: data.date };
+              }
+              else if (item.id === '103' && data.certificateNumber) {
+                return { ...item, isCompleted: true, value: data.certificateNumber };
+              }
+              return item;
+            })
+          };
+        }
+        return group;
+      })
+    );
+
+    toast.success("License information has been processed!", {
+      description: "Your license details have been updated automatically.",
+      position: "top-center",
+    });
+  };
+
   const totalTasks = checklists.reduce((acc, group) => acc + group.items.length, 0);
   const completedTasks = checklists.reduce(
     (acc, group) => acc + group.items.filter(item => item.isCompleted).length, 
@@ -91,6 +130,11 @@ const Index = () => {
   const overallProgress = totalTasks > 0 
     ? Math.round((completedTasks / totalTasks) * 100) 
     : 0;
+
+  const idGroup = checklists.find(group => group.id === '1');
+  const showCaptureButton = idGroup && 
+    idGroup.items.filter(item => ['101', '102', '103'].includes(item.id))
+    .every(item => !item.isCompleted);
 
   return (
     <div className="min-h-screen flex flex-col pb-16 bg-gradient-to-b from-background to-muted">
@@ -116,6 +160,21 @@ const Index = () => {
               ></div>
             </div>
             
+            {showCaptureButton && (
+              <div className="my-4">
+                <Button 
+                  onClick={handleCaptureLicense} 
+                  className="w-full"
+                >
+                  <Camera className="mr-2 h-4 w-4" />
+                  Capture License for All Fields
+                </Button>
+                <p className="text-xs text-muted-foreground text-center mt-1">
+                  Take one photo to complete all license requirements
+                </p>
+              </div>
+            )}
+            
             <div className="space-y-6">
               {checklists.map(group => (
                 <ChecklistGroup 
@@ -132,6 +191,12 @@ const Index = () => {
       </main>
       
       <Footer />
+
+      <LicenseCapture
+        isOpen={licenseCaptureOpen}
+        onClose={() => setLicenseCaptureOpen(false)}
+        onSave={handleLicenseCaptureComplete}
+      />
     </div>
   );
 };
