@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useContext } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ChecklistGroup, { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
@@ -9,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
 import LicenseCapture from '@/components/checklists/LicenseCapture';
 import MedicalCapture from '@/components/checklists/MedicalCapture';
+import NameDiscrepancyDialog from '@/components/checklists/NameDiscrepancyDialog';
+import { ChecklistContext, ChecklistProvider } from '@/context/ChecklistContext';
 
 // Sample data to start with
 const initialData: ChecklistGroupData[] = [
@@ -31,11 +34,19 @@ const initialData: ChecklistGroupData[] = [
   }
 ];
 
-const Index = () => {
-  const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
+const IndexContent = () => {
   const [streak, setStreak] = useState(3);
   const [licenseCaptureOpen, setLicenseCaptureOpen] = useState(false);
   const [medicalCaptureOpen, setMedicalCaptureOpen] = useState(false);
+  
+  const { 
+    checklists, 
+    setChecklists,
+    licenseName,
+    medicalName,
+    showNameDiscrepancy,
+    setShowNameDiscrepancy
+  } = useContext(ChecklistContext);
 
   const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
     setChecklists(prevChecklists => 
@@ -258,7 +269,23 @@ const Index = () => {
         onClose={() => setMedicalCaptureOpen(false)}
         onSave={handleMedicalCaptureComplete}
       />
+
+      <NameDiscrepancyDialog
+        isOpen={showNameDiscrepancy}
+        onClose={() => setShowNameDiscrepancy(false)}
+        licenseName={licenseName}
+        medicalName={medicalName}
+      />
     </div>
+  );
+};
+
+// Wrapper component to provide the ChecklistContext
+const Index = () => {
+  return (
+    <ChecklistProvider initialData={initialData}>
+      <IndexContent />
+    </ChecklistProvider>
   );
 };
 

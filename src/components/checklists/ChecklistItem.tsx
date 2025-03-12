@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Check, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LicenseNameDialog from './LicenseNameDialog';
@@ -7,6 +7,7 @@ import IssuanceDateDialog from './IssuanceDateDialog';
 import CertificateNumberDialog from './CertificateNumberDialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { ChecklistContext } from '@/context/ChecklistContext';
 
 export interface ChecklistItemData {
   id: string;
@@ -26,6 +27,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const [nameDialogOpen, setNameDialogOpen] = useState(false);
   const [dateDialogOpen, setDateDialogOpen] = useState(false);
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
+  const { checkNameDiscrepancy } = useContext(ChecklistContext);
 
   const handleToggle = () => {
     if (item.title === 'Name as it appears on License' || item.title === 'Name as it appears on Medical') {
@@ -53,6 +55,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const handleSaveLicenseName = (name: string) => {
     toast.success(`License name saved: ${name}`);
     onToggleComplete(item.id, true, name);
+    
+    // After setting the name, check for discrepancies
+    if (item.title === 'Name as it appears on License' || item.title === 'Name as it appears on Medical') {
+      checkNameDiscrepancy();
+    }
   };
   
   const handleSaveIssuanceDate = (date: Date) => {
@@ -130,6 +137,14 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
       </div>
 
       {item.title === 'Name as it appears on License' && (
+        <LicenseNameDialog
+          isOpen={nameDialogOpen}
+          onClose={() => setNameDialogOpen(false)}
+          onSave={handleSaveLicenseName}
+        />
+      )}
+      
+      {item.title === 'Name as it appears on Medical' && (
         <LicenseNameDialog
           isOpen={nameDialogOpen}
           onClose={() => setNameDialogOpen(false)}
