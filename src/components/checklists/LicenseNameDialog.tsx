@@ -80,6 +80,8 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     try {
       const worker = await createWorker();
       
+      // Use the correct methods from tesseract.js v3+
+      await worker.load();
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
       
@@ -108,7 +110,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     }
   };
 
-  // Simple name extraction logic - can be improved for better accuracy
+  // Updated name extraction logic to find first, middle, and last names
   const extractNameFromText = (text: string): string | null => {
     // Look for patterns like "NAME: John Doe" or just capitalized words
     const namePatterns = [
@@ -120,6 +122,13 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     for (const pattern of namePatterns) {
       const match = text.match(pattern);
       if (match && match[1]) {
+        const nameParts = match[1].trim().split(/\s+/);
+        // Format as First, Middle, Last if we have enough parts
+        if (nameParts.length >= 3) {
+          return `${nameParts[0]}, ${nameParts[1]}, ${nameParts.slice(2).join(' ')}`;
+        } else if (nameParts.length === 2) {
+          return `${nameParts[0]}, ${nameParts[1]}`;
+        }
         return match[1].trim();
       }
     }
@@ -128,8 +137,16 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     const lines = text.split('\n');
     for (const line of lines) {
       // Look for lines with 2-3 words that might be a name
-      if (line.length > 5 && line.length < 30 && /^[A-Z][a-z]+ [A-Z][a-z]+/.test(line)) {
-        return line.trim();
+      if (line.length > 5 && line.length < 40) {
+        const nameParts = line.trim().split(/\s+/);
+        if (nameParts.length >= 2 && nameParts.every(part => /^[A-Z]/.test(part))) {
+          if (nameParts.length >= 3) {
+            return `${nameParts[0]}, ${nameParts[1]}, ${nameParts.slice(2).join(' ')}`;
+          } else if (nameParts.length === 2) {
+            return `${nameParts[0]}, ${nameParts[1]}`;
+          }
+          return line.trim();
+        }
       }
     }
     
@@ -141,7 +158,19 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
       toast.error("Please enter your license name");
       return;
     }
-    onSave(licenseName);
+    
+    // Ensure the name is in the correct format (First, Middle, Last)
+    let formattedName = licenseName;
+    if (!licenseName.includes(',')) {
+      const parts = licenseName.trim().split(/\s+/);
+      if (parts.length >= 3) {
+        formattedName = `${parts[0]}, ${parts[1]}, ${parts.slice(2).join(' ')}`;
+      } else if (parts.length === 2) {
+        formattedName = `${parts[0]}, ${parts[1]}`;
+      }
+    }
+    
+    onSave(formattedName);
     onClose();
     
     // Clean up
@@ -173,13 +202,16 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="flex flex-col gap-4">
-            <Label htmlFor="licenseName">Name (as it appears on license)</Label>
+            <Label htmlFor="licenseName">Name (First, Middle, Last)</Label>
             <Input
               id="licenseName"
               value={licenseName}
               onChange={(e) => setLicenseName(e.target.value)}
               placeholder="Enter your name as shown on license"
             />
+            <p className="text-xs text-muted-foreground">
+              Format: First, Middle, Last (include commas)
+            </p>
           </div>
           
           {showCamera ? (
