@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
 import LicenseCapture from '@/components/checklists/LicenseCapture';
+import MedicalCapture from '@/components/checklists/MedicalCapture';
 
 // Sample data to start with
 const initialData: ChecklistGroupData[] = [
@@ -34,6 +35,7 @@ const Index = () => {
   const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
   const [streak, setStreak] = useState(3);
   const [licenseCaptureOpen, setLicenseCaptureOpen] = useState(false);
+  const [medicalCaptureOpen, setMedicalCaptureOpen] = useState(false);
 
   const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
     setChecklists(prevChecklists => 
@@ -85,6 +87,10 @@ const Index = () => {
     setLicenseCaptureOpen(true);
   };
 
+  const handleCaptureMedical = () => {
+    setMedicalCaptureOpen(true);
+  };
+
   const handleLicenseCaptureComplete = (data: {
     name?: string;
     date?: Date;
@@ -102,6 +108,9 @@ const Index = () => {
               else if (item.id === '102' && data.date) {
                 return { ...item, isCompleted: true, value: data.date };
               }
+              else if (item.id === '103' && data.certificateNumber) {
+                return { ...item, isCompleted: true, value: data.certificateNumber };
+              }
               return item;
             })
           };
@@ -112,6 +121,36 @@ const Index = () => {
 
     toast.success("License information has been processed!", {
       description: "Your license details have been updated automatically.",
+      position: "top-center",
+    });
+  };
+
+  const handleMedicalCaptureComplete = (data: {
+    name?: string;
+    date?: Date;
+  }) => {
+    setChecklists(prevChecklists => 
+      prevChecklists.map(group => {
+        if (group.id === '2') {
+          return {
+            ...group,
+            items: group.items.map(item => {
+              if (item.id === '201' && data.name) {
+                return { ...item, isCompleted: true, value: data.name };
+              }
+              else if (item.id === '202' && data.date) {
+                return { ...item, isCompleted: true, value: data.date };
+              }
+              return item;
+            })
+          };
+        }
+        return group;
+      })
+    );
+
+    toast.success("Medical certificate information has been processed!", {
+      description: "Your medical details have been updated automatically.",
       position: "top-center",
     });
   };
@@ -129,6 +168,11 @@ const Index = () => {
   const idGroup = checklists.find(group => group.id === '1');
   const showCaptureButton = idGroup && 
     idGroup.items.filter(item => ['101', '102', '103'].includes(item.id))
+    .every(item => !item.isCompleted);
+
+  const medicalGroup = checklists.find(group => group.id === '2');
+  const showMedicalCaptureButton = medicalGroup && 
+    medicalGroup.items.filter(item => ['201', '202'].includes(item.id))
     .every(item => !item.isCompleted);
 
   return (
@@ -169,6 +213,22 @@ const Index = () => {
                 </p>
               </div>
             )}
+
+            {showMedicalCaptureButton && (
+              <div className="my-4">
+                <Button 
+                  onClick={handleCaptureMedical} 
+                  className="w-full"
+                  variant="outline"
+                >
+                  <Camera className="mr-2 h-4 w-4" />
+                  Capture Medical Certificate
+                </Button>
+                <p className="text-xs text-muted-foreground text-center mt-1">
+                  Take one photo to complete all medical requirements
+                </p>
+              </div>
+            )}
             
             <div className="space-y-6">
               {checklists.map(group => (
@@ -191,6 +251,12 @@ const Index = () => {
         isOpen={licenseCaptureOpen}
         onClose={() => setLicenseCaptureOpen(false)}
         onSave={handleLicenseCaptureComplete}
+      />
+
+      <MedicalCapture
+        isOpen={medicalCaptureOpen}
+        onClose={() => setMedicalCaptureOpen(false)}
+        onSave={handleMedicalCaptureComplete}
       />
     </div>
   );
