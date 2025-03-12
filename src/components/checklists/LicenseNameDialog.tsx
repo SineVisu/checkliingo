@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -78,12 +77,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
   const processImageWithOCR = async (imageData: string) => {
     setIsProcessing(true);
     try {
-      const worker = await createWorker();
-      
-      // Use the correct methods from tesseract.js v3+
-      await worker.load();
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
+      const worker = await createWorker('eng');
       
       const result = await worker.recognize(imageData);
       console.log("OCR Result:", result);
@@ -110,7 +104,6 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     }
   };
 
-  // Updated name extraction logic to find first, middle, and last names
   const extractNameFromText = (text: string): string | null => {
     // Look for patterns like "NAME: John Doe" or just capitalized words
     const namePatterns = [
