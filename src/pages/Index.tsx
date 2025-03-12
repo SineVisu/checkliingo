@@ -14,7 +14,7 @@ import LicenseCapture from '@/components/checklists/LicenseCapture';
 const initialData: ChecklistGroupData[] = [
   {
     id: '1',
-    title: 'Identification',
+    title: 'Pilot\'s License',
     items: [
       { id: '101', title: 'Name as it appears on License', isCompleted: false, category: 'identification' },
       { id: '102', title: 'Date of Issuance', isCompleted: false, category: 'identification' },
