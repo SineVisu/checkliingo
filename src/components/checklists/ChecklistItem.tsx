@@ -77,6 +77,8 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         return 'bg-amber-100 text-amber-800';
       case 'identification':
         return 'bg-teal-100 text-teal-800';
+      case 'medical':
+        return 'bg-rose-100 text-rose-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
