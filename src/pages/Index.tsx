@@ -26,7 +26,7 @@ const initialData: ChecklistGroupData[] = [
     title: 'Pilot\'s Medical',
     items: [
       { id: '201', title: 'Name as it appears on Medical', isCompleted: false, category: 'medical' },
-      { id: '202', title: 'Complete TypeScript course', isCompleted: false, category: 'medical' },
+      { id: '202', title: 'Date of Examination', isCompleted: false, category: 'medical' },
       { id: '203', title: 'Practice coding problem', isCompleted: true, category: 'medical' }
     ]
   }
