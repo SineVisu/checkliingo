@@ -70,7 +70,8 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
     );
   }
 
-  if (itemTitle === '(i) Preflight preparation' || itemTitle === 'Flight' || itemTitle === 'Ground') {
+  // Use PreflightPreparationDialog for Flight and Ground subtasks in any Flight Proficiency task
+  if (itemTitle === 'Flight' || itemTitle === 'Ground') {
     return (
       <PreflightPreparationDialog
         isOpen={isOpen}

@@ -43,17 +43,116 @@ const initialData: ChecklistGroupData[] = [
           { id: '401-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
         ]
       },
-      { id: '402', title: 'Preflight procedures', isCompleted: false, category: 'proficiency' },
-      { id: '403', title: 'Airport and seaplane base operations', isCompleted: false, category: 'proficiency' },
-      { id: '404', title: 'Takeoffs, landings, and go-arounds', isCompleted: false, category: 'proficiency' },
-      { id: '405', title: 'Performance maneuvers', isCompleted: false, category: 'proficiency' },
-      { id: '406', title: 'Ground reference maneuvers', isCompleted: false, category: 'proficiency' },
-      { id: '407', title: 'Navigation', isCompleted: false, category: 'proficiency' },
-      { id: '408', title: 'Slow flight and stalls', isCompleted: false, category: 'proficiency' },
-      { id: '409', title: 'Basic instrument maneuvers', isCompleted: false, category: 'proficiency' },
-      { id: '410', title: 'Emergency operations', isCompleted: false, category: 'proficiency' },
-      { id: '411', title: 'Night operations', isCompleted: false, category: 'proficiency' },
-      { id: '412', title: 'Postflight procedures', isCompleted: false, category: 'proficiency' }
+      { 
+        id: '402', 
+        title: 'Preflight procedures', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '402-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '402-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '403', 
+        title: 'Airport and seaplane base operations', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '403-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '403-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '404', 
+        title: 'Takeoffs, landings, and go-arounds', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '404-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '404-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '405', 
+        title: 'Performance maneuvers', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '405-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '405-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '406', 
+        title: 'Ground reference maneuvers', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '406-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '406-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '407', 
+        title: 'Navigation', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '407-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '407-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '408', 
+        title: 'Slow flight and stalls', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '408-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '408-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '409', 
+        title: 'Basic instrument maneuvers', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '409-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '409-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '410', 
+        title: 'Emergency operations', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '410-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '410-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '411', 
+        title: 'Night operations', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '411-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '411-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      },
+      { 
+        id: '412', 
+        title: 'Postflight procedures', 
+        isCompleted: false, 
+        category: 'proficiency',
+        subtasks: [
+          { id: '412-1', title: 'Flight', isCompleted: false, category: 'proficiency' },
+          { id: '412-2', title: 'Ground', isCompleted: false, category: 'proficiency' }
+        ]
+      }
     ]
   }
 ];

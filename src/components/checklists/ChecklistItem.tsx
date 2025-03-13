@@ -29,6 +29,9 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const [expandedSubtasks, setExpandedSubtasks] = useState(false);
   const { checkNameDiscrepancy } = useContext(ChecklistContext);
 
+  // Check if item is a Flight Proficiency task (in group 4)
+  const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
+
   const handleToggle = () => {
     // If the item has subtasks, toggle expansion instead of completing
     if (item.subtasks && item.subtasks.length > 0) {
@@ -43,9 +46,9 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
       return;
     }
 
-    // For the preflight preparation item, we don't allow direct completion
-    if (item.title === '(i) Preflight preparation') {
-      toast.warning("Complete both Flight and Ground subtasks first", {
+    // For flight proficiency tasks, don't allow direct completion
+    if (isFlightProficiencyTask) {
+      toast.warning(`Complete both Flight and Ground subtasks first`, {
         description: "Both Flight and Ground subtasks must be completed first",
       });
       setExpandedSubtasks(true);
@@ -86,7 +89,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 
   const handleSavePreflight = (data: { date: Date; hours: string; pageNumber?: string }) => {
     const pageInfo = data.pageNumber ? ` - Page: ${data.pageNumber}` : '';
-    toast.success(`Preflight preparation details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
+    toast.success(`${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
     onToggleComplete(item.id, true, data);
   };
 
@@ -99,10 +102,10 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   // Update main task status when all subtasks are completed
   useEffect(() => {
     if (item.subtasks && areAllSubtasksCompleted() && !item.isCompleted) {
-      // Only automatically complete for the preflight preparation item
-      if (item.title === '(i) Preflight preparation') {
+      // Only automatically complete for flight proficiency tasks
+      if (isFlightProficiencyTask) {
         onToggleComplete(item.id, true);
-        toast.success("Preflight preparation completed!", {
+        toast.success(`${item.title} completed!`, {
           description: "Both Flight and Ground subtasks are now complete.",
         });
       }
