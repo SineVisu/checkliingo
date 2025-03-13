@@ -191,7 +191,7 @@ const IndexContent = () => {
       <main className="flex-1 px-4 pt-4 pb-20 max-w-lg mx-auto w-full">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-bold">Private Pilot Practical Test Checklist</h2>
+            <h2 className="text-2xl font-bold">Private Pilot Practical Test ASEL Checklist</h2>
             <p className="text-muted-foreground text-sm">
               {completedTasks} of {totalTasks} tasks completed
             </p>
