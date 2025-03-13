@@ -1,5 +1,5 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Check, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -40,6 +40,15 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
          'Date of Issuance', 'Certificate Number', 'FTN# (FAA Tracking Number)',
          'Flight', 'Ground'].includes(item.title)) {
       setDialogOpen(true);
+      return;
+    }
+
+    // For the preflight preparation item, we don't allow direct completion
+    if (item.title === '(i) Preflight preparation') {
+      toast.warning("Complete both Flight and Ground subtasks first", {
+        description: "Both Flight and Ground subtasks must be completed first",
+      });
+      setExpandedSubtasks(true);
       return;
     }
 
@@ -88,9 +97,15 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   };
 
   // Update main task status when all subtasks are completed
-  React.useEffect(() => {
+  useEffect(() => {
     if (item.subtasks && areAllSubtasksCompleted() && !item.isCompleted) {
-      onToggleComplete(item.id, true);
+      // Only automatically complete for the preflight preparation item
+      if (item.title === '(i) Preflight preparation') {
+        onToggleComplete(item.id, true);
+        toast.success("Preflight preparation completed!", {
+          description: "Both Flight and Ground subtasks are now complete.",
+        });
+      }
     }
   }, [item.subtasks, item.isCompleted]);
 
