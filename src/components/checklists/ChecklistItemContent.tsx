@@ -20,6 +20,9 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
   setExpandedSubtasks,
   areAllSubtasksCompleted
 }) => {
+  // Check if this is an aeronautical experience task
+  const isExperienceTask = item.category === 'experience';
+  
   return (
     <div className="flex-1 flex items-center">
       <button 
@@ -60,6 +63,18 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
         {item.value && (
           <p className="text-xs text-gray-500 mt-1">
             <ValueDisplay value={item.value} />
+          </p>
+        )}
+        
+        {isExperienceTask && !item.isCompleted && (
+          <p className="text-xs text-orange-600 mt-1">
+            Please list logbook page where this requirement was satisfied.
+          </p>
+        )}
+        
+        {isExperienceTask && !item.isCompleted && (
+          <p className="text-xs text-gray-500 mt-0.5 italic">
+            If multiple flights took to satisfy this requirement, please list the page of the final flight when it was satisfied.
           </p>
         )}
         

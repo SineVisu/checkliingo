@@ -40,6 +40,8 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 
   // Check if item is an Aeronautical Knowledge task (in group 5)
   const isKnowledgeTask = item.id.startsWith('5') && !item.id.includes('-');
+  // Check if item is an Aeronautical Experience task (in group 6)
+  const isExperienceTask = item.id.startsWith('6') && !item.id.includes('-');
 
   // Dialog callbacks
   const { handleSaveLicenseName, handleSaveIssuanceDate, handleSaveCertificateNumber, 
@@ -131,6 +133,18 @@ const getInitialValueWithParent = (item: ChecklistItemData) => {
       parentTaskTitle: item.title
     };
   }
+  
+  // Handle Aeronautical Experience tasks
+  if (item.id.startsWith('6') && !item.id.includes('-')) {
+    const baseObject = typeof item.value === 'object' && item.value !== null && !(item.value instanceof Date)
+      ? { ...item.value as object } 
+      : {};
+    
+    initialValueWithParent = {
+      ...baseObject,
+      parentTaskTitle: item.title
+    };
+  }
 
   return initialValueWithParent;
 };
@@ -143,6 +157,8 @@ const useDialogCallbacks = (item: ChecklistItemData, onToggleComplete: Checklist
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
   // Check if item is an Aeronautical Knowledge task (in group 5)
   const isKnowledgeTask = item.id.startsWith('5');
+  // Check if item is an Aeronautical Experience task (in group 6)
+  const isExperienceTask = item.id.startsWith('6');
 
   const handleSaveLicenseName = (name: string) => {
     toast.success(`Certificate name saved: ${name}`);
@@ -170,16 +186,26 @@ const useDialogCallbacks = (item: ChecklistItemData, onToggleComplete: Checklist
   };
 
   const handleSavePreflight = (data: { date: Date; hours: string; pageNumber?: string }) => {
-    const pageInfo = data.pageNumber ? ` - Page: ${data.pageNumber}` : '';
-    toast.success(`${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
+    let successMessage = '';
+    
+    if (isExperienceTask) {
+      const pageInfo = data.pageNumber ? ` - Logbook Page: ${data.pageNumber}` : '';
+      successMessage = `${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`;
+    } else {
+      const pageInfo = data.pageNumber ? ` - Page: ${data.pageNumber}` : '';
+      successMessage = `${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`;
+    }
+    
+    toast.success(successMessage);
     
     // Add parent task title to the data for displaying in dialog title
     const parentItem = isFlightProficiencyTask ? item : null;
     const knowledgeParentTitle = isKnowledgeTask ? item.title : null;
+    const experienceParentTitle = isExperienceTask ? item.title : null;
     
     const completeData = {
       ...data,
-      parentTaskTitle: knowledgeParentTitle || (parentItem?.title || null)
+      parentTaskTitle: experienceParentTitle || knowledgeParentTitle || (parentItem?.title || null)
     };
     
     onToggleComplete(item.id, true, completeData);
