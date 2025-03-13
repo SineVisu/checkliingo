@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from 'react';
 import { Check, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
 import CertificateNumberDialog from './CertificateNumberDialog';
 import FTNDialog from './FTNDialog';
+import PreflightPreparationDialog from './PreflightPreparationDialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ChecklistContext } from '@/context/ChecklistContext';
@@ -15,12 +15,12 @@ export interface ChecklistItemData {
   title: string;
   isCompleted: boolean;
   category?: string;
-  value?: string | Date;
+  value?: string | Date | { date?: Date; hours?: string };
 }
 
 interface ChecklistItemProps {
   item: ChecklistItemData;
-  onToggleComplete: (id: string, completed: boolean, value?: string | Date) => void;
+  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string }) => void;
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
@@ -29,6 +29,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const [dateDialogOpen, setDateDialogOpen] = useState(false);
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
   const [ftnDialogOpen, setFtnDialogOpen] = useState(false);
+  const [preflightDialogOpen, setPreflightDialogOpen] = useState(false);
   const { checkNameDiscrepancy } = useContext(ChecklistContext);
 
   const handleToggle = () => {
@@ -49,6 +50,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 
     if (item.title === 'FTN# (FAA Tracking Number)') {
       setFtnDialogOpen(true);
+      return;
+    }
+
+    if (item.title === '(i) Preflight preparation') {
+      setPreflightDialogOpen(true);
       return;
     }
 
@@ -84,6 +90,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     onToggleComplete(item.id, true, ftn);
   };
 
+  const handleSavePreflight = (data: { date: Date; hours: string }) => {
+    toast.success(`Preflight preparation details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours`);
+    onToggleComplete(item.id, true, data);
+  };
+
   const getCategoryColor = (category?: string) => {
     switch (category) {
       case 'work':
@@ -103,6 +114,25 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const renderValue = (value: any) => {
+    if (!value) return null;
+    
+    if (value instanceof Date) {
+      return format(value, 'MMMM d, yyyy');
+    } 
+    
+    if (typeof value === 'object' && value.date) {
+      return (
+        <>
+          <span>Date: {format(value.date, 'MMMM d, yyyy')}</span>
+          {value.hours && <span className="ml-2">Hours: {value.hours}</span>}
+        </>
+      );
+    }
+    
+    return value.toString();
   };
 
   return (
@@ -131,9 +161,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
             
             {item.value && (
               <p className="text-xs text-gray-500 mt-1">
-                {item.value instanceof Date 
-                  ? format(item.value, 'MMMM d, yyyy') 
-                  : item.value}
+                {renderValue(item.value)}
               </p>
             )}
             
@@ -188,6 +216,19 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           onClose={() => setFtnDialogOpen(false)}
           onSave={handleSaveFTN}
           initialValue={item.value as string}
+        />
+      )}
+
+      {item.title === '(i) Preflight preparation' && (
+        <PreflightPreparationDialog
+          isOpen={preflightDialogOpen}
+          onClose={() => setPreflightDialogOpen(false)}
+          onSave={handleSavePreflight}
+          initialValues={
+            typeof item.value === 'object' && !(item.value instanceof Date)
+              ? item.value as { date?: Date; hours?: string }
+              : undefined
+          }
         />
       )}
     </>
