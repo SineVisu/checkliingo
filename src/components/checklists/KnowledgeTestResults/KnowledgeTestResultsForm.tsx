@@ -1,15 +1,13 @@
 
 import React, { useEffect } from 'react';
-import { BookText } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PLTCodesInput from './PLTCodesInput';
-import DateSelector from '@/components/common/DateSelector';
-import { addMonths, isFuture, isAfter } from 'date-fns';
+import ScoreInput from './ScoreInput';
+import TestDateInput from './TestDateInput';
+import FormActions from './FormActions';
 
 // Define PLT code format validation
 const pltCodeSchema = z.string().regex(/^PLT\d{3}$/, "Must be in format PLT followed by 3 digits");
@@ -47,16 +45,21 @@ const KnowledgeTestResultsForm: React.FC<KnowledgeTestResultsFormProps> = ({
     }
   });
 
-  // Update showPltInput when score changes
-  useEffect(() => {
-    const score = form.watch('score');
-    if (score && parseInt(score) < 100) {
+  // Handle score changes to determine if PLT codes input should be shown
+  const handleScoreChange = (value: string) => {
+    if (value && parseInt(value) < 100) {
       setShowPltInput(true);
     } else {
       setShowPltInput(false);
       setPltCodeInputs([]);
       form.setValue('pltCodes', []);
     }
+  };
+
+  // Update showPltInput when initialValues change
+  useEffect(() => {
+    const score = form.watch('score');
+    handleScoreChange(score);
   }, [form.watch('score')]);
 
   const handlePltCodesChange = (codes: string[]) => {
@@ -64,69 +67,15 @@ const KnowledgeTestResultsForm: React.FC<KnowledgeTestResultsFormProps> = ({
     form.setValue('pltCodes', codes);
   };
 
-  // Function to disable dates: future dates and dates older than 24 months
-  const disabledDates = (date: Date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // Calculate the date 24 months ago
-    const twentyFourMonthsAgo = addMonths(today, -24);
-    
-    // Disable future dates
-    if (isFuture(date)) return true;
-    
-    // Disable dates more than 24 months in the past
-    if (isAfter(twentyFourMonthsAgo, date)) return true;
-    
-    return false;
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-        <FormField
-          control={form.control}
-          name="score"
-          render={({ field }) => (
-            <FormItem className="space-y-2">
-              <FormLabel>Test Score (%)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter your test score (e.g., 85)"
-                  className="w-full"
-                  type="number"
-                  min="0"
-                  max="100"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <ScoreInput form={form} onScoreChange={handleScoreChange} />
         
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem className="space-y-2">
-              <FormLabel>Test Date</FormLabel>
-              <FormControl>
-                <DateSelector
-                  date={field.value}
-                  onDateChange={(date) => {
-                    field.onChange(date);
-                    setCalendarOpen(false);
-                  }}
-                  placeholder="Select test date"
-                  isOpen={calendarOpen}
-                  onOpenChange={setCalendarOpen}
-                  disabledDates={disabledDates}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <TestDateInput 
+          form={form} 
+          calendarOpen={calendarOpen} 
+          setCalendarOpen={setCalendarOpen} 
         />
         
         {showPltInput && (
@@ -140,21 +89,10 @@ const KnowledgeTestResultsForm: React.FC<KnowledgeTestResultsFormProps> = ({
           Please enter the score and date from your FAA Private Pilot Airplane (PAR) Knowledge Test
         </div>
 
-        <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
-          <Button 
-            variant="outline" 
-            onClick={onCancel}
-            type="button"
-          >
-            Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            disabled={!form.formState.isValid}
-          >
-            Save Test Results
-          </Button>
-        </div>
+        <FormActions 
+          onCancel={onCancel} 
+          isValid={form.formState.isValid} 
+        />
       </form>
     </Form>
   );
