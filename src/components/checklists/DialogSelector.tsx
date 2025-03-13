@@ -1,4 +1,3 @@
-
 import React from 'react';
 import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
@@ -6,7 +5,7 @@ import CertificateNumberDialog from './CertificateNumberDialog';
 import FTNDialog from './FTNDialog';
 import PreflightPreparationDialog from './PreflightPreparationDialog';
 import LogbookPageDialog from './LogbookPageDialog';
-import KnowledgeTestResultsDialog from './KnowledgeTestResultsDialog';
+import KnowledgeTestResultsDialog from './KnowledgeTestResults/KnowledgeTestResultsDialog';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -96,7 +95,6 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
     );
   }
 
-  // Use PreflightPreparationDialog for Flight and Ground subtasks in any Flight Proficiency task
   if (itemTitle === 'Flight' || itemTitle === 'Ground') {
     const dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
     
@@ -115,7 +113,6 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
     );
   }
 
-  // Show the LogbookPageDialog for Aeronautical Experience tasks
   if (category === 'experience') {
     return (
       <LogbookPageDialog
