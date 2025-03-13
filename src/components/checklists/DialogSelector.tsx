@@ -1,4 +1,3 @@
-
 import React from 'react';
 import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
@@ -37,8 +36,8 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
     return renderLicenseNameDialog(props);
   }
   
-  // Issuance Date or Medical Examination Date Dialog
-  if (isIssuanceOrExaminationDateDialog(itemTitle)) {
+  // Issuance Date Dialog
+  if (itemTitle === 'Date of Issuance') {
     return renderIssuanceDateDialog(props);
   }
 
@@ -76,12 +75,6 @@ const isLicenseOrMedicalNameDialog = (itemTitle: string): boolean => {
          itemTitle === 'Name as it appears on Medical';
 };
 
-// Helper function to check if dialog is for issuance or examination date
-const isIssuanceOrExaminationDateDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'Date of Issuance' || 
-         itemTitle === 'Date of Examination';
-};
-
 // Render License Name Dialog
 const renderLicenseNameDialog = (props: DialogSelectorProps) => {
   const { itemTitle, isOpen, onClose, onSaveLicenseName } = props;
@@ -100,16 +93,13 @@ const renderLicenseNameDialog = (props: DialogSelectorProps) => {
 const renderIssuanceDateDialog = (props: DialogSelectorProps) => {
   const { itemTitle, isOpen, onClose, onSaveIssuanceDate, initialValue } = props;
   
-  const isMedical = itemTitle === 'Date of Examination';
-  const initialDate = isMedical && initialValue instanceof Date ? initialValue : undefined;
-  
   return (
     <IssuanceDateDialog
       isOpen={isOpen}
       onClose={onClose}
       onSave={onSaveIssuanceDate}
-      isMedical={isMedical}
-      initialDate={initialDate}
+      isMedical={false}
+      initialDate={initialValue instanceof Date ? initialValue : undefined}
     />
   );
 };
