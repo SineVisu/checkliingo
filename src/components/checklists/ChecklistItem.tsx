@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
 import CertificateNumberDialog from './CertificateNumberDialog';
+import FTNDialog from './FTNDialog';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ChecklistContext } from '@/context/ChecklistContext';
@@ -27,6 +28,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const [nameDialogOpen, setNameDialogOpen] = useState(false);
   const [dateDialogOpen, setDateDialogOpen] = useState(false);
   const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
+  const [ftnDialogOpen, setFtnDialogOpen] = useState(false);
   const { checkNameDiscrepancy } = useContext(ChecklistContext);
 
   const handleToggle = () => {
@@ -42,6 +44,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 
     if (item.title === 'Certificate Number') {
       setCertificateDialogOpen(true);
+      return;
+    }
+
+    if (item.title === 'FTN# (FAA Tracking Number)') {
+      setFtnDialogOpen(true);
       return;
     }
 
@@ -70,6 +77,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const handleSaveCertificateNumber = (number: string) => {
     toast.success(`Certificate number saved: ${number}`);
     onToggleComplete(item.id, true, number);
+  };
+
+  const handleSaveFTN = (ftn: string) => {
+    toast.success(`FTN# saved: ${ftn}`);
+    onToggleComplete(item.id, true, ftn);
   };
 
   const getCategoryColor = (category?: string) => {
@@ -165,6 +177,15 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           isOpen={certificateDialogOpen}
           onClose={() => setCertificateDialogOpen(false)}
           onSave={handleSaveCertificateNumber}
+        />
+      )}
+
+      {item.title === 'FTN# (FAA Tracking Number)' && (
+        <FTNDialog
+          isOpen={ftnDialogOpen}
+          onClose={() => setFtnDialogOpen(false)}
+          onSave={handleSaveFTN}
+          initialValue={item.value as string}
         />
       )}
     </>
