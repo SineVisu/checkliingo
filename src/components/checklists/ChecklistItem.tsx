@@ -1,13 +1,12 @@
 
-import React, { useState, useContext, useEffect } from 'react';
-import { Check, ChevronRight } from 'lucide-react';
+import React from 'react';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { ChecklistContext } from '@/context/ChecklistContext';
-import ValueDisplay from './ValueDisplay';
-import DialogSelector from './DialogSelector';
-import CategoryLabel from './CategoryLabel';
 import ChecklistItemActions from './ChecklistItemActions';
+import ChecklistItemContent from './ChecklistItemContent';
+import DialogSelector from './DialogSelector';
+import { useSubtaskHandling } from '@/hooks/useSubtaskHandling';
+import { useChecklistItemState } from '@/hooks/useChecklistItemState';
 
 export interface ChecklistItemData {
   id: string;
@@ -24,43 +23,108 @@ interface ChecklistItemProps {
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
-  const [animating, setAnimating] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [expandedSubtasks, setExpandedSubtasks] = useState(false);
-  const { checkNameDiscrepancy } = useContext(ChecklistContext);
+  const { dialogOpen, setDialogOpen, expandedSubtasks, setExpandedSubtasks, animating, setAnimating } = useChecklistItemState();
+  
+  // Handle subtasks expansion and completion
+  const { handleToggle, areAllSubtasksCompleted } = useSubtaskHandling({
+    item,
+    onToggleComplete,
+    setAnimating,
+    setExpandedSubtasks,
+    expandedSubtasks,
+    setDialogOpen
+  });
 
+  // Get initial value for the dialog
+  const initialValueWithParent = getInitialValueWithParent(item);
+
+  // Dialog callbacks
+  const { handleSaveLicenseName, handleSaveIssuanceDate, handleSaveCertificateNumber, 
+          handleSaveFTN, handleSavePreflight } = useDialogCallbacks(item, onToggleComplete);
+
+  return (
+    <>
+      <div 
+        className={`bg-white rounded-xl p-4 mb-3 task-shadow flex items-center animate-scale transition-all duration-300 ${
+          animating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
+        }`}
+        data-task-id={item.id}
+      >
+        <ChecklistItemContent 
+          item={item}
+          handleToggle={handleToggle}
+          expandedSubtasks={expandedSubtasks}
+          setExpandedSubtasks={setExpandedSubtasks}
+          areAllSubtasksCompleted={areAllSubtasksCompleted}
+        />
+        
+        <ChecklistItemActions />
+      </div>
+
+      {/* Render subtasks if expanded */}
+      {expandedSubtasks && item.subtasks && item.subtasks.length > 0 && (
+        <div className="pl-8 space-y-2 mb-3">
+          {item.subtasks.map(subtask => (
+            <ChecklistItem 
+              key={subtask.id} 
+              item={subtask} 
+              onToggleComplete={onToggleComplete}
+            />
+          ))}
+        </div>
+      )}
+
+      <DialogSelector 
+        itemTitle={item.title}
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onSaveLicenseName={handleSaveLicenseName}
+        onSaveIssuanceDate={handleSaveIssuanceDate}
+        onSaveCertificateNumber={handleSaveCertificateNumber}
+        onSaveFTN={handleSaveFTN}
+        onSavePreflight={handleSavePreflight}
+        initialValue={initialValueWithParent}
+      />
+    </>
+  );
+};
+
+// Helper function to get the initial value for dialog
+const getInitialValueWithParent = (item: ChecklistItemData) => {
+  let initialValueWithParent = item.value;
+
+  if (item.title === 'Flight' || item.title === 'Ground') {
+    // Start with an empty object if value isn't an object
+    const baseObject = typeof item.value === 'object' && item.value !== null && !(item.value instanceof Date)
+      ? { ...item.value as object } 
+      : {};
+    
+    // Find the parent task title
+    let parentTaskTitle = null;
+    if (item.id.includes('-')) {
+      const parentId = item.id.split('-')[0];
+      const parentTaskElements = document.querySelectorAll(`[data-task-id="${parentId}"]`);
+      if (parentTaskElements.length > 0) {
+        const element = parentTaskElements[0];
+        parentTaskTitle = element.textContent?.trim() || null;
+      }
+    }
+    
+    initialValueWithParent = {
+      ...baseObject,
+      parentTaskTitle: parentTaskTitle
+    };
+  }
+
+  return initialValueWithParent;
+};
+
+// Extract dialog callbacks into a custom hook
+const useDialogCallbacks = (item: ChecklistItemData, onToggleComplete: ChecklistItemProps['onToggleComplete']) => {
+  const { checkNameDiscrepancy } = React.useContext(ChecklistContext);
+  
   // Check if item is a Flight Proficiency task (in group 4)
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
-
-  const handleToggle = () => {
-    // If the item has subtasks, toggle expansion instead of completing
-    if (item.subtasks && item.subtasks.length > 0) {
-      setExpandedSubtasks(!expandedSubtasks);
-      return;
-    }
-
-    if (['Name as it appears on Certificate', 'Name as it appears on Medical', 
-         'Date of Issuance', 'Certificate Number', 'FTN# (FAA Tracking Number)',
-         'Flight', 'Ground'].includes(item.title)) {
-      setDialogOpen(true);
-      return;
-    }
-
-    // For flight proficiency tasks, don't allow direct completion
-    if (isFlightProficiencyTask) {
-      toast.warning(`Complete both Flight and Ground subtasks first`, {
-        description: "Both Flight and Ground subtasks must be completed first",
-      });
-      setExpandedSubtasks(true);
-      return;
-    }
-
-    setAnimating(true);
-    setTimeout(() => {
-      onToggleComplete(item.id, !item.isCompleted);
-      setAnimating(false);
-    }, 300);
-  };
 
   const handleSaveLicenseName = (name: string) => {
     toast.success(`Certificate name saved: ${name}`);
@@ -101,134 +165,16 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     onToggleComplete(item.id, true, completeData);
   };
 
-  // Check if all subtasks are completed
-  const areAllSubtasksCompleted = () => {
-    if (!item.subtasks || item.subtasks.length === 0) return false;
-    return item.subtasks.every(subtask => subtask.isCompleted);
+  return {
+    handleSaveLicenseName,
+    handleSaveIssuanceDate,
+    handleSaveCertificateNumber,
+    handleSaveFTN,
+    handleSavePreflight
   };
-
-  // Update main task status when all subtasks are completed
-  useEffect(() => {
-    if (item.subtasks && areAllSubtasksCompleted() && !item.isCompleted) {
-      // Only automatically complete for flight proficiency tasks
-      if (isFlightProficiencyTask) {
-        onToggleComplete(item.id, true);
-        toast.success(`${item.title} completed!`, {
-          description: "Both Flight and Ground subtasks are now complete.",
-        });
-      }
-    }
-  }, [item.subtasks, item.isCompleted]);
-
-  // If this is a subtask of a Flight Proficiency task, pass the parent task title
-  let initialValueWithParent = item.value;
-
-  if (item.title === 'Flight' || item.title === 'Ground') {
-    // Start with an empty object if value isn't an object
-    const baseObject = typeof item.value === 'object' && item.value !== null && !(item.value instanceof Date)
-      ? { ...item.value as object } 
-      : {};
-    
-    // Find the parent task title
-    let parentTaskTitle = null;
-    if (item.id.includes('-')) {
-      const parentId = item.id.split('-')[0];
-      const parentTaskElements = document.querySelectorAll(`[data-task-id="${parentId}"]`);
-      if (parentTaskElements.length > 0) {
-        const element = parentTaskElements[0];
-        parentTaskTitle = element.textContent?.trim() || null;
-      }
-    }
-    
-    initialValueWithParent = {
-      ...baseObject,
-      parentTaskTitle: parentTaskTitle
-    };
-  }
-
-  return (
-    <>
-      <div 
-        className={`bg-white rounded-xl p-4 mb-3 task-shadow flex items-center animate-scale transition-all duration-300 ${
-          animating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
-        }`}
-        data-task-id={item.id}
-      >
-        <div className="flex-1 flex items-center">
-          <button 
-            onClick={handleToggle} 
-            className={`checkbox-container mr-3 ${
-              item.subtasks && item.subtasks.length > 0 
-                ? areAllSubtasksCompleted() ? 'checked' : '' 
-                : item.isCompleted ? 'checked' : ''
-            }`}
-          >
-            <div className={`checkbox-circle ${
-              item.subtasks && item.subtasks.length > 0 
-                ? areAllSubtasksCompleted() ? 'border-success' : 'border-gray-300' 
-                : item.isCompleted ? 'border-success' : 'border-gray-300'
-            }`}>
-              <Check className="h-3 w-3 text-white checkbox-icon" />
-            </div>
-          </button>
-          
-          <div className="flex-1">
-            <div className="flex items-center">
-              <p className={`font-medium transition-all duration-300 ${
-                item.isCompleted ? 'text-gray-800' : 'text-gray-800'
-              }`}>
-                {item.title}
-              </p>
-              
-              {item.subtasks && item.subtasks.length > 0 && (
-                <button 
-                  onClick={() => setExpandedSubtasks(!expandedSubtasks)}
-                  className="ml-2 text-gray-400 hover:text-gray-600 transition-all"
-                >
-                  <ChevronRight className={`h-4 w-4 transition-transform ${expandedSubtasks ? 'rotate-90' : ''}`} />
-                </button>
-              )}
-            </div>
-            
-            {item.value && (
-              <p className="text-xs text-gray-500 mt-1">
-                <ValueDisplay value={item.value} />
-              </p>
-            )}
-            
-            <CategoryLabel category={item.category} />
-          </div>
-        </div>
-        
-        <ChecklistItemActions />
-      </div>
-
-      {/* Render subtasks if expanded */}
-      {expandedSubtasks && item.subtasks && item.subtasks.length > 0 && (
-        <div className="pl-8 space-y-2 mb-3">
-          {item.subtasks.map(subtask => (
-            <ChecklistItem 
-              key={subtask.id} 
-              item={subtask} 
-              onToggleComplete={onToggleComplete}
-            />
-          ))}
-        </div>
-      )}
-
-      <DialogSelector 
-        itemTitle={item.title}
-        isOpen={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onSaveLicenseName={handleSaveLicenseName}
-        onSaveIssuanceDate={handleSaveIssuanceDate}
-        onSaveCertificateNumber={handleSaveCertificateNumber}
-        onSaveFTN={handleSaveFTN}
-        onSavePreflight={handleSavePreflight}
-        initialValue={initialValueWithParent}
-      />
-    </>
-  );
 };
+
+// Import needed for format function in useDialogCallbacks
+import { format } from 'date-fns';
 
 export default ChecklistItem;
