@@ -41,12 +41,13 @@ export const getInitialValueWithParent = (item: ChecklistItemData) => {
     };
   }
   
-  // Special case for Knowledge Test Results to preserve score and date
+  // Special case for Knowledge Test Results to preserve score, date, and PLT codes
   if (item.id === '515' && typeof item.value === 'object' && item.value !== null) {
     // Create a new object with the correct type
     const testResults = {
       score: (item.value as any).score,
-      date: (item.value as any).date
+      date: (item.value as any).date,
+      pltCodes: (item.value as any).pltCodes
     };
     
     initialValueWithParent = testResults;

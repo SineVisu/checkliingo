@@ -66,10 +66,17 @@ export const useDialogCallbacks = ({ item, onToggleComplete }: UseDialogCallback
     onToggleComplete(item.id, true, pageNumber);
   };
 
-  const handleSaveKnowledgeTestResults = (data: { score: string; date: Date }) => {
+  const handleSaveKnowledgeTestResults = (data: { score: string; date: Date; pltCodes?: string[] }) => {
+    let description = `Test date: ${format(data.date, 'MMMM d, yyyy')}`;
+    
+    if (data.pltCodes && data.pltCodes.length > 0) {
+      description += `, PLT Codes: ${data.pltCodes.join(', ')}`;
+    }
+    
     toast.success(`Knowledge test results saved: ${data.score}%`, {
-      description: `Test date: ${format(data.date, 'MMMM d, yyyy')}`
+      description
     });
+    
     onToggleComplete(item.id, true, data);
   };
 

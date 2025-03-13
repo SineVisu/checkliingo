@@ -18,7 +18,7 @@ interface DialogSelectorProps {
   onSaveFTN: (ftn: string) => void;
   onSavePreflight: (data: { date: Date; hours: string; pageNumber?: string }) => void;
   onSaveLogbookPage: (pageNumber: string) => void;
-  onSaveKnowledgeTestResults: (data: { score: string; date: Date }) => void;
+  onSaveKnowledgeTestResults: (data: { score: string; date: Date; pltCodes?: string[] }) => void;
   initialValue?: any;
   category?: string;
 }
@@ -89,7 +89,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
         onSave={onSaveKnowledgeTestResults}
         initialValues={
           typeof initialValue === 'object' && !(initialValue instanceof Date)
-            ? initialValue as { score?: string; date?: Date }
+            ? initialValue as { score?: string; date?: Date; pltCodes?: string[] }
             : undefined
         }
       />

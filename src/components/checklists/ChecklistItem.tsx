@@ -14,13 +14,13 @@ export interface ChecklistItemData {
   title: string;
   isCompleted: boolean;
   category?: string;
-  value?: string | Date | { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string };
+  value?: string | Date | { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string; score?: string; pltCodes?: string[] };
   subtasks?: ChecklistItemData[];
 }
 
 interface ChecklistItemProps {
   item: ChecklistItemData;
-  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }) => void;
+  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string; score?: string; pltCodes?: string[] }) => void;
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
@@ -84,6 +84,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         onSaveFTN={dialogCallbacks.handleSaveFTN}
         onSavePreflight={dialogCallbacks.handleSavePreflight}
         onSaveLogbookPage={dialogCallbacks.handleSaveLogbookPage}
+        onSaveKnowledgeTestResults={dialogCallbacks.handleSaveKnowledgeTestResults}
         initialValue={initialValueWithParent}
         category={item.category}
       />
