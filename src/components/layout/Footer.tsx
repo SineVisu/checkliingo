@@ -2,13 +2,42 @@
 import React from 'react';
 import { Home, List, Trophy, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Footer: React.FC = () => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-10 glass-panel animate-slide-up border-t">
       <div className="flex items-center justify-around py-2">
         <NavButton icon={<Home className="h-5 w-5" />} label="Home" active />
-        <NavButton icon={<List className="h-5 w-5" />} label="Lists" />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex flex-col items-center justify-center py-1 rounded-xl transition-all text-muted-foreground"
+            >
+              <div>
+                <List className="h-5 w-5" />
+              </div>
+              <span className="text-xs mt-1">Lists</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="w-48">
+            <DropdownMenuItem className="cursor-pointer">
+              Identification
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              Flight Proficiency FAR 61.107(b)(1)
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              Aeronautical Knowledge FAR 61.105(b)
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <NavButton icon={<Trophy className="h-5 w-5" />} label="Achievements" />
         <NavButton icon={<User className="h-5 w-5" />} label="Profile" />
       </div>
