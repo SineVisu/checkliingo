@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,8 +24,8 @@ import { cn } from "@/lib/utils";
 interface PreflightPreparationDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: { date: Date; hours: string }) => void;
-  initialValues?: { date?: Date; hours?: string };
+  onSave: (data: { date: Date; hours: string; pageNumber?: string }) => void;
+  initialValues?: { date?: Date; hours?: string; pageNumber?: string };
 }
 
 const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
@@ -36,6 +36,7 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
 }) => {
   const [date, setDate] = useState<Date | undefined>(initialValues?.date);
   const [hours, setHours] = useState<string>(initialValues?.hours || '');
+  const [pageNumber, setPageNumber] = useState<string>(initialValues?.pageNumber || '');
   const [hoursError, setHoursError] = useState<string>('');
 
   const handleSave = () => {
@@ -50,7 +51,7 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
       return;
     }
 
-    onSave({ date, hours });
+    onSave({ date, hours, pageNumber });
     onClose();
   };
 
@@ -115,6 +116,22 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
             {hoursError && (
               <p className="text-sm text-red-500">{hoursError}</p>
             )}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="pageNumber">Logbook Page Number</Label>
+            <div className="relative">
+              <Input
+                id="pageNumber"
+                value={pageNumber}
+                onChange={(e) => setPageNumber(e.target.value)}
+                placeholder="e.g., 42"
+                className="pl-9"
+              />
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <BookOpen className="h-4 w-4 text-gray-400" />
+              </div>
+            </div>
           </div>
         </div>
 

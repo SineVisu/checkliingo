@@ -15,12 +15,12 @@ export interface ChecklistItemData {
   title: string;
   isCompleted: boolean;
   category?: string;
-  value?: string | Date | { date?: Date; hours?: string };
+  value?: string | Date | { date?: Date; hours?: string; pageNumber?: string };
 }
 
 interface ChecklistItemProps {
   item: ChecklistItemData;
-  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string }) => void;
+  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string; pageNumber?: string }) => void;
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
@@ -90,8 +90,9 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     onToggleComplete(item.id, true, ftn);
   };
 
-  const handleSavePreflight = (data: { date: Date; hours: string }) => {
-    toast.success(`Preflight preparation details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours`);
+  const handleSavePreflight = (data: { date: Date; hours: string; pageNumber?: string }) => {
+    const pageInfo = data.pageNumber ? ` - Page: ${data.pageNumber}` : '';
+    toast.success(`Preflight preparation details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
     onToggleComplete(item.id, true, data);
   };
 
@@ -128,6 +129,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         <>
           <span>Date: {format(value.date, 'MMMM d, yyyy')}</span>
           {value.hours && <span className="ml-2">Hours: {value.hours}</span>}
+          {value.pageNumber && <span className="ml-2">Page: {value.pageNumber}</span>}
         </>
       );
     }
@@ -226,7 +228,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           onSave={handleSavePreflight}
           initialValues={
             typeof item.value === 'object' && !(item.value instanceof Date)
-              ? item.value as { date?: Date; hours?: string }
+              ? item.value as { date?: Date; hours?: string; pageNumber?: string }
               : undefined
           }
         />
