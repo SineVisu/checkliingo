@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -19,10 +18,7 @@ interface MedicalCaptureProps {
 const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [extractedData, setExtractedData] = useState<{
-    name: string | null;
-    date: Date | null;
-  }>({
+  const [extractedData, setExtractedData<{ name: string | null; date: Date | null }>({
     name: null,
     date: null
   });

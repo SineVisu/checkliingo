@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import ChecklistItemActions from './ChecklistItemActions';
@@ -26,7 +25,6 @@ interface ChecklistItemProps {
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
   const { dialogOpen, setDialogOpen, expandedSubtasks, setExpandedSubtasks, animating, setAnimating } = useChecklistItemState();
   
-  // Handle subtasks expansion and completion
   const { handleToggle, areAllSubtasksCompleted } = useSubtaskHandling({
     item,
     onToggleComplete,
@@ -36,10 +34,8 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     setDialogOpen
   });
 
-  // Get initial value for the dialog
   const initialValueWithParent = getInitialValueWithParent(item);
 
-  // Dialog callbacks
   const dialogCallbacks = useDialogCallbacks({ item, onToggleComplete });
 
   return (
@@ -61,7 +57,6 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         <ChecklistItemActions />
       </div>
 
-      {/* Render subtasks if expanded */}
       {expandedSubtasks && item.subtasks && item.subtasks.length > 0 && (
         <div className="pl-8 space-y-2 mb-3">
           {item.subtasks.map(subtask => (

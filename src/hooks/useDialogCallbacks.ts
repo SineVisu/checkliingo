@@ -29,7 +29,12 @@ export const useDialogCallbacks = ({ item, onToggleComplete }: UseDialogCallback
   };
   
   const handleSaveIssuanceDate = (date: Date) => {
-    toast.success(`Date of issuance saved: ${format(date, 'MMMM d, yyyy')}`);
+    const isMedical = item.title === 'Date of Examination';
+    const message = isMedical 
+      ? `Medical examination date saved: ${format(date, 'MMMM d, yyyy')}`
+      : `Date of issuance saved: ${format(date, 'MMMM d, yyyy')}`;
+      
+    toast.success(message);
     onToggleComplete(item.id, true, date);
   };
 
