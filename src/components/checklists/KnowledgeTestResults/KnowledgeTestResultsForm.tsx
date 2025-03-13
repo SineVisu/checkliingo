@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PLTCodesInput from './PLTCodesInput';
 import DateSelector from '@/components/common/DateSelector';
+import { addMonths, isFuture, isAfter } from 'date-fns';
 
 // Define PLT code format validation
 const pltCodeSchema = z.string().regex(/^PLT\d{3}$/, "Must be in format PLT followed by 3 digits");
@@ -63,6 +64,23 @@ const KnowledgeTestResultsForm: React.FC<KnowledgeTestResultsFormProps> = ({
     form.setValue('pltCodes', codes);
   };
 
+  // Function to disable dates: future dates and dates older than 24 months
+  const disabledDates = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Calculate the date 24 months ago
+    const twentyFourMonthsAgo = addMonths(today, -24);
+    
+    // Disable future dates
+    if (isFuture(date)) return true;
+    
+    // Disable dates more than 24 months in the past
+    if (isAfter(twentyFourMonthsAgo, date)) return true;
+    
+    return false;
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -103,6 +121,7 @@ const KnowledgeTestResultsForm: React.FC<KnowledgeTestResultsFormProps> = ({
                   placeholder="Select test date"
                   isOpen={calendarOpen}
                   onOpenChange={setCalendarOpen}
+                  disabledDates={disabledDates}
                 />
               </FormControl>
               <FormMessage />

@@ -60,6 +60,13 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
     }
   };
 
+  // Function to disable future dates
+  const disableFutureDates = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date > today;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -77,6 +84,7 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
               date={date}
               onDateChange={setDate}
               placeholder="Select a date"
+              disabledDates={disableFutureDates}
             />
           </div>
 

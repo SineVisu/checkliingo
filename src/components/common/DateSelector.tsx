@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
@@ -18,6 +19,7 @@ interface DateSelectorProps {
   className?: string;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  disabledDates?: (date: Date) => boolean;
 }
 
 const DateSelector: React.FC<DateSelectorProps> = ({
@@ -26,7 +28,8 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   placeholder = "Select date",
   className,
   isOpen,
-  onOpenChange
+  onOpenChange,
+  disabledDates
 }) => {
   // If isOpen and onOpenChange are provided, use them to control the popover
   // Otherwise, let the Popover component handle its own state
@@ -55,6 +58,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
           mode="single"
           selected={date}
           onSelect={onDateChange}
+          disabled={disabledDates}
           initialFocus
           className={cn("p-3 pointer-events-auto")}
         />
