@@ -74,11 +74,8 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
   }
 
   // Use PreflightPreparationDialog for Flight and Ground subtasks in any Flight Proficiency task
-  // AND for any tasks in the 'experience' category
-  if (itemTitle === 'Flight' || itemTitle === 'Ground' || itemTitle.includes('FAR 61.109')) {
-    const dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 
-                        itemTitle === 'Ground' ? 'Ground Training' : 
-                        'Aeronautical Experience';
+  if (itemTitle === 'Flight' || itemTitle === 'Ground') {
+    const dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
     
     return (
       <PreflightPreparationDialog
