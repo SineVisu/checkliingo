@@ -1,4 +1,3 @@
-
 import React from 'react';
 import IndexContent from '@/components/pages/IndexContent';
 import { ChecklistProvider } from '@/context/ChecklistContext';
@@ -173,6 +172,26 @@ const initialData: ChecklistGroupData[] = [
       { id: '512', title: '(12) Stall awareness, spin entry, spins, and spin recovery techniques', isCompleted: false, category: 'knowledge' },
       { id: '513', title: '(13) Aeronautical decision making and judgment', isCompleted: false, category: 'knowledge' },
       { id: '514', title: '(14) Preflight action', isCompleted: false, category: 'knowledge' }
+    ]
+  },
+  {
+    id: '6',
+    title: 'Aeronautical Experience FAR 61.109',
+    items: [
+      { id: '601', title: '(a)(1) 40 hours of flight time', isCompleted: false, category: 'experience' },
+      { id: '602', title: '(a)(2) 20 hours of flight training', isCompleted: false, category: 'experience' },
+      { id: '603', title: '(a)(2)(i) 3 hours cross-country flight training', isCompleted: false, category: 'experience' },
+      { id: '604', title: '(a)(2)(ii) 3 hours night flight training', isCompleted: false, category: 'experience' },
+      { id: '605', title: '(a)(2)(ii)(A) One cross-country flight over 100NM total distance', isCompleted: false, category: 'experience' },
+      { id: '606', title: '(a)(2)(ii)(B) 10 takeoffs and landings at an airport', isCompleted: false, category: 'experience' },
+      { id: '607', title: '(a)(2)(iii) 3 hours instrument flight training', isCompleted: false, category: 'experience' },
+      { id: '608', title: '(a)(2)(iv) 3 hours test preparation', isCompleted: false, category: 'experience' },
+      { id: '609', title: '(a)(3) 10 hours of solo flight time', isCompleted: false, category: 'experience' },
+      { id: '610', title: '(a)(3)(i) 5 hours cross-country', isCompleted: false, category: 'experience' },
+      { id: '611', title: '(a)(3)(ii) One solo cross-country flight of 150NM total', isCompleted: false, category: 'experience' },
+      { id: '612', title: '(a)(3)(ii)(A) Full-stop landings at 3 points', isCompleted: false, category: 'experience' },
+      { id: '613', title: '(a)(3)(ii)(B) One segment of flight of at least 50NM straight-line distance', isCompleted: false, category: 'experience' },
+      { id: '614', title: '(a)(3)(iii) 3 takeoffs and landings at a controlled airport', isCompleted: false, category: 'experience' },
     ]
   }
 ];

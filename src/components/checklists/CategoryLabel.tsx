@@ -24,6 +24,10 @@ const CategoryLabel: React.FC<CategoryLabelProps> = ({ category }) => {
         return 'bg-rose-100 text-rose-800';
       case 'proficiency':
         return 'bg-indigo-100 text-indigo-800';
+      case 'knowledge':
+        return 'bg-gray-100 text-gray-800';
+      case 'experience':
+        return 'bg-orange-100 text-orange-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }

@@ -83,6 +83,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
     if (filterCategory === 'proficiency') return 'Flight Proficiency FAR 61.107(b)(1)';
     if (filterCategory === 'knowledge') return 'Aeronautical Knowledge FAR 61.105(b)';
     if (filterCategory === 'identification') return 'Identification';
+    if (filterCategory === 'experience') return 'Aeronautical Experience FAR 61.109';
     return 'FAA Private Pilot Practical Test // ASEL Checklist';
   };
 
