@@ -45,7 +45,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '402', 
-        title: 'Preflight procedures', 
+        title: '(ii) Preflight procedures', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
