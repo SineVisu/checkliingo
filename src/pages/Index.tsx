@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -13,7 +12,6 @@ import MedicalCapture from '@/components/checklists/MedicalCapture';
 import NameDiscrepancyDialog from '@/components/checklists/NameDiscrepancyDialog';
 import { ChecklistContext, ChecklistProvider } from '@/context/ChecklistContext';
 
-// Sample data to start with
 const initialData: ChecklistGroupData[] = [
   {
     id: '1',
@@ -193,7 +191,7 @@ const IndexContent = () => {
       <main className="flex-1 px-4 pt-4 pb-20 max-w-lg mx-auto w-full">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-bold">Private Pilot Practical Exam Checklist</h2>
+            <h2 className="text-2xl font-bold">Private Pilot Practical Test Checklist</h2>
             <p className="text-muted-foreground text-sm">
               {completedTasks} of {totalTasks} tasks completed
             </p>
@@ -280,7 +278,6 @@ const IndexContent = () => {
   );
 };
 
-// Wrapper component to provide the ChecklistContext
 const Index = () => {
   return (
     <ChecklistProvider initialData={initialData}>
