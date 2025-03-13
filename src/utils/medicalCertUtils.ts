@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 import { createWorker } from 'tesseract.js';
 import { subYears, isAfter, isFuture } from 'date-fns';
@@ -51,7 +50,9 @@ export const extractDateFromMedicalCert = (text: string): Date | null => {
     /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(0?[1-9]|[12][0-9]|3[01])(st|nd|rd|th)?,\s+(19|20)\d{2}\b/gi,
     // Medical specific patterns
     /EXAM(?:INATION)?\s*DATE[\s:]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
-    /DATE[\s:]*OF[\s:]*EXAM(?:INATION)?[\s:]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i
+    /DATE[\s:]*OF[\s:]*EXAM(?:INATION)?[\s:]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
+    /EXAM[\s:]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
+    /DATE[\s:]*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i
   ];
   
   for (const pattern of datePatterns) {
@@ -74,10 +75,15 @@ export const extractDateFromMedicalCert = (text: string): Date | null => {
         }
         
         // Alternative parsing for MM/DD/YYYY format
-        const mmddyyyy = dateString.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+        const mmddyyyy = dateString.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4}|\d{2})/);
         if (mmddyyyy) {
           const [, month, day, year] = mmddyyyy;
-          return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+          let fullYear = parseInt(year);
+          // Handle 2-digit years
+          if (fullYear < 100) {
+            fullYear += fullYear < 50 ? 2000 : 1900;
+          }
+          return new Date(fullYear, parseInt(month) - 1, parseInt(day));
         }
       } catch (e) {
         console.error("Date parsing error:", e);

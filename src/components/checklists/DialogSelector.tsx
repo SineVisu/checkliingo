@@ -1,3 +1,4 @@
+
 import React from 'react';
 import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
@@ -31,38 +32,32 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
     category
   } = props;
   
-  // License Name or Medical Name Dialog
+  // Dialog Type Identification Functions
   if (isLicenseOrMedicalNameDialog(itemTitle)) {
     return renderLicenseNameDialog(props);
   }
   
-  // Issuance Date Dialog
-  if (itemTitle === 'Date of Issuance') {
+  if (isDateDialog(itemTitle)) {
     return renderIssuanceDateDialog(props);
   }
 
-  // Certificate Number Dialog
-  if (itemTitle === 'Certificate Number') {
+  if (isCertificateNumberDialog(itemTitle)) {
     return renderCertificateNumberDialog(props);
   }
 
-  // FTN Dialog
-  if (itemTitle === 'FTN# (FAA Tracking Number)') {
+  if (isFTNDialog(itemTitle)) {
     return renderFTNDialog(props);
   }
 
-  // Knowledge Test Results Dialog
-  if (itemTitle === 'PAR Knowledge Test Results') {
+  if (isKnowledgeTestResultsDialog(itemTitle)) {
     return renderKnowledgeTestResultsDialog(props);
   }
 
-  // Flight or Ground Training Dialog
-  if (itemTitle === 'Flight' || itemTitle === 'Ground') {
+  if (isTrainingDialog(itemTitle)) {
     return renderPreflightPreparationDialog(props);
   }
 
-  // Experience/Logbook Page Dialog
-  if (category === 'experience') {
+  if (isExperienceDialog(category)) {
     return renderLogbookPageDialog(props);
   }
 
@@ -73,6 +68,37 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
 const isLicenseOrMedicalNameDialog = (itemTitle: string): boolean => {
   return itemTitle === 'Name as it appears on Certificate' || 
          itemTitle === 'Name as it appears on Medical';
+};
+
+// Helper function to check if dialog is for dates
+const isDateDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'Date of Issuance' || 
+         itemTitle === 'Date of examination';
+};
+
+// Helper function to check if dialog is for certificate number
+const isCertificateNumberDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'Certificate Number';
+};
+
+// Helper function to check if dialog is for FTN
+const isFTNDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'FTN# (FAA Tracking Number)';
+};
+
+// Helper function to check if dialog is for knowledge test results
+const isKnowledgeTestResultsDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'PAR Knowledge Test Results';
+};
+
+// Helper function to check if dialog is for training
+const isTrainingDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'Flight' || itemTitle === 'Ground';
+};
+
+// Helper function to check if dialog is for experience/logbook
+const isExperienceDialog = (category?: string): boolean => {
+  return category === 'experience';
 };
 
 // Render License Name Dialog
@@ -93,12 +119,14 @@ const renderLicenseNameDialog = (props: DialogSelectorProps) => {
 const renderIssuanceDateDialog = (props: DialogSelectorProps) => {
   const { itemTitle, isOpen, onClose, onSaveIssuanceDate, initialValue } = props;
   
+  const isMedical = itemTitle === 'Date of examination';
+  
   return (
     <IssuanceDateDialog
       isOpen={isOpen}
       onClose={onClose}
       onSave={onSaveIssuanceDate}
-      isMedical={false}
+      isMedical={isMedical}
       initialDate={initialValue instanceof Date ? initialValue : undefined}
     />
   );
