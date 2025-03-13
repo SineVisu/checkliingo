@@ -67,3 +67,22 @@ export const hasMiddleNameDiscrepancy = (name1?: string, name2?: string): boolea
   
   return false;
 };
+
+/**
+ * Determine if there is a general name discrepancy excluding middle name issues
+ * @param name1 First name to check (typically pilot certificate)
+ * @param name2 Second name to check (typically medical certificate)
+ * @returns boolean indicating if there's a non-middle-name discrepancy
+ */
+export const hasGeneralNameDiscrepancy = (name1?: string, name2?: string): boolean => {
+  if (!name1 || !name2) return false;
+  
+  // Check if names match
+  const namesMatch = compareNames(name1, name2);
+  
+  // Check if there's a middle name discrepancy
+  const hasMiddleNameIssue = hasMiddleNameDiscrepancy(name1, name2);
+  
+  // Return true if names don't match AND it's not a middle name issue
+  return !namesMatch && !hasMiddleNameIssue;
+};

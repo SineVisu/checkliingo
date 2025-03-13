@@ -58,7 +58,7 @@ const NameDiscrepancyDialog: React.FC<NameDiscrepancyDialogProps> = ({
           
           <div className="border-l-4 border-amber-500 bg-amber-50 p-4">
             <p className="text-sm">
-              If the student pilot certificate or pilot certificate has incorrect pilot legal name, please go to your IACRA's user profile and correct your name there, so the application (8710) will be correct. Your DPE will make a note in IACRA about the incorrect name on the printed certificate and attach the ID.
+              Please go to your IACRA profile and correct your name so your application (8710) will be correct on the day of your Practical Test. Your DPE will make a note in IACRA about the incorrect name on the printed certificate and attach the ID.
             </p>
           </div>
           

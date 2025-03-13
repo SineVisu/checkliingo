@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { compareNames, hasMiddleNameDiscrepancy } from '@/utils/validation';
+import { compareNames, hasMiddleNameDiscrepancy, hasGeneralNameDiscrepancy } from '@/utils/validation';
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 
 interface ChecklistContextType {
@@ -10,6 +10,7 @@ interface ChecklistContextType {
   medicalName: string | undefined;
   nameDiscrepancyDetected: boolean;
   middleNameDiscrepancyDetected: boolean;
+  generalNameDiscrepancyDetected: boolean;
   showNameDiscrepancy: boolean;
   showMiddleNameDiscrepancy: boolean;
   setShowNameDiscrepancy: (show: boolean) => void;
@@ -26,6 +27,7 @@ export const ChecklistContext = createContext<ChecklistContextType>({
   medicalName: undefined,
   nameDiscrepancyDetected: false,
   middleNameDiscrepancyDetected: false,
+  generalNameDiscrepancyDetected: false,
   showNameDiscrepancy: false,
   showMiddleNameDiscrepancy: false,
   setShowNameDiscrepancy: () => {},
@@ -57,17 +59,24 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     .find(group => group.id === '2')?.items
     .find(item => item.id === '201')?.value as string | undefined;
   
-  // Check if names match or if there's a middle name discrepancy
-  const nameDiscrepancyDetected = Boolean(
-    licenseName && 
-    medicalName && 
-    !compareNames(licenseName, medicalName)
-  );
-  
+  // Check for different types of name discrepancies
   const middleNameDiscrepancyDetected = Boolean(
     licenseName &&
     medicalName &&
     hasMiddleNameDiscrepancy(licenseName, medicalName)
+  );
+  
+  const generalNameDiscrepancyDetected = Boolean(
+    licenseName &&
+    medicalName &&
+    hasGeneralNameDiscrepancy(licenseName, medicalName)
+  );
+  
+  // Any name discrepancy (for backward compatibility)
+  const nameDiscrepancyDetected = Boolean(
+    licenseName && 
+    medicalName && 
+    !compareNames(licenseName, medicalName)
   );
 
   // This function will be called when either name changes
@@ -103,7 +112,7 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
         );
       }
       // Then check for general name discrepancy if no middle name issue
-      else if (!compareNames(licenseName, medicalName)) {
+      else if (hasGeneralNameDiscrepancy(licenseName, medicalName)) {
         // We have a general discrepancy, show the dialog
         setShowNameDiscrepancy(true);
         setShowMiddleNameDiscrepancy(false);
@@ -227,6 +236,7 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     medicalName,
     nameDiscrepancyDetected,
     middleNameDiscrepancyDetected,
+    generalNameDiscrepancyDetected,
     showNameDiscrepancy,
     showMiddleNameDiscrepancy,
     setShowNameDiscrepancy,
