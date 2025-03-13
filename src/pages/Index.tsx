@@ -218,7 +218,7 @@ const IndexContent = () => {
                   Capture Pilot Certificate
                 </Button>
                 <p className="text-xs text-muted-foreground text-center mt-1">
-                  Take one photo to complete all certificate requirements
+                  Take one photo to complete all pilot certificate requirements
                 </p>
               </div>
             )}
