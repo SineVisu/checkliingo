@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -122,7 +121,7 @@ const IndexContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col pb-16 bg-gradient-to-b from-background to-muted">
-      <Header onNewChecklist={handleCreateNewChecklist} />
+      <Header />
       
       <ChecklistContent 
         streak={streak}

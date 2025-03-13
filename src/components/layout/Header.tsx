@@ -1,13 +1,9 @@
 
 import React from 'react';
-import { Menu, Plus } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface HeaderProps {
-  onNewChecklist: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onNewChecklist }) => {
+const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-10 px-4 py-3 glass-panel animate-slide-down">
       <div className="flex items-center justify-between">
@@ -19,13 +15,6 @@ const Header: React.FC<HeaderProps> = ({ onNewChecklist }) => {
             Checklist
           </h1>
         </div>
-        <Button 
-          onClick={onNewChecklist} 
-          size="icon" 
-          className="rounded-full bg-primary hover:bg-primary/90 transition-all"
-        >
-          <Plus className="h-5 w-5" />
-        </Button>
       </div>
     </header>
   );

@@ -100,7 +100,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
           </div>
         </>
       ) : (
-        <EmptyState onCreateNew={onCreateNewChecklist} />
+        <EmptyState />
       )}
     </main>
   );
