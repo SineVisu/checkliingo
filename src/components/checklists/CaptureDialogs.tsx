@@ -15,6 +15,7 @@ interface CaptureDialogsProps {
   onCloseNameDiscrepancy: () => void;
   onLicenseCaptureComplete: (data: { name?: string; date?: Date; certificateNumber?: string }) => void;
   onMedicalCaptureComplete: (data: { name?: string; date?: Date }) => void;
+  onAcknowledgeNameDiscrepancy: () => void;
 }
 
 const CaptureDialogs: React.FC<CaptureDialogsProps> = ({
@@ -27,7 +28,8 @@ const CaptureDialogs: React.FC<CaptureDialogsProps> = ({
   onCloseMedicalCapture,
   onCloseNameDiscrepancy,
   onLicenseCaptureComplete,
-  onMedicalCaptureComplete
+  onMedicalCaptureComplete,
+  onAcknowledgeNameDiscrepancy
 }) => {
   return (
     <>
@@ -48,6 +50,7 @@ const CaptureDialogs: React.FC<CaptureDialogsProps> = ({
         onClose={onCloseNameDiscrepancy}
         licenseName={licenseName}
         medicalName={medicalName}
+        onAcknowledge={onAcknowledgeNameDiscrepancy}
       />
     </>
   );
