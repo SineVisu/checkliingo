@@ -70,7 +70,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
     );
   }
 
-  if (itemTitle === '(i) Preflight preparation') {
+  if (itemTitle === '(i) Preflight preparation' || itemTitle === 'Flight' || itemTitle === 'Ground') {
     return (
       <PreflightPreparationDialog
         isOpen={isOpen}

@@ -1,6 +1,6 @@
 
 import React, { useState, useContext } from 'react';
-import { Check } from 'lucide-react';
+import { Check, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ChecklistContext } from '@/context/ChecklistContext';
@@ -15,6 +15,7 @@ export interface ChecklistItemData {
   isCompleted: boolean;
   category?: string;
   value?: string | Date | { date?: Date; hours?: string; pageNumber?: string };
+  subtasks?: ChecklistItemData[];
 }
 
 interface ChecklistItemProps {
@@ -25,12 +26,19 @@ interface ChecklistItemProps {
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
   const [animating, setAnimating] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [expandedSubtasks, setExpandedSubtasks] = useState(false);
   const { checkNameDiscrepancy } = useContext(ChecklistContext);
 
   const handleToggle = () => {
+    // If the item has subtasks, toggle expansion instead of completing
+    if (item.subtasks && item.subtasks.length > 0) {
+      setExpandedSubtasks(!expandedSubtasks);
+      return;
+    }
+
     if (['Name as it appears on Certificate', 'Name as it appears on Medical', 
          'Date of Issuance', 'Certificate Number', 'FTN# (FAA Tracking Number)',
-         '(i) Preflight preparation'].includes(item.title)) {
+         'Flight', 'Ground'].includes(item.title)) {
       setDialogOpen(true);
       return;
     }
@@ -73,6 +81,19 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     onToggleComplete(item.id, true, data);
   };
 
+  // Check if all subtasks are completed
+  const areAllSubtasksCompleted = () => {
+    if (!item.subtasks || item.subtasks.length === 0) return false;
+    return item.subtasks.every(subtask => subtask.isCompleted);
+  };
+
+  // Update main task status when all subtasks are completed
+  React.useEffect(() => {
+    if (item.subtasks && areAllSubtasksCompleted() && !item.isCompleted) {
+      onToggleComplete(item.id, true);
+    }
+  }, [item.subtasks, item.isCompleted]);
+
   return (
     <>
       <div 
@@ -83,19 +104,38 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         <div className="flex-1 flex items-center">
           <button 
             onClick={handleToggle} 
-            className={`checkbox-container mr-3 ${item.isCompleted ? 'checked' : ''}`}
+            className={`checkbox-container mr-3 ${
+              item.subtasks && item.subtasks.length > 0 
+                ? areAllSubtasksCompleted() ? 'checked' : '' 
+                : item.isCompleted ? 'checked' : ''
+            }`}
           >
-            <div className={`checkbox-circle ${item.isCompleted ? 'border-success' : 'border-gray-300'}`}>
+            <div className={`checkbox-circle ${
+              item.subtasks && item.subtasks.length > 0 
+                ? areAllSubtasksCompleted() ? 'border-success' : 'border-gray-300' 
+                : item.isCompleted ? 'border-success' : 'border-gray-300'
+            }`}>
               <Check className="h-3 w-3 text-white checkbox-icon" />
             </div>
           </button>
           
           <div className="flex-1">
-            <p className={`font-medium transition-all duration-300 ${
-              item.isCompleted ? 'text-gray-800' : 'text-gray-800'
-            }`}>
-              {item.title}
-            </p>
+            <div className="flex items-center">
+              <p className={`font-medium transition-all duration-300 ${
+                item.isCompleted ? 'text-gray-800' : 'text-gray-800'
+              }`}>
+                {item.title}
+              </p>
+              
+              {item.subtasks && item.subtasks.length > 0 && (
+                <button 
+                  onClick={() => setExpandedSubtasks(!expandedSubtasks)}
+                  className="ml-2 text-gray-400 hover:text-gray-600 transition-all"
+                >
+                  <ChevronRight className={`h-4 w-4 transition-transform ${expandedSubtasks ? 'rotate-90' : ''}`} />
+                </button>
+              )}
+            </div>
             
             {item.value && (
               <p className="text-xs text-gray-500 mt-1">
@@ -109,6 +149,19 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         
         <ChecklistItemActions />
       </div>
+
+      {/* Render subtasks if expanded */}
+      {expandedSubtasks && item.subtasks && item.subtasks.length > 0 && (
+        <div className="pl-8 space-y-2 mb-3">
+          {item.subtasks.map(subtask => (
+            <ChecklistItem 
+              key={subtask.id} 
+              item={subtask} 
+              onToggleComplete={onToggleComplete}
+            />
+          ))}
+        </div>
+      )}
 
       <DialogSelector 
         itemTitle={item.title}
