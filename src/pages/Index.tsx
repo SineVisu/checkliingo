@@ -215,7 +215,7 @@ const IndexContent = () => {
                   className="w-full"
                 >
                   <Camera className="mr-2 h-4 w-4" />
-                  Capture Pilot Certificate for All Fields
+                  Capture Pilot Certificate
                 </Button>
                 <p className="text-xs text-muted-foreground text-center mt-1">
                   Take one photo to complete all certificate requirements
