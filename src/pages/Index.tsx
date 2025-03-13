@@ -11,7 +11,8 @@ const initialData: ChecklistGroupData[] = [
     items: [
       { id: '101', title: 'Name as it appears on Certificate', isCompleted: false, category: 'identification' },
       { id: '102', title: 'Date of Issuance', isCompleted: false, category: 'identification' },
-      { id: '103', title: 'Certificate Number', isCompleted: false, category: 'identification' }
+      { id: '103', title: 'Certificate Number', isCompleted: false, category: 'identification' },
+      { id: '104', title: 'FTN# (FAA Tracking Number)', isCompleted: false, category: 'identification' }
     ]
   },
   {
