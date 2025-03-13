@@ -11,7 +11,7 @@ import {
 import { ChecklistContext } from '@/context/ChecklistContext';
 
 const Footer: React.FC = () => {
-  const { setFilterCategory } = useContext(ChecklistContext);
+  const { setFilterCategory, filterCategory } = useContext(ChecklistContext);
 
   const handleFilterSelect = (category: string | null) => {
     setFilterCategory(category);
@@ -23,14 +23,16 @@ const Footer: React.FC = () => {
         <NavButton 
           icon={<Home className="h-5 w-5" />} 
           label="Home" 
-          active 
+          active={filterCategory === null}
           onClick={() => handleFilterSelect(null)}
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex flex-col items-center justify-center py-1 rounded-xl transition-all text-muted-foreground"
+              className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all ${
+                filterCategory ? 'text-primary' : 'text-muted-foreground'
+              }`}
             >
               <div>
                 <List className="h-5 w-5" />
@@ -43,7 +45,7 @@ const Footer: React.FC = () => {
               className="cursor-pointer"
               onClick={() => handleFilterSelect('identification')}
             >
-              Identification
+              Identification & Medical
             </DropdownMenuItem>
             <DropdownMenuItem 
               className="cursor-pointer"
@@ -65,8 +67,16 @@ const Footer: React.FC = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <NavButton icon={<Trophy className="h-5 w-5" />} label="Achievements" />
-        <NavButton icon={<User className="h-5 w-5" />} label="Profile" />
+        <NavButton 
+          icon={<Trophy className="h-5 w-5" />} 
+          label="Achievements" 
+          active={false}
+        />
+        <NavButton 
+          icon={<User className="h-5 w-5" />} 
+          label="Profile" 
+          active={false}
+        />
       </div>
     </footer>
   );

@@ -27,10 +27,18 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
     filterCategory
   } = useContext(ChecklistContext);
 
+  // Modified filtering logic to include 'medical' category when 'identification' is selected
   const filteredChecklists = filterCategory
-    ? checklists.filter(group => 
-        group.items.some(item => item.category === filterCategory)
-      )
+    ? checklists.filter(group => {
+        // Special case for identification to include medical
+        if (filterCategory === 'identification') {
+          return group.items.some(item => 
+            item.category === 'identification' || item.category === 'medical'
+          );
+        }
+        // Normal filtering for other categories
+        return group.items.some(item => item.category === filterCategory);
+      })
     : checklists;
 
   const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
@@ -79,7 +87,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
   const getCategoryTitle = () => {
     if (filterCategory === 'proficiency') return 'Flight Proficiency FAR 61.107(b)(1)';
     if (filterCategory === 'knowledge') return 'Aeronautical Knowledge FAR 61.105(b)';
-    if (filterCategory === 'identification') return 'Identification';
+    if (filterCategory === 'identification') return 'Identification & Medical';
     if (filterCategory === 'experience') return 'Aeronautical Experience FAR 61.109';
     return 'FAA Private Pilot Practical Test // ASEL Checklist';
   };
