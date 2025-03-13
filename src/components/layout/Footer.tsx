@@ -57,6 +57,12 @@ const Footer: React.FC = () => {
             >
               Aeronautical Knowledge FAR 61.105(b)
             </DropdownMenuItem>
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => handleFilterSelect('experience')}
+            >
+              Aeronautical Experience FAR 61.109
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <NavButton icon={<Trophy className="h-5 w-5" />} label="Achievements" />
