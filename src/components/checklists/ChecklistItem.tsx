@@ -30,7 +30,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const { checkNameDiscrepancy } = useContext(ChecklistContext);
 
   const handleToggle = () => {
-    if (item.title === 'Name as it appears on License' || item.title === 'Name as it appears on Medical') {
+    if (item.title === 'Name as it appears on Certificate' || item.title === 'Name as it appears on Medical') {
       setNameDialogOpen(true);
       return;
     }
@@ -53,11 +53,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   };
 
   const handleSaveLicenseName = (name: string) => {
-    toast.success(`License name saved: ${name}`);
+    toast.success(`Certificate name saved: ${name}`);
     onToggleComplete(item.id, true, name);
     
     // After setting the name, check for discrepancies
-    if (item.title === 'Name as it appears on License' || item.title === 'Name as it appears on Medical') {
+    if (item.title === 'Name as it appears on Certificate' || item.title === 'Name as it appears on Medical') {
       checkNameDiscrepancy();
     }
   };
@@ -136,7 +136,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         </Button>
       </div>
 
-      {item.title === 'Name as it appears on License' && (
+      {item.title === 'Name as it appears on Certificate' && (
         <LicenseNameDialog
           isOpen={nameDialogOpen}
           onClose={() => setNameDialogOpen(false)}

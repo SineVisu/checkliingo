@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
       
       if (possibleName) {
         setLicenseName(possibleName);
-        toast.success("Name detected from license");
+        toast.success("Name detected from certificate");
       } else {
         toast.info("Couldn't detect name automatically. Please enter manually.");
       }
@@ -148,7 +149,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
 
   const handleSave = () => {
     if (!licenseName.trim()) {
-      toast.error("Please enter your license name");
+      toast.error("Please enter your certificate name");
       return;
     }
     
@@ -191,7 +192,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enter License Name</DialogTitle>
+          <DialogTitle>Enter Certificate Name</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="flex flex-col gap-4">
@@ -200,7 +201,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
               id="licenseName"
               value={licenseName}
               onChange={(e) => setLicenseName(e.target.value)}
-              placeholder="Enter your name as shown on license"
+              placeholder="Enter your name as shown on certificate"
             />
             <p className="text-xs text-muted-foreground">
               Format: First, Middle, Last (include commas)
@@ -229,7 +230,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
               <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
                 <img 
                   src={imageUrl} 
-                  alt="License" 
+                  alt="Certificate" 
                   className="h-full w-full object-contain" 
                 />
               </div>
@@ -249,7 +250,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
               disabled={isProcessing}
             >
               <Camera className="mr-2 h-4 w-4" />
-              Capture License Photo
+              Capture Certificate Photo
             </Button>
           )}
 

@@ -17,9 +17,9 @@ import { ChecklistContext, ChecklistProvider } from '@/context/ChecklistContext'
 const initialData: ChecklistGroupData[] = [
   {
     id: '1',
-    title: 'Pilot\'s License',
+    title: 'Pilot\'s Certificate',
     items: [
-      { id: '101', title: 'Name as it appears on License', isCompleted: false, category: 'identification' },
+      { id: '101', title: 'Name as it appears on Certificate', isCompleted: false, category: 'identification' },
       { id: '102', title: 'Date of Issuance', isCompleted: false, category: 'identification' },
       { id: '103', title: 'Certificate Number', isCompleted: false, category: 'identification' }
     ]
@@ -130,8 +130,8 @@ const IndexContent = () => {
       })
     );
 
-    toast.success("License information has been processed!", {
-      description: "Your license details have been updated automatically.",
+    toast.success("Certificate information has been processed!", {
+      description: "Your certificate details have been updated automatically.",
       position: "top-center",
     });
   };
@@ -217,10 +217,10 @@ const IndexContent = () => {
                   className="w-full"
                 >
                   <Camera className="mr-2 h-4 w-4" />
-                  Capture License for All Fields
+                  Capture Certificate for All Fields
                 </Button>
                 <p className="text-xs text-muted-foreground text-center mt-1">
-                  Take one photo to complete all license requirements
+                  Take one photo to complete all certificate requirements
                 </p>
               </div>
             )}

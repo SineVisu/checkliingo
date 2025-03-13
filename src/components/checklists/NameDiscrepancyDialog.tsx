@@ -26,14 +26,14 @@ const NameDiscrepancyDialog: React.FC<NameDiscrepancyDialogProps> = ({
             Name Discrepancy Detected
           </DialogTitle>
           <DialogDescription>
-            There is a discrepancy between your pilot license and medical certificate names.
+            There is a discrepancy between your pilot certificate and medical certificate names.
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
           <div className="bg-muted p-4 rounded-lg space-y-3">
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground">License Name:</h3>
+              <h3 className="text-sm font-medium text-muted-foreground">Certificate Name:</h3>
               <p className="font-medium">{licenseName || 'Not provided'}</p>
             </div>
             

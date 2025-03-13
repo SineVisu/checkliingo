@@ -93,7 +93,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
       const worker = await createWorker('eng');
       
       const result = await worker.recognize(imageData);
-      console.log("OCR Result for full license:", result);
+      console.log("OCR Result for full certificate:", result);
       
       // Extract all needed information
       const extractedText = result.data.text;
@@ -183,7 +183,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
       /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(0?[1-9]|[12][0-9]|3[01])(st|nd|rd|th)?,\s+(19|20)\d{2}\b/gi,
       // DD/MM/YYYY (international format)
       /\b(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[0-2])[\/\-](19|20)\d{2}\b/g,
-      // Common license patterns
+      // Common certificate patterns
       /ISSUE\s*DATE\s*:?\s*(0?[1-9]|1[0-2])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-](19|20)\d{2}/i,
       /DATE\s*ISSUED\s*:?\s*(0?[1-9]|1[0-2])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-](19|20)\d{2}/i
     ];
@@ -256,7 +256,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
     
     // Check if we have any data to save
     if (!dataToSave.name && !dataToSave.date && !dataToSave.certificateNumber) {
-      toast.error("No information was extracted from license. Please try again.");
+      toast.error("No information was extracted from certificate. Please try again.");
       return;
     }
     
@@ -288,7 +288,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Capture Pilot License</DialogTitle>
+          <DialogTitle>Capture Pilot Certificate</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           {showCamera ? (
@@ -313,7 +313,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
               <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
                 <img 
                   src={imageUrl} 
-                  alt="License" 
+                  alt="Certificate" 
                   className="h-full w-full object-contain" 
                 />
               </div>
@@ -353,7 +353,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
           ) : (
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground text-center">
-                Take a clear photo of your pilot license to automatically extract your name, 
+                Take a clear photo of your pilot certificate to automatically extract your name, 
                 issuance date, and certificate number
               </p>
               
@@ -363,7 +363,7 @@ const LicenseCapture: React.FC<LicenseCaptureProps> = ({ isOpen, onClose, onSave
                 disabled={isProcessing}
               >
                 <Camera className="mr-2 h-4 w-4" />
-                Capture License Photo
+                Capture Certificate Photo
               </Button>
             </div>
           )}
