@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { createWorker } from 'tesseract.js';
-import { format } from 'date-fns';
+import { format, subYears, isAfter, isFuture } from 'date-fns';
 
 interface MedicalCaptureProps {
   isOpen: boolean;
@@ -99,21 +99,31 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
       const name = extractNameFromText(extractedText);
       const date = extractDateFromText(extractedText);
       
+      // Validate the date is within the past 3 years
+      let validDate = date;
+      if (date) {
+        const threeYearsAgo = subYears(new Date(), 3);
+        if (isAfter(threeYearsAgo, date) || isFuture(date)) {
+          validDate = null;
+          toast.error("The examination date must be within the past 3 years.");
+        }
+      }
+      
       setExtractedData({
         name,
-        date
+        date: validDate
       });
       
       // Show success/info toast based on extracted data
-      if (name || date) {
+      if (name || validDate) {
         let extractedItems = [];
         if (name) extractedItems.push("name");
-        if (date) extractedItems.push("examination date");
+        if (validDate) extractedItems.push("examination date");
         
         if (extractedItems.length > 0) {
           toast.success(`Successfully detected: ${extractedItems.join(", ")}`);
         } else {
-          toast.info("Couldn't detect information automatically. Please try again or enter manually.");
+          toast.info("Couldn't detect valid information automatically. Please try again or enter manually.");
         }
       }
       
@@ -204,6 +214,15 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
     return null;
   };
 
+  const validateDate = (date: Date | null): boolean => {
+    if (!date) return false;
+    
+    const today = new Date();
+    const threeYearsAgo = subYears(today, 3);
+    
+    return !isAfter(threeYearsAgo, date) && !isFuture(date);
+  };
+
   const handleSave = () => {
     // Prepare the data to save
     const dataToSave = {
@@ -214,6 +233,12 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
     // Check if we have any data to save
     if (!dataToSave.name && !dataToSave.date) {
       toast.error("No information was extracted from medical certificate. Please try again.");
+      return;
+    }
+    
+    // Validate the date is within the past 3 years
+    if (dataToSave.date && !validateDate(dataToSave.date)) {
+      toast.error("The examination date must be within the past 3 years.");
       return;
     }
     
