@@ -7,6 +7,7 @@ import ChecklistHeader from '@/components/checklists/ChecklistHeader';
 import EmptyState from '@/components/ui/EmptyState';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import { toast } from 'sonner';
+import NameDiscrepancyDialog from '@/components/checklists/NameDiscrepancyDialog';
 
 interface ChecklistContentProps {
   streak: number;
@@ -21,7 +22,15 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
   onCaptureLicense,
   onCaptureMedical
 }) => {
-  const { checklists, setChecklists } = useContext(ChecklistContext);
+  const { 
+    checklists, 
+    setChecklists, 
+    showNameDiscrepancy, 
+    setShowNameDiscrepancy,
+    licenseName,
+    medicalName,
+    acknowledgeNameDiscrepancy
+  } = useContext(ChecklistContext);
 
   const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
     setChecklists(prevChecklists => 
@@ -95,6 +104,15 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
               />
             ))}
           </div>
+          
+          {/* Name discrepancy dialog */}
+          <NameDiscrepancyDialog
+            isOpen={showNameDiscrepancy}
+            onClose={() => setShowNameDiscrepancy(false)}
+            licenseName={licenseName}
+            medicalName={medicalName}
+            onAcknowledge={acknowledgeNameDiscrepancy}
+          />
         </>
       ) : (
         <EmptyState onCreateNew={onCreateNewChecklist} />

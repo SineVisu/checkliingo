@@ -12,6 +12,7 @@ interface ChecklistContextType {
   showNameDiscrepancy: boolean;
   setShowNameDiscrepancy: (show: boolean) => void;
   checkNameDiscrepancy: () => void;
+  acknowledgeNameDiscrepancy: () => void;
 }
 
 export const ChecklistContext = createContext<ChecklistContextType>({
@@ -23,6 +24,7 @@ export const ChecklistContext = createContext<ChecklistContextType>({
   showNameDiscrepancy: false,
   setShowNameDiscrepancy: () => {},
   checkNameDiscrepancy: () => {},
+  acknowledgeNameDiscrepancy: () => {},
 });
 
 interface ChecklistProviderProps {
@@ -110,6 +112,35 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     }
   };
 
+  // Function to acknowledge the name discrepancy and mark tasks as complete
+  const acknowledgeNameDiscrepancy = () => {
+    // Mark both name items as complete despite the discrepancy
+    setChecklists(prevChecklists => 
+      prevChecklists.map(group => {
+        if (group.id === '1') {
+          return {
+            ...group,
+            items: group.items.map(item => 
+              item.id === '101' ? { ...item, isCompleted: true } : item
+            )
+          };
+        }
+        else if (group.id === '2') {
+          return {
+            ...group,
+            items: group.items.map(item => 
+              item.id === '201' ? { ...item, isCompleted: true } : item
+            )
+          };
+        }
+        return group;
+      })
+    );
+    
+    // Close the dialog
+    setShowNameDiscrepancy(false);
+  };
+
   // Check discrepancy whenever names change
   useEffect(() => {
     checkNameDiscrepancy();
@@ -124,6 +155,7 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     showNameDiscrepancy,
     setShowNameDiscrepancy,
     checkNameDiscrepancy,
+    acknowledgeNameDiscrepancy,
   };
 
   return (

@@ -1,27 +1,40 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 interface NameDiscrepancyDialogProps {
   isOpen: boolean;
   onClose: () => void;
   licenseName?: string;
   medicalName?: string;
+  onAcknowledge: () => void;
 }
 
 const NameDiscrepancyDialog: React.FC<NameDiscrepancyDialogProps> = ({ 
   isOpen, 
   onClose,
   licenseName,
-  medicalName
+  medicalName,
+  onAcknowledge
 }) => {
+  const [acknowledged, setAcknowledged] = useState(false);
+  
+  const handleAcknowledge = () => {
+    if (acknowledged) {
+      onAcknowledge();
+      onClose();
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-destructive">
+          <DialogTitle className="flex items-center text-amber-600">
             <AlertTriangle className="h-5 w-5 mr-2" />
             Name Discrepancy Detected
           </DialogTitle>
@@ -43,16 +56,30 @@ const NameDiscrepancyDialog: React.FC<NameDiscrepancyDialogProps> = ({
             </div>
           </div>
           
-          <div className="border-l-4 border-destructive bg-destructive/10 p-4">
+          <div className="border-l-4 border-amber-500 bg-amber-50 p-4">
             <p className="text-sm">
-              Please contact your local FSDO to resolve this discrepancy. Flyber Checklist Complete cannot certify that you are eligible for your checkride without this issue resolved.
+              If the student pilot certificate or pilot certificate has incorrect pilot legal name, please go to your IACRA's user profile and correct your name there, so the application (8710) will be correct. Your DPE will make a note in the IACRA about the incorrect name on the printed certificate and attach the ID.
             </p>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="acknowledge" 
+              checked={acknowledged} 
+              onCheckedChange={(checked) => setAcknowledged(checked as boolean)}
+            />
+            <Label htmlFor="acknowledge" className="text-sm">
+              I understand this discrepancy and will take appropriate action
+            </Label>
           </div>
         </div>
         
         <div className="flex justify-end">
-          <Button onClick={onClose}>
-            Understand, I'll Resolve This
+          <Button 
+            onClick={handleAcknowledge}
+            disabled={!acknowledged}
+          >
+            Acknowledge and Continue
           </Button>
         </div>
       </DialogContent>
