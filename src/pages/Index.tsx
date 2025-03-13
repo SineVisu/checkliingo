@@ -33,7 +33,7 @@ const initialData: ChecklistGroupData[] = [
     id: '4',
     title: 'Flight Proficiency FAR 61.107(b)(1)',
     items: [
-      { id: '401', title: 'Preflight preparation', isCompleted: false, category: 'proficiency' },
+      { id: '401', title: '(i) Preflight preparation', isCompleted: false, category: 'proficiency' },
       { id: '402', title: 'Preflight procedures', isCompleted: false, category: 'proficiency' },
       { id: '403', title: 'Airport and seaplane base operations', isCompleted: false, category: 'proficiency' },
       { id: '404', title: 'Takeoffs, landings, and go-arounds', isCompleted: false, category: 'proficiency' },
