@@ -26,6 +26,9 @@ export const useSubtaskHandling = ({
   // Check if item is an Aeronautical Knowledge task (in group 5)
   const isKnowledgeTask = item.id.startsWith('5') && !item.id.includes('-');
 
+  // Check if item is an Aeronautical Experience task (category experience)
+  const isExperienceTask = item.category === 'experience';
+
   const handleToggle = () => {
     // If the item has subtasks, toggle expansion instead of completing
     if (item.subtasks && item.subtasks.length > 0) {
@@ -51,6 +54,12 @@ export const useSubtaskHandling = ({
 
     // For knowledge tasks, allow direct completion but show dialog for entering data
     if (isKnowledgeTask) {
+      setDialogOpen(true);
+      return;
+    }
+
+    // For experience tasks, open the dialog for logbook page entry
+    if (isExperienceTask) {
       setDialogOpen(true);
       return;
     }

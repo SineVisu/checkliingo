@@ -5,6 +5,7 @@ import IssuanceDateDialog from './IssuanceDateDialog';
 import CertificateNumberDialog from './CertificateNumberDialog';
 import FTNDialog from './FTNDialog';
 import PreflightPreparationDialog from './PreflightPreparationDialog';
+import LogbookPageDialog from './LogbookPageDialog';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -15,7 +16,9 @@ interface DialogSelectorProps {
   onSaveCertificateNumber: (number: string) => void;
   onSaveFTN: (ftn: string) => void;
   onSavePreflight: (data: { date: Date; hours: string; pageNumber?: string }) => void;
+  onSaveLogbookPage: (pageNumber: string) => void;
   initialValue?: any;
+  category?: string;
 }
 
 const DialogSelector: React.FC<DialogSelectorProps> = ({
@@ -27,7 +30,9 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
   onSaveCertificateNumber,
   onSaveFTN,
   onSavePreflight,
-  initialValue
+  onSaveLogbookPage,
+  initialValue,
+  category
 }) => {
   if (itemTitle === 'Name as it appears on Certificate' || itemTitle === 'Name as it appears on Medical') {
     return (
@@ -88,6 +93,19 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
             ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
             : undefined
         }
+      />
+    );
+  }
+
+  // Show the LogbookPageDialog for Aeronautical Experience tasks
+  if (category === 'experience') {
+    return (
+      <LogbookPageDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        onSave={onSaveLogbookPage}
+        dialogTitle={itemTitle}
+        initialValue={typeof initialValue === 'string' ? initialValue : undefined}
       />
     );
   }

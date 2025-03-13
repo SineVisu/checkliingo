@@ -43,7 +43,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 
   // Dialog callbacks
   const { handleSaveLicenseName, handleSaveIssuanceDate, handleSaveCertificateNumber, 
-          handleSaveFTN, handleSavePreflight } = useDialogCallbacks(item, onToggleComplete);
+          handleSaveFTN, handleSavePreflight, handleSaveLogbookPage } = useDialogCallbacks(item, onToggleComplete);
 
   return (
     <>
@@ -86,7 +86,9 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         onSaveCertificateNumber={handleSaveCertificateNumber}
         onSaveFTN={handleSaveFTN}
         onSavePreflight={handleSavePreflight}
+        onSaveLogbookPage={handleSaveLogbookPage}
         initialValue={initialValueWithParent}
+        category={item.category}
       />
     </>
   );
@@ -185,12 +187,20 @@ const useDialogCallbacks = (item: ChecklistItemData, onToggleComplete: Checklist
     onToggleComplete(item.id, true, completeData);
   };
 
+  const handleSaveLogbookPage = (pageNumber: string) => {
+    toast.success(`Logbook page saved: ${pageNumber}`, {
+      description: `for ${item.title}`
+    });
+    onToggleComplete(item.id, true, pageNumber);
+  };
+
   return {
     handleSaveLicenseName,
     handleSaveIssuanceDate,
     handleSaveCertificateNumber,
     handleSaveFTN,
-    handleSavePreflight
+    handleSavePreflight,
+    handleSaveLogbookPage
   };
 };
 
