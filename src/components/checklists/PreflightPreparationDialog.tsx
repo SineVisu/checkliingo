@@ -120,6 +120,7 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
 
           <div className="grid gap-2">
             <Label htmlFor="pageNumber">Logbook Page Number</Label>
+            <p className="text-xs text-gray-500 -mt-1 mb-1">Please provide the page number where this training is logged</p>
             <div className="relative">
               <Input
                 id="pageNumber"
