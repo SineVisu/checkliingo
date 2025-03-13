@@ -22,6 +22,9 @@ export const useSubtaskHandling = ({
 }: SubtaskHandlingProps) => {
   // Check if item is a Flight Proficiency task (in group 4)
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
+  
+  // Check if item is an Aeronautical Knowledge task (in group 5)
+  const isKnowledgeTask = item.id.startsWith('5') && !item.id.includes('-');
 
   const handleToggle = () => {
     // If the item has subtasks, toggle expansion instead of completing
@@ -43,6 +46,12 @@ export const useSubtaskHandling = ({
         description: "Both Flight and Ground subtasks must be completed first",
       });
       setExpandedSubtasks(true);
+      return;
+    }
+
+    // For knowledge tasks, allow direct completion but show dialog for entering data
+    if (isKnowledgeTask) {
+      setDialogOpen(true);
       return;
     }
 
