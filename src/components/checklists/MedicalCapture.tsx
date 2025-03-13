@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Camera } from "lucide-react";
 import { toast } from "sonner";
-import { format } from 'date-fns';
-import CameraCapture from './CameraCapture';
 import ProcessingIndicator from './ProcessingIndicator';
-import { processMedicalCertificate } from '@/utils/medicalCertUtils';
+import { useMedicalImageProcessing } from '@/hooks/useMedicalImageProcessing';
+import MedicalImagePreview from './medical/MedicalImagePreview';
+import InitialCameraView from './medical/InitialCameraView';
+import ExtractedMedicalInfo from './medical/ExtractedMedicalInfo';
+import MedicalCaptureActions from './medical/MedicalCaptureActions';
 
 interface MedicalCaptureProps {
   isOpen: boolean;
@@ -18,44 +19,13 @@ interface MedicalCaptureProps {
 }
 
 const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave }) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [extractedData, setExtractedData] = useState<{ 
-    name: string | null; 
-    date: Date | null 
-  }>({
-    name: null,
-    date: null
-  });
-
-  const handleImageCapture = (imageDataUrl: string) => {
-    setImageUrl(imageDataUrl);
-    processMedicalImage(imageDataUrl);
-  };
-
-  const processMedicalImage = async (imageData: string) => {
-    setIsProcessing(true);
-    try {
-      const { name, date, validItems } = await processMedicalCertificate(imageData);
-      
-      setExtractedData({
-        name,
-        date
-      });
-      
-      // Show success/info toast based on extracted data
-      if (validItems.length > 0) {
-        toast.success(`Successfully detected: ${validItems.join(", ")}`);
-      } else {
-        toast.info("Couldn't detect valid information automatically. Please try again or enter manually.");
-      }
-    } catch (error) {
-      console.error("OCR processing error:", error);
-      toast.error("Error processing image");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  const {
+    imageUrl,
+    isProcessing,
+    extractedData,
+    handleImageCapture,
+    resetImageData
+  } = useMedicalImageProcessing();
 
   const handleSave = () => {
     // Prepare the data to save
@@ -74,12 +44,16 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
     onClose();
     
     // Clean up
-    setImageUrl(null);
-    setExtractedData({ name: null, date: null });
+    resetImageData();
+  };
+
+  const handleClose = () => {
+    onClose();
+    resetImageData();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Capture Medical Certificate</DialogTitle>
@@ -87,65 +61,27 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
         <div className="space-y-4 py-4">
           {imageUrl ? (
             <div className="space-y-2">
-              <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
-                <img 
-                  src={imageUrl} 
-                  alt="Medical Certificate" 
-                  className="h-full w-full object-contain" 
-                />
-              </div>
-              
-              {/* Show extracted information */}
-              <div className="space-y-3 mt-4">
-                <h3 className="text-sm font-medium">Extracted Information:</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Name:</span>
-                    <span className="font-medium">{extractedData.name || 'Not detected'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Date of Examination:</span>
-                    <span className="font-medium">
-                      {extractedData.date 
-                        ? format(extractedData.date, 'MMMM d, yyyy') 
-                        : 'Not detected'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <CameraCapture 
-                onImageCapture={handleImageCapture}
-                captureButtonText="Retake Photo"
-                showRetake={true}
+              <MedicalImagePreview 
+                imageUrl={imageUrl} 
+                onImageCapture={handleImageCapture} 
               />
+              
+              <ExtractedMedicalInfo extractedData={extractedData} />
             </div>
           ) : (
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground text-center">
-                Take a clear photo of your medical certificate to automatically extract your name
-                and examination date
-              </p>
-              
-              <CameraCapture 
-                onImageCapture={handleImageCapture}
-                captureButtonText="Capture Medical Certificate"
-              />
-            </div>
+            <InitialCameraView onImageCapture={handleImageCapture} />
           )}
 
           {isProcessing && <ProcessingIndicator message="Processing image..." />}
         </div>
         
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button 
-            onClick={handleSave}
-            disabled={isProcessing || (!extractedData.name && !extractedData.date)}
-          >
-            {imageUrl ? 'Save All' : 'Skip'}
-          </Button>
-        </div>
+        <MedicalCaptureActions 
+          onCancel={handleClose}
+          onSave={handleSave}
+          disabled={!extractedData.name && !extractedData.date}
+          isProcessing={isProcessing}
+          hasImage={!!imageUrl}
+        />
       </DialogContent>
     </Dialog>
   );
