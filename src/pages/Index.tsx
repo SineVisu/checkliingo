@@ -105,7 +105,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '408', 
-        title: 'Slow flight and stalls', 
+        title: '(viii) Slow flight and stalls', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
