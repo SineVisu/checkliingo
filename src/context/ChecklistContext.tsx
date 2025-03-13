@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { compareNames } from '@/utils/validation';
+import { compareNames, hasMiddleNameDiscrepancy } from '@/utils/validation';
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 
 interface ChecklistContextType {
@@ -9,10 +9,14 @@ interface ChecklistContextType {
   licenseName: string | undefined;
   medicalName: string | undefined;
   nameDiscrepancyDetected: boolean;
+  middleNameDiscrepancyDetected: boolean;
   showNameDiscrepancy: boolean;
+  showMiddleNameDiscrepancy: boolean;
   setShowNameDiscrepancy: (show: boolean) => void;
+  setShowMiddleNameDiscrepancy: (show: boolean) => void;
   checkNameDiscrepancy: () => void;
   acknowledgeNameDiscrepancy: () => void;
+  acknowledgeMiddleNameDiscrepancy: () => void;
 }
 
 export const ChecklistContext = createContext<ChecklistContextType>({
@@ -21,10 +25,14 @@ export const ChecklistContext = createContext<ChecklistContextType>({
   licenseName: undefined,
   medicalName: undefined,
   nameDiscrepancyDetected: false,
+  middleNameDiscrepancyDetected: false,
   showNameDiscrepancy: false,
+  showMiddleNameDiscrepancy: false,
   setShowNameDiscrepancy: () => {},
+  setShowMiddleNameDiscrepancy: () => {},
   checkNameDiscrepancy: () => {},
   acknowledgeNameDiscrepancy: () => {},
+  acknowledgeMiddleNameDiscrepancy: () => {},
 });
 
 interface ChecklistProviderProps {
@@ -38,6 +46,7 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
 }) => {
   const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
   const [showNameDiscrepancy, setShowNameDiscrepancy] = useState(false);
+  const [showMiddleNameDiscrepancy, setShowMiddleNameDiscrepancy] = useState(false);
   
   // Extract names from checklists
   const licenseName = checklists
@@ -48,20 +57,56 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     .find(group => group.id === '2')?.items
     .find(item => item.id === '201')?.value as string | undefined;
   
-  // Check if names match
+  // Check if names match or if there's a middle name discrepancy
   const nameDiscrepancyDetected = Boolean(
     licenseName && 
     medicalName && 
     !compareNames(licenseName, medicalName)
   );
+  
+  const middleNameDiscrepancyDetected = Boolean(
+    licenseName &&
+    medicalName &&
+    hasMiddleNameDiscrepancy(licenseName, medicalName)
+  );
 
   // This function will be called when either name changes
   const checkNameDiscrepancy = () => {
     if (licenseName && medicalName) {
-      // Both names are present, check for discrepancy
-      if (!compareNames(licenseName, medicalName)) {
-        // We have a discrepancy, show the dialog
+      // First check for middle name discrepancy
+      if (hasMiddleNameDiscrepancy(licenseName, medicalName)) {
+        // Middle name detected, show the middle name dialog
+        setShowMiddleNameDiscrepancy(true);
+        setShowNameDiscrepancy(false);
+        
+        // Mark both items as incomplete
+        setChecklists(prevChecklists => 
+          prevChecklists.map(group => {
+            if (group.id === '1') {
+              return {
+                ...group,
+                items: group.items.map(item => 
+                  item.id === '101' ? { ...item, isCompleted: false } : item
+                )
+              };
+            }
+            else if (group.id === '2') {
+              return {
+                ...group,
+                items: group.items.map(item => 
+                  item.id === '201' ? { ...item, isCompleted: false } : item
+                )
+              };
+            }
+            return group;
+          })
+        );
+      }
+      // Then check for general name discrepancy if no middle name issue
+      else if (!compareNames(licenseName, medicalName)) {
+        // We have a general discrepancy, show the dialog
         setShowNameDiscrepancy(true);
+        setShowMiddleNameDiscrepancy(false);
         
         // Also mark both items as incomplete
         setChecklists(prevChecklists => 
@@ -140,6 +185,35 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     // Close the dialog
     setShowNameDiscrepancy(false);
   };
+  
+  // Function to acknowledge the middle name discrepancy and mark tasks as complete
+  const acknowledgeMiddleNameDiscrepancy = () => {
+    // Mark both name items as complete despite the discrepancy
+    setChecklists(prevChecklists => 
+      prevChecklists.map(group => {
+        if (group.id === '1') {
+          return {
+            ...group,
+            items: group.items.map(item => 
+              item.id === '101' ? { ...item, isCompleted: true } : item
+            )
+          };
+        }
+        else if (group.id === '2') {
+          return {
+            ...group,
+            items: group.items.map(item => 
+              item.id === '201' ? { ...item, isCompleted: true } : item
+            )
+          };
+        }
+        return group;
+      })
+    );
+    
+    // Close the dialog
+    setShowMiddleNameDiscrepancy(false);
+  };
 
   // Check discrepancy whenever names change
   useEffect(() => {
@@ -152,10 +226,14 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     licenseName,
     medicalName,
     nameDiscrepancyDetected,
+    middleNameDiscrepancyDetected,
     showNameDiscrepancy,
+    showMiddleNameDiscrepancy,
     setShowNameDiscrepancy,
+    setShowMiddleNameDiscrepancy,
     checkNameDiscrepancy,
     acknowledgeNameDiscrepancy,
+    acknowledgeMiddleNameDiscrepancy,
   };
 
   return (

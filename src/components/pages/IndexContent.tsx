@@ -18,7 +18,11 @@ const IndexContent: React.FC = () => {
     licenseName,
     medicalName,
     showNameDiscrepancy,
-    setShowNameDiscrepancy
+    showMiddleNameDiscrepancy,
+    setShowNameDiscrepancy,
+    setShowMiddleNameDiscrepancy,
+    acknowledgeNameDiscrepancy,
+    acknowledgeMiddleNameDiscrepancy
   } = useContext(ChecklistContext);
 
   const handleCreateNewChecklist = () => {
@@ -133,13 +137,17 @@ const IndexContent: React.FC = () => {
         licenseCaptureOpen={licenseCaptureOpen}
         medicalCaptureOpen={medicalCaptureOpen}
         showNameDiscrepancy={showNameDiscrepancy}
+        showMiddleNameDiscrepancy={showMiddleNameDiscrepancy}
         licenseName={licenseName}
         medicalName={medicalName}
         onCloseLicenseCapture={() => setLicenseCaptureOpen(false)}
         onCloseMedicalCapture={() => setMedicalCaptureOpen(false)}
         onCloseNameDiscrepancy={() => setShowNameDiscrepancy(false)}
+        onCloseMiddleNameDiscrepancy={() => setShowMiddleNameDiscrepancy(false)}
         onLicenseCaptureComplete={handleLicenseCaptureComplete}
         onMedicalCaptureComplete={handleMedicalCaptureComplete}
+        onAcknowledgeNameDiscrepancy={acknowledgeNameDiscrepancy}
+        onAcknowledgeMiddleNameDiscrepancy={acknowledgeMiddleNameDiscrepancy}
       />
     </div>
   );
