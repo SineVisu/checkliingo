@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import ChecklistGroup from '@/components/checklists/ChecklistGroup';
 import ChecklistProgress from '@/components/checklists/ChecklistProgress';
@@ -72,7 +73,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
 
   const medicalGroup = checklists.find(group => group.id === '2');
   const showMedicalCaptureButton = medicalGroup && 
-    medicalGroup.items.filter(item => ['201', '202'].includes(item.id))
+    medicalGroup.items.filter(item => ['201'].includes(item.id))
     .every(item => !item.isCompleted);
 
   const getCategoryTitle = () => {

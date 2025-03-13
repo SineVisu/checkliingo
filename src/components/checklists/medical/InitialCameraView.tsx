@@ -11,7 +11,6 @@ const InitialCameraView: React.FC<InitialCameraViewProps> = ({ onImageCapture })
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground text-center">
         Take a clear photo of your medical certificate to automatically extract your name
-        and examination date
       </p>
       
       <CameraCapture 

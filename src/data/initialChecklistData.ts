@@ -1,3 +1,4 @@
+
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 
 export const initialChecklistData: ChecklistGroupData[] = [
@@ -14,8 +15,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
     id: '2',
     title: 'Pilot\'s Medical',
     items: [
-      { id: '201', title: 'Name as it appears on Medical', isCompleted: false, category: 'medical' },
-      { id: '202', title: 'Date of examination', isCompleted: false, category: 'medical' }
+      { id: '201', title: 'Name as it appears on Medical', isCompleted: false, category: 'medical' }
     ]
   },
   {

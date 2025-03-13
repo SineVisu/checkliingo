@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { format } from 'date-fns';
 
 interface ExtractedMedicalInfoProps {
   extractedData: {
@@ -17,14 +16,6 @@ const ExtractedMedicalInfo: React.FC<ExtractedMedicalInfoProps> = ({ extractedDa
         <div className="flex justify-between">
           <span className="text-muted-foreground">Name:</span>
           <span className="font-medium">{extractedData.name || 'Not detected'}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Date of Examination:</span>
-          <span className="font-medium">
-            {extractedData.date 
-              ? format(extractedData.date, 'MMMM d, yyyy') 
-              : 'Not detected'}
-          </span>
         </div>
       </div>
     </div>

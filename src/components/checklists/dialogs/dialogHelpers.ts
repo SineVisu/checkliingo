@@ -7,8 +7,7 @@ export const isLicenseOrMedicalNameDialog = (itemTitle: string): boolean => {
 };
 
 export const isDateDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'Date of Issuance' || 
-         itemTitle === 'Date of examination';
+  return itemTitle === 'Date of Issuance';
 };
 
 export const isCertificateNumberDialog = (itemTitle: string): boolean => {

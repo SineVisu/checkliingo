@@ -14,7 +14,6 @@ interface MedicalCaptureProps {
   onClose: () => void;
   onSave: (data: {
     name?: string;
-    date?: Date;
   }) => void;
 }
 
@@ -30,12 +29,11 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
   const handleSave = () => {
     // Prepare the data to save
     const dataToSave = {
-      name: extractedData.name || undefined,
-      date: extractedData.date || undefined
+      name: extractedData.name || undefined
     };
     
     // Check if we have any data to save
-    if (!dataToSave.name && !dataToSave.date) {
+    if (!dataToSave.name) {
       toast.error("No information was extracted from medical certificate. Please try again.");
       return;
     }
@@ -78,7 +76,7 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
         <MedicalCaptureActions 
           onCancel={handleClose}
           onSave={handleSave}
-          disabled={!extractedData.name && !extractedData.date}
+          disabled={!extractedData.name}
           isProcessing={isProcessing}
           hasImage={!!imageUrl}
         />
