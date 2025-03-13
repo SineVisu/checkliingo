@@ -65,7 +65,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '404', 
-        title: 'Takeoffs, landings, and go-arounds', 
+        title: '(iv) Takeoffs, landings, and go-arounds', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
