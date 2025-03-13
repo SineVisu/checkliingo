@@ -1,25 +1,34 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import DateSelector from '@/components/common/DateSelector';
-import { addMonths, isFuture, isAfter } from 'date-fns';
+import { addMonths, isFuture, isAfter, subYears } from 'date-fns';
 
 interface IssuanceDateDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (date: Date) => void;
   isMedical?: boolean;
+  initialDate?: Date;
 }
 
 const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ 
   isOpen, 
   onClose, 
   onSave,
-  isMedical = false
+  isMedical = false,
+  initialDate
 }) => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<Date | undefined>(initialDate);
   
+  // Update local state when initialDate changes
+  useEffect(() => {
+    if (initialDate) {
+      setDate(initialDate);
+    }
+  }, [initialDate]);
+
   const handleSave = () => {
     if (date) {
       onSave(date);
@@ -37,7 +46,7 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({
     
     if (isMedical) {
       // For medical certificates, disable dates older than 3 years
-      const threeYearsAgo = addMonths(today, -36);
+      const threeYearsAgo = subYears(today, 3);
       return isAfter(threeYearsAgo, date);
     } else {
       // Regular certificate logic (no additional restrictions)
@@ -60,6 +69,11 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({
             placeholder={isMedical ? "Select examination date" : "Select issuance date"}
             disabledDates={disabledDates}
           />
+          {isMedical && (
+            <p className="text-sm text-muted-foreground">
+              Please select a date within the past 3 years.
+            </p>
+          )}
         </div>
         <div className="flex justify-end">
           <Button type="button" onClick={handleSave} disabled={!date}>

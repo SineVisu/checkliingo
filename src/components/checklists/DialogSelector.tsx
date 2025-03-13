@@ -1,4 +1,3 @@
-
 import React from 'react';
 import LicenseNameDialog from './LicenseNameDialog';
 import IssuanceDateDialog from './IssuanceDateDialog';
@@ -50,12 +49,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
   
   if (itemTitle === 'Date of Issuance' || itemTitle === 'Date of Examination') {
     const isMedical = itemTitle === 'Date of Examination';
+    const initialDate = isMedical && initialValue instanceof Date ? initialValue : undefined;
+    
     return (
       <IssuanceDateDialog
         isOpen={isOpen}
         onClose={onClose}
         onSave={onSaveIssuanceDate}
         isMedical={isMedical}
+        initialDate={initialDate}
       />
     );
   }

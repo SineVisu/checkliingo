@@ -105,7 +105,7 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
         const threeYearsAgo = subYears(new Date(), 3);
         if (isAfter(threeYearsAgo, date) || isFuture(date)) {
           validDate = null;
-          toast.error("The examination date must be within the past 3 years.");
+          toast.error("The examination date must be within the past 3 years and cannot be in the future.");
         }
       }
       
@@ -220,6 +220,7 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
     const today = new Date();
     const threeYearsAgo = subYears(today, 3);
     
+    // Date must be within last 3 years and not in the future
     return !isAfter(threeYearsAgo, date) && !isFuture(date);
   };
 
@@ -238,7 +239,7 @@ const MedicalCapture: React.FC<MedicalCaptureProps> = ({ isOpen, onClose, onSave
     
     // Validate the date is within the past 3 years
     if (dataToSave.date && !validateDate(dataToSave.date)) {
-      toast.error("The examination date must be within the past 3 years.");
+      toast.error("The examination date must be within the past 3 years and not in the future.");
       return;
     }
     
