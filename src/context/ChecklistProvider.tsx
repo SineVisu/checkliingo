@@ -14,6 +14,7 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
   initialData 
 }) => {
   const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
+  const [filterCategory, setFilterCategory] = useState<string | null>(null);
   
   const nameDiscrepancyState = useNameDiscrepancy({ 
     checklists, 
@@ -23,6 +24,8 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
   const value = {
     checklists,
     setChecklists,
+    filterCategory,
+    setFilterCategory,
     ...nameDiscrepancyState
   };
 

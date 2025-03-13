@@ -23,8 +23,16 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
 }) => {
   const { 
     checklists, 
-    setChecklists, 
+    setChecklists,
+    filterCategory
   } = useContext(ChecklistContext);
+
+  // Filter checklists based on selected category
+  const filteredChecklists = filterCategory
+    ? checklists.filter(group => 
+        group.items.some(item => item.category === filterCategory)
+      )
+    : checklists;
 
   const handleToggleItem = (groupId: string, itemId: string, completed: boolean, value?: string | Date) => {
     setChecklists(prevChecklists => 
@@ -49,6 +57,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
     }
   };
 
+  // Calculate progress based on all tasks, not just filtered ones
   const totalTasks = checklists.reduce((acc, group) => acc + group.items.length, 0);
   const completedTasks = checklists.reduce(
     (acc, group) => acc + group.items.filter(item => item.isCompleted).length, 
@@ -69,28 +78,38 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
     medicalGroup.items.filter(item => ['201', '202'].includes(item.id))
     .every(item => !item.isCompleted);
 
+  // Display category title when filtering
+  const getCategoryTitle = () => {
+    if (filterCategory === 'proficiency') return 'Flight Proficiency FAR 61.107(b)(1)';
+    if (filterCategory === 'knowledge') return 'Aeronautical Knowledge FAR 61.105(b)';
+    if (filterCategory === 'identification') return 'Identification';
+    return 'FAA Private Pilot Practical Test // ASEL Checklist';
+  };
+
   return (
     <main className="flex-1 px-4 pt-4 pb-20 max-w-lg mx-auto w-full">
       <ChecklistHeader 
-        title="FAA Private Pilot Practical Test // ASEL Checklist"
+        title={getCategoryTitle()}
         completedTasks={completedTasks}
         totalTasks={totalTasks}
         streak={streak}
       />
       
-      {checklists.length > 0 ? (
+      {filteredChecklists.length > 0 ? (
         <>
           <ChecklistProgress progress={overallProgress} />
           
-          <CaptureButtons 
-            showLicenseCapture={showCaptureButton}
-            showMedicalCapture={showMedicalCaptureButton}
-            onCaptureLicense={onCaptureLicense}
-            onCaptureMedical={onCaptureMedical}
-          />
+          {!filterCategory && (
+            <CaptureButtons 
+              showLicenseCapture={showCaptureButton}
+              showMedicalCapture={showMedicalCaptureButton}
+              onCaptureLicense={onCaptureLicense}
+              onCaptureMedical={onCaptureMedical}
+            />
+          )}
           
           <div className="space-y-6">
-            {checklists.map(group => (
+            {filteredChecklists.map(group => (
               <ChecklistGroup 
                 key={group.id} 
                 group={group} 

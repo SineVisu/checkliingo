@@ -16,6 +16,8 @@ export interface ChecklistContextType {
   checkNameDiscrepancy: () => void;
   acknowledgeNameDiscrepancy: () => void;
   acknowledgeMiddleNameDiscrepancy: () => void;
+  filterCategory: string | null;
+  setFilterCategory: (category: string | null) => void;
 }
 
 export const defaultContextValue: ChecklistContextType = {
@@ -33,4 +35,6 @@ export const defaultContextValue: ChecklistContextType = {
   checkNameDiscrepancy: () => {},
   acknowledgeNameDiscrepancy: () => {},
   acknowledgeMiddleNameDiscrepancy: () => {},
+  filterCategory: null,
+  setFilterCategory: () => {},
 };

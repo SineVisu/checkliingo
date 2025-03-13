@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Home, List, Trophy, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,12 +8,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ChecklistContext } from '@/context/ChecklistContext';
 
 const Footer: React.FC = () => {
+  const { setFilterCategory } = useContext(ChecklistContext);
+
+  const handleFilterSelect = (category: string | null) => {
+    setFilterCategory(category);
+  };
+
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-10 glass-panel animate-slide-up border-t">
       <div className="flex items-center justify-around py-2">
-        <NavButton icon={<Home className="h-5 w-5" />} label="Home" active />
+        <NavButton 
+          icon={<Home className="h-5 w-5" />} 
+          label="Home" 
+          active 
+          onClick={() => handleFilterSelect(null)}
+        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -27,13 +39,22 @@ const Footer: React.FC = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-48">
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => handleFilterSelect('identification')}
+            >
               Identification
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => handleFilterSelect('proficiency')}
+            >
               Flight Proficiency FAR 61.107(b)(1)
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem 
+              className="cursor-pointer"
+              onClick={() => handleFilterSelect('knowledge')}
+            >
               Aeronautical Knowledge FAR 61.105(b)
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -49,15 +70,17 @@ interface NavButtonProps {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
+  onClick?: () => void;
 }
 
-const NavButton: React.FC<NavButtonProps> = ({ icon, label, active }) => {
+const NavButton: React.FC<NavButtonProps> = ({ icon, label, active, onClick }) => {
   return (
     <Button
       variant="ghost"
       className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all ${
         active ? 'text-primary' : 'text-muted-foreground'
       }`}
+      onClick={onClick}
     >
       <div className={`${active ? 'animate-ping-small' : ''}`}>
         {icon}
