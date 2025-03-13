@@ -23,115 +23,178 @@ interface DialogSelectorProps {
   category?: string;
 }
 
-const DialogSelector: React.FC<DialogSelectorProps> = ({
-  itemTitle,
-  isOpen,
-  onClose,
-  onSaveLicenseName,
-  onSaveIssuanceDate,
-  onSaveCertificateNumber,
-  onSaveFTN,
-  onSavePreflight,
-  onSaveLogbookPage,
-  onSaveKnowledgeTestResults,
-  initialValue,
-  category
-}) => {
-  if (itemTitle === 'Name as it appears on Certificate' || itemTitle === 'Name as it appears on Medical') {
-    return (
-      <LicenseNameDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSaveLicenseName}
-        dialogTitle={itemTitle}
-      />
-    );
+const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
+  const {
+    itemTitle,
+    isOpen,
+    onClose,
+    initialValue,
+    category
+  } = props;
+  
+  // License Name or Medical Name Dialog
+  if (isLicenseOrMedicalNameDialog(itemTitle)) {
+    return renderLicenseNameDialog(props);
   }
   
-  if (itemTitle === 'Date of Issuance' || itemTitle === 'Date of Examination') {
-    const isMedical = itemTitle === 'Date of Examination';
-    const initialDate = isMedical && initialValue instanceof Date ? initialValue : undefined;
-    
-    return (
-      <IssuanceDateDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSaveIssuanceDate}
-        isMedical={isMedical}
-        initialDate={initialDate}
-      />
-    );
+  // Issuance Date or Medical Examination Date Dialog
+  if (isIssuanceOrExaminationDateDialog(itemTitle)) {
+    return renderIssuanceDateDialog(props);
   }
 
+  // Certificate Number Dialog
   if (itemTitle === 'Certificate Number') {
-    return (
-      <CertificateNumberDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSaveCertificateNumber}
-        dialogTitle={itemTitle}
-      />
-    );
+    return renderCertificateNumberDialog(props);
   }
 
+  // FTN Dialog
   if (itemTitle === 'FTN# (FAA Tracking Number)') {
-    return (
-      <FTNDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSaveFTN}
-        initialValue={initialValue as string}
-        dialogTitle={itemTitle}
-      />
-    );
+    return renderFTNDialog(props);
   }
 
+  // Knowledge Test Results Dialog
   if (itemTitle === 'PAR Knowledge Test Results') {
-    return (
-      <KnowledgeTestResultsDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSaveKnowledgeTestResults}
-        initialValues={
-          typeof initialValue === 'object' && !(initialValue instanceof Date)
-            ? initialValue as { score?: string; date?: Date; pltCodes?: string[] }
-            : undefined
-        }
-      />
-    );
+    return renderKnowledgeTestResultsDialog(props);
   }
 
+  // Flight or Ground Training Dialog
   if (itemTitle === 'Flight' || itemTitle === 'Ground') {
-    const dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
-    
-    return (
-      <PreflightPreparationDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSavePreflight}
-        dialogTitle={dialogTitle}
-        initialValues={
-          typeof initialValue === 'object' && !(initialValue instanceof Date)
-            ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
-            : undefined
-        }
-      />
-    );
+    return renderPreflightPreparationDialog(props);
   }
 
+  // Experience/Logbook Page Dialog
   if (category === 'experience') {
-    return (
-      <LogbookPageDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        onSave={onSaveLogbookPage}
-        dialogTitle={itemTitle}
-        initialValue={typeof initialValue === 'string' ? initialValue : undefined}
-      />
-    );
+    return renderLogbookPageDialog(props);
   }
 
   return null;
+};
+
+// Helper function to check if dialog is for license or medical name
+const isLicenseOrMedicalNameDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'Name as it appears on Certificate' || 
+         itemTitle === 'Name as it appears on Medical';
+};
+
+// Helper function to check if dialog is for issuance or examination date
+const isIssuanceOrExaminationDateDialog = (itemTitle: string): boolean => {
+  return itemTitle === 'Date of Issuance' || 
+         itemTitle === 'Date of Examination';
+};
+
+// Render License Name Dialog
+const renderLicenseNameDialog = (props: DialogSelectorProps) => {
+  const { itemTitle, isOpen, onClose, onSaveLicenseName } = props;
+  
+  return (
+    <LicenseNameDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSaveLicenseName}
+      dialogTitle={itemTitle}
+    />
+  );
+};
+
+// Render Issuance Date Dialog
+const renderIssuanceDateDialog = (props: DialogSelectorProps) => {
+  const { itemTitle, isOpen, onClose, onSaveIssuanceDate, initialValue } = props;
+  
+  const isMedical = itemTitle === 'Date of Examination';
+  const initialDate = isMedical && initialValue instanceof Date ? initialValue : undefined;
+  
+  return (
+    <IssuanceDateDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSaveIssuanceDate}
+      isMedical={isMedical}
+      initialDate={initialDate}
+    />
+  );
+};
+
+// Render Certificate Number Dialog
+const renderCertificateNumberDialog = (props: DialogSelectorProps) => {
+  const { itemTitle, isOpen, onClose, onSaveCertificateNumber } = props;
+  
+  return (
+    <CertificateNumberDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSaveCertificateNumber}
+      dialogTitle={itemTitle}
+    />
+  );
+};
+
+// Render FTN Dialog
+const renderFTNDialog = (props: DialogSelectorProps) => {
+  const { itemTitle, isOpen, onClose, onSaveFTN, initialValue } = props;
+  
+  return (
+    <FTNDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSaveFTN}
+      initialValue={initialValue as string}
+      dialogTitle={itemTitle}
+    />
+  );
+};
+
+// Render Knowledge Test Results Dialog
+const renderKnowledgeTestResultsDialog = (props: DialogSelectorProps) => {
+  const { isOpen, onClose, onSaveKnowledgeTestResults, initialValue } = props;
+  
+  return (
+    <KnowledgeTestResultsDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSaveKnowledgeTestResults}
+      initialValues={
+        typeof initialValue === 'object' && !(initialValue instanceof Date)
+          ? initialValue as { score?: string; date?: Date; pltCodes?: string[] }
+          : undefined
+      }
+    />
+  );
+};
+
+// Render Preflight Preparation Dialog
+const renderPreflightPreparationDialog = (props: DialogSelectorProps) => {
+  const { itemTitle, isOpen, onClose, onSavePreflight, initialValue } = props;
+  
+  const dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
+  
+  return (
+    <PreflightPreparationDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSavePreflight}
+      dialogTitle={dialogTitle}
+      initialValues={
+        typeof initialValue === 'object' && !(initialValue instanceof Date)
+          ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
+          : undefined
+      }
+    />
+  );
+};
+
+// Render Logbook Page Dialog
+const renderLogbookPageDialog = (props: DialogSelectorProps) => {
+  const { itemTitle, isOpen, onClose, onSaveLogbookPage, initialValue } = props;
+  
+  return (
+    <LogbookPageDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onSave={onSaveLogbookPage}
+      dialogTitle={itemTitle}
+      initialValue={typeof initialValue === 'string' ? initialValue : undefined}
+    />
+  );
 };
 
 export default DialogSelector;
