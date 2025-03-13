@@ -6,6 +6,7 @@ import CertificateNumberDialog from './CertificateNumberDialog';
 import FTNDialog from './FTNDialog';
 import PreflightPreparationDialog from './PreflightPreparationDialog';
 import LogbookPageDialog from './LogbookPageDialog';
+import KnowledgeTestResultsDialog from './KnowledgeTestResultsDialog';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -17,6 +18,7 @@ interface DialogSelectorProps {
   onSaveFTN: (ftn: string) => void;
   onSavePreflight: (data: { date: Date; hours: string; pageNumber?: string }) => void;
   onSaveLogbookPage: (pageNumber: string) => void;
+  onSaveKnowledgeTestResults: (data: { score: string; date: Date }) => void;
   initialValue?: any;
   category?: string;
 }
@@ -31,6 +33,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
   onSaveFTN,
   onSavePreflight,
   onSaveLogbookPage,
+  onSaveKnowledgeTestResults,
   initialValue,
   category
 }) => {
@@ -74,6 +77,21 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
         onSave={onSaveFTN}
         initialValue={initialValue as string}
         dialogTitle={itemTitle}
+      />
+    );
+  }
+
+  if (itemTitle === 'PAR Knowledge Test Results') {
+    return (
+      <KnowledgeTestResultsDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        onSave={onSaveKnowledgeTestResults}
+        initialValues={
+          typeof initialValue === 'object' && !(initialValue instanceof Date)
+            ? initialValue as { score?: string; date?: Date }
+            : undefined
+        }
       />
     );
   }

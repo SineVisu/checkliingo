@@ -66,12 +66,20 @@ export const useDialogCallbacks = ({ item, onToggleComplete }: UseDialogCallback
     onToggleComplete(item.id, true, pageNumber);
   };
 
+  const handleSaveKnowledgeTestResults = (data: { score: string; date: Date }) => {
+    toast.success(`Knowledge test results saved: ${data.score}%`, {
+      description: `Test date: ${format(data.date, 'MMMM d, yyyy')}`
+    });
+    onToggleComplete(item.id, true, data);
+  };
+
   return {
     handleSaveLicenseName,
     handleSaveIssuanceDate,
     handleSaveCertificateNumber,
     handleSaveFTN,
     handleSavePreflight,
-    handleSaveLogbookPage
+    handleSaveLogbookPage,
+    handleSaveKnowledgeTestResults
   };
 };

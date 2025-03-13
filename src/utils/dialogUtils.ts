@@ -40,6 +40,14 @@ export const getInitialValueWithParent = (item: ChecklistItemData) => {
       parentTaskTitle: item.title
     };
   }
+  
+  // Special case for Knowledge Test Results to preserve score and date
+  if (item.id === '515' && typeof item.value === 'object' && item.value !== null) {
+    initialValueWithParent = {
+      score: (item.value as any).score,
+      date: (item.value as any).date
+    };
+  }
 
   return initialValueWithParent;
 };

@@ -171,7 +171,8 @@ const initialData: ChecklistGroupData[] = [
       { id: '511', title: '(11) Principles of aerodynamics, powerplants and aircraft systems', isCompleted: false, category: 'knowledge' },
       { id: '512', title: '(12) Stall awareness, spin entry, spins, and spin recovery techniques', isCompleted: false, category: 'knowledge' },
       { id: '513', title: '(13) Aeronautical decision making and judgment', isCompleted: false, category: 'knowledge' },
-      { id: '514', title: '(14) Preflight action', isCompleted: false, category: 'knowledge' }
+      { id: '514', title: '(14) Preflight action', isCompleted: false, category: 'knowledge' },
+      { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
   {
