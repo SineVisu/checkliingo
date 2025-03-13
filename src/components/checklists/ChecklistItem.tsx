@@ -121,16 +121,30 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   }, [item.subtasks, item.isCompleted]);
 
   // If this is a subtask of a Flight Proficiency task, pass the parent task title
-  const initialValueWithParent = item.title === 'Flight' || item.title === 'Ground'
-    ? { ...item.value, parentTaskTitle: item.id.split('-')[0].length === 1 ? null : 
-        // Find the parent task title from the ID
-        (() => {
-          const parentId = item.id.split('-')[0];
-          const parentTask = document.querySelector(`[data-task-id="${parentId}"]`);
-          return parentTask?.textContent?.trim() || null;
-        })()
+  let initialValueWithParent = item.value;
+
+  if (item.title === 'Flight' || item.title === 'Ground') {
+    // Start with an empty object if value isn't an object
+    const baseObject = typeof item.value === 'object' && item.value !== null && !(item.value instanceof Date)
+      ? { ...item.value as object } 
+      : {};
+    
+    // Find the parent task title
+    let parentTaskTitle = null;
+    if (item.id.includes('-')) {
+      const parentId = item.id.split('-')[0];
+      const parentTaskElements = document.querySelectorAll(`[data-task-id="${parentId}"]`);
+      if (parentTaskElements.length > 0) {
+        const element = parentTaskElements[0];
+        parentTaskTitle = element.textContent?.trim() || null;
+      }
     }
-    : item.value;
+    
+    initialValueWithParent = {
+      ...baseObject,
+      parentTaskTitle: parentTaskTitle
+    };
+  }
 
   return (
     <>
