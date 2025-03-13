@@ -55,7 +55,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '403', 
-        title: 'Airport and seaplane base operations', 
+        title: '(iii) Airport and seaplane base operations', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
