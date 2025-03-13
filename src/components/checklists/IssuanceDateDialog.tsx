@@ -1,15 +1,12 @@
-
 import React, { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { Camera, Loader2, CalendarIcon } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { createWorker } from 'tesseract.js';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import DateSelector from '@/components/common/DateSelector';
 
 interface IssuanceDateDialogProps {
   isOpen: boolean;
@@ -28,7 +25,6 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
 
   const handleCapture = async () => {
     try {
-      // Request camera access
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { facingMode: 'environment' } 
       });
@@ -55,18 +51,14 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
     
     if (!context) return;
     
-    // Set canvas dimensions to match video
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
-    // Draw the video frame to the canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Convert to image URL
     const imageDataUrl = canvas.toDataURL('image/jpeg');
     setImageUrl(imageDataUrl);
     
-    // Stop the camera stream
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
@@ -74,7 +66,6 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
     
     setShowCamera(false);
     
-    // Process the image with OCR
     processImageWithOCR(imageDataUrl);
   };
 
@@ -86,10 +77,8 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
       const result = await worker.recognize(imageData);
       console.log("OCR Result:", result);
       
-      // Extract the text
       const extractedText = result.data.text;
       
-      // Try to find date patterns
       const extractedDate = extractDateFromText(extractedText);
       
       if (extractedDate) {
@@ -109,15 +98,10 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
   };
 
   const extractDateFromText = (text: string): Date | null => {
-    // Common date formats: MM/DD/YYYY, MM-DD-YYYY, Month DD, YYYY
     const datePatterns = [
-      // MM/DD/YYYY or MM-DD-YYYY
       /\b(0?[1-9]|1[0-2])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-](19|20)\d{2}\b/g,
-      // Month DD, YYYY
       /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(0?[1-9]|[12][0-9]|3[01])(st|nd|rd|th)?,\s+(19|20)\d{2}\b/gi,
-      // DD/MM/YYYY (international format)
       /\b(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[0-2])[\/\-](19|20)\d{2}\b/g,
-      // Common license patterns
       /ISSUE\s*DATE\s*:?\s*(0?[1-9]|1[0-2])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-](19|20)\d{2}/i,
       /DATE\s*ISSUED\s*:?\s*(0?[1-9]|1[0-2])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-](19|20)\d{2}/i
     ];
@@ -125,30 +109,21 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
     for (const pattern of datePatterns) {
       const matches = text.match(pattern);
       if (matches && matches.length > 0) {
-        // Try to parse the matched date
-        try {
-          // Extract just the date part from the match
-          let dateString = matches[0];
-          
-          // Remove any text before the actual date for patterns like "ISSUE DATE: MM/DD/YYYY"
-          if (dateString.includes(":")) {
-            dateString = dateString.split(":")[1].trim();
-          }
-          
-          // Try to parse with Date.parse
-          const parsedDate = new Date(dateString);
-          if (!isNaN(parsedDate.getTime())) {
-            return parsedDate;
-          }
-          
-          // Alternative parsing for MM/DD/YYYY format
-          const mmddyyyy = dateString.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-          if (mmddyyyy) {
-            const [, month, day, year] = mmddyyyy;
-            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-          }
-        } catch (e) {
-          console.error("Date parsing error:", e);
+        let dateString = matches[0];
+        
+        if (dateString.includes(":")) {
+          dateString = dateString.split(":")[1].trim();
+        }
+        
+        const parsedDate = new Date(dateString);
+        if (!isNaN(parsedDate.getTime())) {
+          return parsedDate;
+        }
+        
+        const mmddyyyy = dateString.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+        if (mmddyyyy) {
+          const [, month, day, year] = mmddyyyy;
+          return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         }
       }
     }
@@ -165,7 +140,6 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
     onSave(date);
     onClose();
     
-    // Clean up
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
@@ -176,7 +150,6 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
   };
 
   const handleClose = () => {
-    // Clean up resources when dialog is closed
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
@@ -195,29 +168,11 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
         <div className="space-y-4 py-4">
           <div className="flex flex-col gap-4">
             <Label htmlFor="issuanceDate">Date (Month, Day, Year)</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "MMMM d, yyyy") : <span>Select date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                  className="pointer-events-auto p-3"
-                />
-              </PopoverContent>
-            </Popover>
+            <DateSelector
+              date={date}
+              onDateChange={setDate}
+              placeholder="Select date"
+            />
           </div>
           
           {showCamera ? (
@@ -273,7 +228,6 @@ const IssuanceDateDialog: React.FC<IssuanceDateDialogProps> = ({ isOpen, onClose
             </div>
           )}
 
-          {/* Hidden canvas for processing the image */}
           <canvas ref={canvasRef} className="hidden" />
         </div>
         

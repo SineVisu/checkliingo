@@ -1,17 +1,14 @@
 
 import React, { useEffect } from 'react';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon, BookText } from 'lucide-react';
+import { BookText } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PLTCodesInput from './PLTCodesInput';
+import DateSelector from '@/components/common/DateSelector';
 
 // Define PLT code format validation
 const pltCodeSchema = z.string().regex(/^PLT\d{3}$/, "Must be in format PLT followed by 3 digits");
@@ -97,32 +94,16 @@ const KnowledgeTestResultsForm: React.FC<KnowledgeTestResultsFormProps> = ({
             <FormItem className="space-y-2">
               <FormLabel>Test Date</FormLabel>
               <FormControl>
-                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                      type="button"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? format(field.value, 'PPP') : <span>Select test date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={(date) => {
-                        field.onChange(date);
-                        setCalendarOpen(false);
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <DateSelector
+                  date={field.value}
+                  onDateChange={(date) => {
+                    field.onChange(date);
+                    setCalendarOpen(false);
+                  }}
+                  placeholder="Select test date"
+                  isOpen={calendarOpen}
+                  onOpenChange={setCalendarOpen}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
