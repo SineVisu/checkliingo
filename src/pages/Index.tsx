@@ -115,7 +115,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '409', 
-        title: 'Basic instrument maneuvers', 
+        title: '(ix) Basic instrument maneuvers', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
