@@ -38,6 +38,9 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   // Get initial value for the dialog
   const initialValueWithParent = getInitialValueWithParent(item);
 
+  // Check if item is an Aeronautical Knowledge task (in group 5)
+  const isKnowledgeTask = item.id.startsWith('5') && !item.id.includes('-');
+
   // Dialog callbacks
   const { handleSaveLicenseName, handleSaveIssuanceDate, handleSaveCertificateNumber, 
           handleSaveFTN, handleSavePreflight } = useDialogCallbacks(item, onToggleComplete);
@@ -92,7 +95,8 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 // Helper function to get the initial value for dialog
 const getInitialValueWithParent = (item: ChecklistItemData) => {
   let initialValueWithParent = item.value;
-
+  
+  // Check if it's a Flight or Ground task
   if (item.title === 'Flight' || item.title === 'Ground') {
     // Start with an empty object if value isn't an object
     const baseObject = typeof item.value === 'object' && item.value !== null && !(item.value instanceof Date)
@@ -115,6 +119,18 @@ const getInitialValueWithParent = (item: ChecklistItemData) => {
       parentTaskTitle: parentTaskTitle
     };
   }
+  
+  // Handle Aeronautical Knowledge tasks
+  if (item.id.startsWith('5') && !item.id.includes('-')) {
+    const baseObject = typeof item.value === 'object' && item.value !== null && !(item.value instanceof Date)
+      ? { ...item.value as object } 
+      : {};
+    
+    initialValueWithParent = {
+      ...baseObject,
+      parentTaskTitle: item.title
+    };
+  }
 
   return initialValueWithParent;
 };
@@ -125,6 +141,8 @@ const useDialogCallbacks = (item: ChecklistItemData, onToggleComplete: Checklist
   
   // Check if item is a Flight Proficiency task (in group 4)
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
+  // Check if item is an Aeronautical Knowledge task (in group 5)
+  const isKnowledgeTask = item.id.startsWith('5');
 
   const handleSaveLicenseName = (name: string) => {
     toast.success(`Certificate name saved: ${name}`);
@@ -157,9 +175,11 @@ const useDialogCallbacks = (item: ChecklistItemData, onToggleComplete: Checklist
     
     // Add parent task title to the data for displaying in dialog title
     const parentItem = isFlightProficiencyTask ? item : null;
+    const knowledgeParentTitle = isKnowledgeTask ? item.title : null;
+    
     const completeData = {
       ...data,
-      parentTaskTitle: parentItem?.title
+      parentTaskTitle: knowledgeParentTitle || (parentItem?.title || null)
     };
     
     onToggleComplete(item.id, true, completeData);
