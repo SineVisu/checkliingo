@@ -35,6 +35,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         onSave={onSaveLicenseName}
+        dialogTitle={itemTitle}
       />
     );
   }
@@ -45,6 +46,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         onSave={onSaveIssuanceDate}
+        dialogTitle={itemTitle}
       />
     );
   }
@@ -55,6 +57,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         onSave={onSaveCertificateNumber}
+        dialogTitle={itemTitle}
       />
     );
   }
@@ -66,20 +69,25 @@ const DialogSelector: React.FC<DialogSelectorProps> = ({
         onClose={onClose}
         onSave={onSaveFTN}
         initialValue={initialValue as string}
+        dialogTitle={itemTitle}
       />
     );
   }
 
   // Use PreflightPreparationDialog for Flight and Ground subtasks in any Flight Proficiency task
   if (itemTitle === 'Flight' || itemTitle === 'Ground') {
+    const parentTask = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
+    const dialogTitle = `${parentTask} for ${initialValue?.parentTaskTitle || 'Flight Proficiency'}`;
+    
     return (
       <PreflightPreparationDialog
         isOpen={isOpen}
         onClose={onClose}
         onSave={onSavePreflight}
+        dialogTitle={dialogTitle}
         initialValues={
           typeof initialValue === 'object' && !(initialValue instanceof Date)
-            ? initialValue as { date?: Date; hours?: string; pageNumber?: string }
+            ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
             : undefined
         }
       />

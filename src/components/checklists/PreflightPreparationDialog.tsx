@@ -25,7 +25,8 @@ interface PreflightPreparationDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: { date: Date; hours: string; pageNumber?: string }) => void;
-  initialValues?: { date?: Date; hours?: string; pageNumber?: string };
+  initialValues?: { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string };
+  dialogTitle?: string;
 }
 
 const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
@@ -33,6 +34,7 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
   onClose,
   onSave,
   initialValues,
+  dialogTitle = "Preflight Preparation"
 }) => {
   const [date, setDate] = useState<Date | undefined>(initialValues?.date);
   const [hours, setHours] = useState<string>(initialValues?.hours || '');
@@ -69,9 +71,9 @@ const PreflightPreparationDialog: React.FC<PreflightPreparationDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Preflight Preparation Details</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>
-            Enter the date of completion and hours for preflight preparation.
+            Enter the date of completion and hours for this training.
           </DialogDescription>
         </DialogHeader>
 

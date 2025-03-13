@@ -12,9 +12,15 @@ interface LicenseNameDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (name: string) => void;
+  dialogTitle?: string;
 }
 
-const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, onSave }) => {
+const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSave,
+  dialogTitle = "Enter Certificate Name" 
+}) => {
   const [licenseName, setLicenseName] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -192,7 +198,7 @@ const LicenseNameDialog: React.FC<LicenseNameDialogProps> = ({ isOpen, onClose, 
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enter Certificate Name</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="flex flex-col gap-4">

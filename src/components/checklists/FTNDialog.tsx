@@ -10,9 +10,16 @@ interface FTNDialogProps {
   onClose: () => void;
   onSave: (ftn: string) => void;
   initialValue?: string;
+  dialogTitle?: string;
 }
 
-const FTNDialog: React.FC<FTNDialogProps> = ({ isOpen, onClose, onSave, initialValue = '' }) => {
+const FTNDialog: React.FC<FTNDialogProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSave, 
+  initialValue = '',
+  dialogTitle = "FTN# (FAA Tracking Number)"
+}) => {
   const [ftn, setFtn] = useState(initialValue);
 
   const handleSave = () => {
@@ -33,7 +40,7 @@ const FTNDialog: React.FC<FTNDialogProps> = ({ isOpen, onClose, onSave, initialV
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enter FTN# (FAA Tracking Number)</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
         
         <div className="py-4">

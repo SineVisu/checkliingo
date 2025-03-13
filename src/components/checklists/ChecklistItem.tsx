@@ -14,13 +14,13 @@ export interface ChecklistItemData {
   title: string;
   isCompleted: boolean;
   category?: string;
-  value?: string | Date | { date?: Date; hours?: string; pageNumber?: string };
+  value?: string | Date | { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string };
   subtasks?: ChecklistItemData[];
 }
 
 interface ChecklistItemProps {
   item: ChecklistItemData;
-  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string; pageNumber?: string }) => void;
+  onToggleComplete: (id: string, completed: boolean, value?: string | Date | { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }) => void;
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
@@ -90,7 +90,15 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   const handleSavePreflight = (data: { date: Date; hours: string; pageNumber?: string }) => {
     const pageInfo = data.pageNumber ? ` - Page: ${data.pageNumber}` : '';
     toast.success(`${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
-    onToggleComplete(item.id, true, data);
+    
+    // Add parent task title to the data for displaying in dialog title
+    const parentItem = isFlightProficiencyTask ? item : null;
+    const completeData = {
+      ...data,
+      parentTaskTitle: parentItem?.title
+    };
+    
+    onToggleComplete(item.id, true, completeData);
   };
 
   // Check if all subtasks are completed
@@ -112,12 +120,25 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
     }
   }, [item.subtasks, item.isCompleted]);
 
+  // If this is a subtask of a Flight Proficiency task, pass the parent task title
+  const initialValueWithParent = item.title === 'Flight' || item.title === 'Ground'
+    ? { ...item.value, parentTaskTitle: item.id.split('-')[0].length === 1 ? null : 
+        // Find the parent task title from the ID
+        (() => {
+          const parentId = item.id.split('-')[0];
+          const parentTask = document.querySelector(`[data-task-id="${parentId}"]`);
+          return parentTask?.textContent?.trim() || null;
+        })()
+    }
+    : item.value;
+
   return (
     <>
       <div 
         className={`bg-white rounded-xl p-4 mb-3 task-shadow flex items-center animate-scale transition-all duration-300 ${
           animating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
         }`}
+        data-task-id={item.id}
       >
         <div className="flex-1 flex items-center">
           <button 
@@ -190,7 +211,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
         onSaveCertificateNumber={handleSaveCertificateNumber}
         onSaveFTN={handleSaveFTN}
         onSavePreflight={handleSavePreflight}
-        initialValue={item.value}
+        initialValue={initialValueWithParent}
       />
     </>
   );

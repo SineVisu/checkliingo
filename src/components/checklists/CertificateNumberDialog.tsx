@@ -12,9 +12,15 @@ interface CertificateNumberDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (certificateNumber: string) => void;
+  dialogTitle?: string;
 }
 
-const CertificateNumberDialog: React.FC<CertificateNumberDialogProps> = ({ isOpen, onClose, onSave }) => {
+const CertificateNumberDialog: React.FC<CertificateNumberDialogProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSave,
+  dialogTitle = "Certificate Number"
+}) => {
   const [certificateNumber, setCertificateNumber] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -172,7 +178,7 @@ const CertificateNumberDialog: React.FC<CertificateNumberDialogProps> = ({ isOpe
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Enter Certificate Number</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="flex flex-col gap-4">
