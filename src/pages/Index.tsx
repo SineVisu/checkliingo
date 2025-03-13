@@ -84,7 +84,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '406', 
-        title: 'Ground reference maneuvers', 
+        title: '(vi) Ground reference maneuvers', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
