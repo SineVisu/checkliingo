@@ -1,3 +1,4 @@
+
 import React from 'react';
 import IndexContent from '@/components/pages/IndexContent';
 import { ChecklistProvider } from '@/context/ChecklistContext';
@@ -94,7 +95,7 @@ const initialData: ChecklistGroupData[] = [
       },
       { 
         id: '407', 
-        title: 'Navigation', 
+        title: '(vii) Navigation', 
         isCompleted: false, 
         category: 'proficiency',
         subtasks: [
