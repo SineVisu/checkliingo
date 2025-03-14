@@ -60,7 +60,12 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
   }
 
   if (isNTSBAccidentReportingDialog(itemTitle)) {
-    return <NTSBAccidentReportingDialogWrapper {...props} />;
+    return <NTSBAccidentReportingDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSave={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
   }
 
   if (isAeronauticalKnowledgeFARDialog(itemTitle) || isTrainingDialog(itemTitle)) {
