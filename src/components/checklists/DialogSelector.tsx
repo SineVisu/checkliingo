@@ -17,7 +17,8 @@ import {
   isDensityAltitudeDialog,
   isWeightBalanceComputationsDialog,
   isAerodynamicsPowerplantsDialog,
-  isStallAwarenessDialog
+  isStallAwarenessDialog,
+  isAeronauticalDecisionMakingDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -36,6 +37,7 @@ import DensityAltitudeDialogWrapper from './dialogs/DensityAltitudeDialogWrapper
 import WeightBalanceComputationsDialogWrapper from './dialogs/WeightBalanceComputationsDialogWrapper';
 import AerodynamicsPowerplantsDialogWrapper from './dialogs/AerodynamicsPowerplantsDialogWrapper';
 import StallAwarenessDialogWrapper from './dialogs/StallAwarenessDialogWrapper';
+import AeronauticalDecisionMakingDialogWrapper from './dialogs/AeronauticalDecisionMakingDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -55,7 +57,6 @@ interface DialogSelectorProps {
 const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
   const { itemTitle, category } = props;
   
-  // Determine which dialog to render based on item title and category
   if (isLicenseOrMedicalNameDialog(itemTitle)) {
     return <LicenseNameDialogWrapper {...props} />;
   }
@@ -159,6 +160,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
   
   if (isStallAwarenessDialog(itemTitle)) {
     return <StallAwarenessDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSavePreflight={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
+  }
+
+  if (isAeronauticalDecisionMakingDialog(itemTitle)) {
+    return <AeronauticalDecisionMakingDialogWrapper 
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSavePreflight={props.onSavePreflight}

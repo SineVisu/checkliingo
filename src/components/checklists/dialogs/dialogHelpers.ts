@@ -73,3 +73,6 @@ export const isStallAwarenessDialog = (itemTitle: string): boolean => {
   return itemTitle === "(11) Stall awareness, spin entry, spins, and spin recovery techniques";
 };
 
+export const isAeronauticalDecisionMakingDialog = (itemTitle: string): boolean => {
+  return itemTitle === "(12) Aeronautical decision making and judgment";
+};

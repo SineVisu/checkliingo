@@ -57,6 +57,9 @@ export const useSubtaskHandling = ({
   
   // Check if it's the Stall Awareness task
   const isStallAwarenessTask = item.id === '610';
+  
+  // Check if it's the Aeronautical Decision Making task
+  const isAeronauticalDecisionMakingTask = item.id === '611';
 
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
@@ -79,7 +82,8 @@ export const useSubtaskHandling = ({
          '(8) Effects of density altitude on takeoff and climb performance',
          '(9) Weight and balance computations',
          '(10) Principles of aerodynamics, powerplants, and aircraft systems',
-         '(11) Stall awareness, spin entry, spins, and spin recovery techniques'
+         '(11) Stall awareness, spin entry, spins, and spin recovery techniques',
+         '(12) Aeronautical decision making and judgment'
         ].includes(item.title)) {
       setDialogOpen(true);
       return;
@@ -100,7 +104,7 @@ export const useSubtaskHandling = ({
         isRadioCommunicationProceduresTask || isCriticalWeatherSituationsTask ||
         isSafeOperationAircraftTask || isDensityAltitudeTask ||
         isWeightBalanceComputationsTask || isAerodynamicsPowerplantsTask || 
-        isStallAwarenessTask) {
+        isStallAwarenessTask || isAeronauticalDecisionMakingTask) {
       setDialogOpen(true);
       return;
     }
