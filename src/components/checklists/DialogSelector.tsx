@@ -15,7 +15,8 @@ import {
   isRadioCommunicationProceduresDialog,
   isCriticalWeatherSituationsDialog,
   isSafeOperationAircraftDialog,
-  isDensityAltitudeDialog
+  isDensityAltitudeDialog,
+  isWeightBalanceComputationsDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -31,6 +32,7 @@ import RadioCommunicationDialogWrapper from './dialogs/RadioCommunicationDialogW
 import CriticalWeatherSituationsDialogWrapper from './dialogs/CriticalWeatherSituationsDialogWrapper';
 import SafeOperationDialogWrapper from './dialogs/SafeOperationDialogWrapper';
 import DensityAltitudeDialogWrapper from './dialogs/DensityAltitudeDialogWrapper';
+import WeightBalanceComputationsDialogWrapper from './dialogs/WeightBalanceComputationsDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -127,6 +129,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
   
   if (isDensityAltitudeDialog(itemTitle)) {
     return <DensityAltitudeDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSavePreflight={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
+  }
+  
+  if (isWeightBalanceComputationsDialog(itemTitle)) {
+    return <WeightBalanceComputationsDialogWrapper 
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSavePreflight={props.onSavePreflight}

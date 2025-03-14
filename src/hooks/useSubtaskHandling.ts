@@ -49,6 +49,9 @@ export const useSubtaskHandling = ({
   
   // Check if it's the Density Altitude task
   const isDensityAltitudeTask = item.id === '607';
+  
+  // Check if it's the Weight Balance Computations task
+  const isWeightBalanceComputationsTask = item.id === '608';
 
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
@@ -68,7 +71,8 @@ export const useSubtaskHandling = ({
          '(5) Radio communication procedures',
          '(6) Critical weather situations during ground and flight, windshear avoidance and the use of weather reports and forecasts',
          '(7) Safe and efficient operation of aircraft, including collision avoidance and recognition/avoidance of wake turbulence',
-         '(8) Effects of density altitude on takeoff and climb performance'
+         '(8) Effects of density altitude on takeoff and climb performance',
+         '(9) Weight and balance computations'
         ].includes(item.title)) {
       setDialogOpen(true);
       return;
@@ -87,7 +91,8 @@ export const useSubtaskHandling = ({
     if (isKnowledgeTask || isApplicableFARsTask || isNTSBAccidentTask || 
         isAIMAdvisoryCircularsTask || isVFRNavigationChartsTask || 
         isRadioCommunicationProceduresTask || isCriticalWeatherSituationsTask ||
-        isSafeOperationAircraftTask || isDensityAltitudeTask) {
+        isSafeOperationAircraftTask || isDensityAltitudeTask ||
+        isWeightBalanceComputationsTask) {
       setDialogOpen(true);
       return;
     }

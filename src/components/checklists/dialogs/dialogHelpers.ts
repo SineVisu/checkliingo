@@ -60,3 +60,7 @@ export const isSafeOperationAircraftDialog = (itemTitle: string): boolean => {
 export const isDensityAltitudeDialog = (itemTitle: string): boolean => {
   return itemTitle === "(8) Effects of density altitude on takeoff and climb performance";
 };
+
+export const isWeightBalanceComputationsDialog = (itemTitle: string): boolean => {
+  return itemTitle === "(9) Weight and balance computations";
+};
