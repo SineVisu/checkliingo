@@ -155,6 +155,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
     id: '5',
     title: 'Aeronautical Knowledge FAR 61.105(b)',
     items: [
+      { id: '501', title: '(1) Applicable Federal Aviation Regulations, that relate to private pilot privileges, limitations, and flight operations', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
