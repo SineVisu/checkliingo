@@ -164,6 +164,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
       { id: '606', title: '(7) Safe and efficient operation of aircraft, including collision avoidance and recognition/avoidance of wake turbulence', isCompleted: false, category: 'knowledge' },
       { id: '607', title: '(8) Effects of density altitude on takeoff and climb performance', isCompleted: false, category: 'knowledge' },
       { id: '608', title: '(9) Weight and balance computations', isCompleted: false, category: 'knowledge' },
+      { id: '609', title: '(10) Principles of aerodynamics, powerplants, and aircraft systems', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
