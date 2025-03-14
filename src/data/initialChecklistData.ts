@@ -1,3 +1,4 @@
+
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 
 export const initialChecklistData: ChecklistGroupData[] = [
@@ -161,6 +162,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
     id: '6',
     title: 'Aeronautical Experience FAR 61.109',
     items: [
+      { id: '600', title: '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations', isCompleted: false, category: 'experience' },
       { id: '601', title: '(a)(1) 40 hours of flight time', isCompleted: false, category: 'experience' },
       { id: '602', title: '(a)(2) 20 hours of flight training', isCompleted: false, category: 'experience' },
       { id: '603', title: '(a)(2)(i) 3 hours cross-country flight training', isCompleted: false, category: 'experience' },
