@@ -1,4 +1,3 @@
-
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 
 export const initialChecklistData: ChecklistGroupData[] = [
@@ -165,6 +164,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
       { id: '607', title: '(8) Effects of density altitude on takeoff and climb performance', isCompleted: false, category: 'knowledge' },
       { id: '608', title: '(9) Weight and balance computations', isCompleted: false, category: 'knowledge' },
       { id: '609', title: '(10) Principles of aerodynamics, powerplants, and aircraft systems', isCompleted: false, category: 'knowledge' },
+      { id: '610', title: '(11) Stall awareness, spin entry, spins, and spin recovery techniques', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
