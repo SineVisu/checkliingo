@@ -24,7 +24,11 @@ const AIMAdvisoryCircularsDialogWrapper: React.FC<AIMAdvisoryCircularsDialogWrap
       isOpen={isOpen}
       onClose={onClose}
       onSave={handleSave}
-      initialValues={initialValue}
+      initialValues={
+        typeof initialValue === 'object' && !(initialValue instanceof Date)
+          ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
+          : undefined
+      }
     />
   );
 };
