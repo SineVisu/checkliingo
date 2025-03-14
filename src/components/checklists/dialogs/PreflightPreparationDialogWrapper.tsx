@@ -19,9 +19,11 @@ const PreflightPreparationDialogWrapper: React.FC<PreflightPreparationDialogWrap
 }) => {
   let dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
   
-  // Special case for the Applicable FAR's task
+  // Special cases for knowledge tasks
   if (itemTitle === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations') {
     dialogTitle = 'FAR Knowledge Training';
+  } else if (itemTitle === '(2) Accident reporting requirements of the NTSB') {
+    dialogTitle = 'NTSB Accident Reporting Knowledge Training';
   }
   
   return (
