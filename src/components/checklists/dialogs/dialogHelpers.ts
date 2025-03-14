@@ -33,10 +33,6 @@ export const isAIMAdvisoryCircularsDialog = (title: string) => {
   return title === '(3) Use of the applicable portions of the AIM and FAA advisory circulars';
 };
 
-export const isVFRNavigationChartsDialog = (title: string) => {
-  return title === '(4) Use of charts for VFR navigation, using pilotage, dead reckoning, and navigation systems';
-};
-
 export const isTrainingDialog = (title: string) => {
   return title === 'Flight' || title === 'Ground';
 };

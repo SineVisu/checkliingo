@@ -10,8 +10,7 @@ import {
   isNTSBAccidentReportingDialog,
   isTrainingDialog,
   isExperienceDialog,
-  isAIMAdvisoryCircularsDialog,
-  isVFRNavigationChartsDialog
+  isAIMAdvisoryCircularsDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -71,7 +70,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
     />;
   }
 
-  if (isAIMAdvisoryCircularsDialog(itemTitle) || isVFRNavigationChartsDialog(itemTitle)) {
+  if (isAIMAdvisoryCircularsDialog(itemTitle)) {
     return <AIMAdvisoryCircularsDialogWrapper 
       isOpen={props.isOpen}
       onClose={props.onClose}
