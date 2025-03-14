@@ -37,6 +37,9 @@ export const useSubtaskHandling = ({
   
   // Check if it's the VFR Navigation Charts task
   const isVFRNavigationChartsTask = item.id === '603';
+  
+  // Check if it's the Radio Communication Procedures task
+  const isRadioCommunicationProceduresTask = item.id === '604';
 
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
@@ -52,7 +55,8 @@ export const useSubtaskHandling = ({
          'Date of Issuance', 'Certificate Number', 'FTN# (FAA Tracking Number)',
          'Flight', 'Ground', '(2) Accident reporting requirements of the NTSB',
          '(3) Use of the applicable portions of the AIM and FAA advisory circulars',
-         '(4) Use of charts for VFR navigation, using pilotage, dead reckoning, and navigation systems'].includes(item.title)) {
+         '(4) Use of charts for VFR navigation, using pilotage, dead reckoning, and navigation systems',
+         '(5) Radio communication procedures'].includes(item.title)) {
       setDialogOpen(true);
       return;
     }
@@ -67,7 +71,9 @@ export const useSubtaskHandling = ({
     }
 
     // For knowledge tasks, allow direct completion but show dialog for entering data
-    if (isKnowledgeTask || isApplicableFARsTask || isNTSBAccidentTask || isAIMAdvisoryCircularsTask || isVFRNavigationChartsTask) {
+    if (isKnowledgeTask || isApplicableFARsTask || isNTSBAccidentTask || 
+        isAIMAdvisoryCircularsTask || isVFRNavigationChartsTask || 
+        isRadioCommunicationProceduresTask) {
       setDialogOpen(true);
       return;
     }

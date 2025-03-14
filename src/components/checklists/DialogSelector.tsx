@@ -11,7 +11,8 @@ import {
   isTrainingDialog,
   isExperienceDialog,
   isAIMAdvisoryCircularsDialog,
-  isVFRNavigationChartsDialog
+  isVFRNavigationChartsDialog,
+  isRadioCommunicationProceduresDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -23,6 +24,7 @@ import LogbookPageDialogWrapper from './dialogs/LogbookPageDialogWrapper';
 import NTSBAccidentReportingDialogWrapper from './dialogs/NTSBAccidentReportingDialogWrapper';
 import AIMAdvisoryCircularsDialogWrapper from './dialogs/AIMAdvisoryCircularsDialogWrapper';
 import VFRNavigationChartsDialogWrapper from './dialogs/VFRNavigationChartsDialogWrapper';
+import RadioCommunicationDialogWrapper from './dialogs/RadioCommunicationDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -83,6 +85,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
   
   if (isVFRNavigationChartsDialog(itemTitle)) {
     return <VFRNavigationChartsDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSavePreflight={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
+  }
+  
+  if (isRadioCommunicationProceduresDialog(itemTitle)) {
+    return <RadioCommunicationDialogWrapper 
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSavePreflight={props.onSavePreflight}
