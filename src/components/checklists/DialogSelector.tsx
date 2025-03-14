@@ -9,7 +9,8 @@ import {
   isAeronauticalKnowledgeFARDialog,
   isNTSBAccidentReportingDialog,
   isTrainingDialog,
-  isExperienceDialog
+  isExperienceDialog,
+  isAIMAdvisoryCircularsDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -19,6 +20,7 @@ import KnowledgeTestResultsDialogWrapper from './dialogs/KnowledgeTestResultsDia
 import PreflightPreparationDialogWrapper from './dialogs/PreflightPreparationDialogWrapper';
 import LogbookPageDialogWrapper from './dialogs/LogbookPageDialogWrapper';
 import NTSBAccidentReportingDialogWrapper from './dialogs/NTSBAccidentReportingDialogWrapper';
+import AIMAdvisoryCircularsDialogWrapper from './dialogs/AIMAdvisoryCircularsDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -64,6 +66,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSave={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
+  }
+
+  if (isAIMAdvisoryCircularsDialog(itemTitle)) {
+    return <AIMAdvisoryCircularsDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSavePreflight={props.onSavePreflight}
       initialValue={props.initialValue}
     />;
   }
