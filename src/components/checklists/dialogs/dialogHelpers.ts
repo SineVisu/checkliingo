@@ -22,8 +22,7 @@ export const isKnowledgeTestResultsDialog = (title: string) => {
 };
 
 export const isAeronauticalKnowledgeFARDialog = (title: string) => {
-  return title === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations' || 
-         title === '(3) Use of the applicable portions of the AIM and FAA advisory circulars';
+  return title === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations';
 };
 
 export const isNTSBAccidentReportingDialog = (title: string) => {
