@@ -1,4 +1,3 @@
-
 import { ChecklistItemData } from '../ChecklistItem';
 
 export const isLicenseOrMedicalNameDialog = (title: string) => {
@@ -22,7 +21,8 @@ export const isKnowledgeTestResultsDialog = (title: string) => {
 };
 
 export const isAeronauticalKnowledgeFARDialog = (title: string) => {
-  return title === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations';
+  return title === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations' || 
+         title === '(2) Accident reporting requirements of the NTSB';
 };
 
 export const isTrainingDialog = (title: string) => {
