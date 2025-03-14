@@ -41,6 +41,10 @@ export const isRadioCommunicationProceduresDialog = (title: string) => {
   return title === '(5) Radio communication procedures';
 };
 
+export const isCriticalWeatherSituationsDialog = (title: string) => {
+  return title === '(6) Critical weather situations during ground and flight, windshear avoidance and the use of weather reports and forecasts';
+};
+
 export const isTrainingDialog = (title: string) => {
   return title === 'Flight' || title === 'Ground';
 };
