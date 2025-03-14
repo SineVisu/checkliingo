@@ -69,3 +69,7 @@ export const isAerodynamicsPowerplantsDialog = (itemTitle: string): boolean => {
   return itemTitle === "(10) Principles of aerodynamics, powerplants, and aircraft systems";
 };
 
+export const isStallAwarenessDialog = (itemTitle: string): boolean => {
+  return itemTitle === "(11) Stall awareness, spin entry, spins, and spin recovery techniques";
+};
+

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { ChecklistItemData } from '@/components/checklists/ChecklistItem';
@@ -55,6 +54,9 @@ export const useSubtaskHandling = ({
   
   // Check if it's the Aerodynamics Powerplants task
   const isAerodynamicsPowerplantsTask = item.id === '609';
+  
+  // Check if it's the Stall Awareness task
+  const isStallAwarenessTask = item.id === '610';
 
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
@@ -76,7 +78,8 @@ export const useSubtaskHandling = ({
          '(7) Safe and efficient operation of aircraft, including collision avoidance and recognition/avoidance of wake turbulence',
          '(8) Effects of density altitude on takeoff and climb performance',
          '(9) Weight and balance computations',
-         '(10) Principles of aerodynamics, powerplants, and aircraft systems'
+         '(10) Principles of aerodynamics, powerplants, and aircraft systems',
+         '(11) Stall awareness, spin entry, spins, and spin recovery techniques'
         ].includes(item.title)) {
       setDialogOpen(true);
       return;
@@ -96,7 +99,8 @@ export const useSubtaskHandling = ({
         isAIMAdvisoryCircularsTask || isVFRNavigationChartsTask || 
         isRadioCommunicationProceduresTask || isCriticalWeatherSituationsTask ||
         isSafeOperationAircraftTask || isDensityAltitudeTask ||
-        isWeightBalanceComputationsTask || isAerodynamicsPowerplantsTask) {
+        isWeightBalanceComputationsTask || isAerodynamicsPowerplantsTask || 
+        isStallAwarenessTask) {
       setDialogOpen(true);
       return;
     }
