@@ -26,7 +26,8 @@ export const isAeronauticalKnowledgeFARDialog = (title: string) => {
 };
 
 export const isNTSBAccidentReportingDialog = (title: string) => {
-  return title === '(2) Accident reporting requirements of the NTSB';
+  return title === '(2) Accident reporting requirements of the NTSB' || 
+         title === '(3) Use of the applicable portions of the AIM and FAA advisory circulars';
 };
 
 export const isTrainingDialog = (title: string) => {
