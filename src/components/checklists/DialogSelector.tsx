@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   isLicenseOrMedicalNameDialog,
@@ -18,7 +19,8 @@ import {
   isWeightBalanceComputationsDialog,
   isAerodynamicsPowerplantsDialog,
   isStallAwarenessDialog,
-  isAeronauticalDecisionMakingDialog
+  isAeronauticalDecisionMakingDialog,
+  isPreflightActionDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -38,6 +40,7 @@ import WeightBalanceComputationsDialogWrapper from './dialogs/WeightBalanceCompu
 import AerodynamicsPowerplantsDialogWrapper from './dialogs/AerodynamicsPowerplantsDialogWrapper';
 import StallAwarenessDialogWrapper from './dialogs/StallAwarenessDialogWrapper';
 import AeronauticalDecisionMakingDialogWrapper from './dialogs/AeronauticalDecisionMakingDialogWrapper';
+import PreflightActionDialogWrapper from './dialogs/PreflightActionDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -169,6 +172,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
 
   if (isAeronauticalDecisionMakingDialog(itemTitle)) {
     return <AeronauticalDecisionMakingDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSavePreflight={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
+  }
+  
+  if (isPreflightActionDialog(itemTitle)) {
+    return <PreflightActionDialogWrapper 
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSavePreflight={props.onSavePreflight}

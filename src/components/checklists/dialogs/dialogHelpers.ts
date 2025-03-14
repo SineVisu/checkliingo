@@ -1,4 +1,3 @@
-
 import { ChecklistItemData } from '../ChecklistItem';
 
 export const isLicenseOrMedicalNameDialog = (title: string) => {
@@ -75,4 +74,8 @@ export const isStallAwarenessDialog = (itemTitle: string): boolean => {
 
 export const isAeronauticalDecisionMakingDialog = (itemTitle: string): boolean => {
   return itemTitle === "(12) Aeronautical decision making and judgment";
+};
+
+export const isPreflightActionDialog = (itemTitle: string): boolean => {
+  return itemTitle === '(13) Preflight action that includes - (i) How to obtain information on runway lengths at airports of intended use, data on takeoff and landing distances, weather reports and forecasts, and fuel requirements; and (ii) How to plan for alternatives if the planned flight cannot be completed or delays are encountered.';
 };

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { ChecklistItemData } from '@/components/checklists/ChecklistItem';
@@ -60,6 +61,9 @@ export const useSubtaskHandling = ({
   
   // Check if it's the Aeronautical Decision Making task
   const isAeronauticalDecisionMakingTask = item.id === '611';
+  
+  // Check if it's the Preflight Action task
+  const isPreflightActionTask = item.id === '612';
 
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
@@ -83,7 +87,8 @@ export const useSubtaskHandling = ({
          '(9) Weight and balance computations',
          '(10) Principles of aerodynamics, powerplants, and aircraft systems',
          '(11) Stall awareness, spin entry, spins, and spin recovery techniques',
-         '(12) Aeronautical decision making and judgment'
+         '(12) Aeronautical decision making and judgment',
+         '(13) Preflight action that includes - (i) How to obtain information on runway lengths at airports of intended use, data on takeoff and landing distances, weather reports and forecasts, and fuel requirements; and (ii) How to plan for alternatives if the planned flight cannot be completed or delays are encountered.'
         ].includes(item.title)) {
       setDialogOpen(true);
       return;
@@ -104,7 +109,7 @@ export const useSubtaskHandling = ({
         isRadioCommunicationProceduresTask || isCriticalWeatherSituationsTask ||
         isSafeOperationAircraftTask || isDensityAltitudeTask ||
         isWeightBalanceComputationsTask || isAerodynamicsPowerplantsTask || 
-        isStallAwarenessTask || isAeronauticalDecisionMakingTask) {
+        isStallAwarenessTask || isAeronauticalDecisionMakingTask || isPreflightActionTask) {
       setDialogOpen(true);
       return;
     }
