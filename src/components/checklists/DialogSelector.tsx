@@ -7,6 +7,7 @@ import {
   isFTNDialog,
   isKnowledgeTestResultsDialog,
   isAeronauticalKnowledgeFARDialog,
+  isNTSBAccidentReportingDialog,
   isTrainingDialog,
   isExperienceDialog
 } from './dialogs/dialogHelpers';
@@ -17,6 +18,7 @@ import FTNDialogWrapper from './dialogs/FTNDialogWrapper';
 import KnowledgeTestResultsDialogWrapper from './dialogs/KnowledgeTestResultsDialogWrapper';
 import PreflightPreparationDialogWrapper from './dialogs/PreflightPreparationDialogWrapper';
 import LogbookPageDialogWrapper from './dialogs/LogbookPageDialogWrapper';
+import NTSBAccidentReportingDialogWrapper from './dialogs/NTSBAccidentReportingDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -55,6 +57,10 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
 
   if (isKnowledgeTestResultsDialog(itemTitle)) {
     return <KnowledgeTestResultsDialogWrapper {...props} />;
+  }
+
+  if (isNTSBAccidentReportingDialog(itemTitle)) {
+    return <NTSBAccidentReportingDialogWrapper {...props} />;
   }
 
   if (isAeronauticalKnowledgeFARDialog(itemTitle) || isTrainingDialog(itemTitle)) {

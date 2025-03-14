@@ -25,6 +25,10 @@ export const isAeronauticalKnowledgeFARDialog = (title: string) => {
   return title === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations';
 };
 
+export const isNTSBAccidentReportingDialog = (title: string) => {
+  return title === '(2) Accident reporting requirements of the NTSB';
+};
+
 export const isTrainingDialog = (title: string) => {
   return title === 'Flight' || title === 'Ground';
 };
