@@ -1,3 +1,4 @@
+
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 
 export const initialChecklistData: ChecklistGroupData[] = [
@@ -156,6 +157,16 @@ export const initialChecklistData: ChecklistGroupData[] = [
     items: [
       { id: '600', title: '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations', isCompleted: false, category: 'knowledge' },
       { id: '601', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '602', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '603', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '604', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '605', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '606', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '607', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '608', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '609', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '610', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '611', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
@@ -180,3 +191,4 @@ export const initialChecklistData: ChecklistGroupData[] = [
     ]
   }
 ];
+
