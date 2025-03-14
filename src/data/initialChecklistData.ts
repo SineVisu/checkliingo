@@ -157,6 +157,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
     items: [
       { id: '600', title: '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations', isCompleted: false, category: 'knowledge' },
       { id: '601', title: '(2) Accident reporting requirements of the NTSB', isCompleted: false, category: 'knowledge' },
+      { id: '602', title: '(3) Use of the applicable portions of the AIM and FAA advisory circulars', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
