@@ -6,6 +6,7 @@ import {
   isCertificateNumberDialog,
   isFTNDialog,
   isKnowledgeTestResultsDialog,
+  isAeronauticalKnowledgeFARDialog,
   isTrainingDialog,
   isExperienceDialog
 } from './dialogs/dialogHelpers';
@@ -56,7 +57,7 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
     return <KnowledgeTestResultsDialogWrapper {...props} />;
   }
 
-  if (isTrainingDialog(itemTitle)) {
+  if (isAeronauticalKnowledgeFARDialog(itemTitle) || isTrainingDialog(itemTitle)) {
     return <PreflightPreparationDialogWrapper {...props} />;
   }
 

@@ -17,7 +17,12 @@ const PreflightPreparationDialogWrapper: React.FC<PreflightPreparationDialogWrap
   onSavePreflight,
   initialValue
 }) => {
-  const dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
+  let dialogTitle = itemTitle === 'Flight' ? 'Flight Training' : 'Ground Training';
+  
+  // Special case for the Applicable FAR's task
+  if (itemTitle === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations') {
+    dialogTitle = 'FAR Knowledge Training';
+  }
   
   return (
     <PreflightPreparationDialog

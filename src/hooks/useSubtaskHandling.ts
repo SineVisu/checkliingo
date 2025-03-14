@@ -26,6 +26,9 @@ export const useSubtaskHandling = ({
   // Check if item is an Aeronautical Knowledge task (in group 5)
   const isKnowledgeTask = item.id.startsWith('5') && !item.id.includes('-');
 
+  // Check if it's the Applicable FAR's task
+  const isApplicableFARsTask = item.id === '600';
+
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
 
@@ -53,7 +56,7 @@ export const useSubtaskHandling = ({
     }
 
     // For knowledge tasks, allow direct completion but show dialog for entering data
-    if (isKnowledgeTask) {
+    if (isKnowledgeTask || isApplicableFARsTask) {
       setDialogOpen(true);
       return;
     }

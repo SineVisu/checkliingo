@@ -17,6 +17,8 @@ export const useDialogCallbacks = ({ item, onToggleComplete }: UseDialogCallback
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
   // Check if item is an Aeronautical Knowledge task (in group 5)
   const isKnowledgeTask = item.id.startsWith('5');
+  // Check if it's the Applicable FAR's task
+  const isApplicableFARsTask = item.id === '600';
 
   const handleSaveLicenseName = (name: string) => {
     toast.success(`Certificate name saved: ${name}`);
@@ -50,11 +52,16 @@ export const useDialogCallbacks = ({ item, onToggleComplete }: UseDialogCallback
 
   const handleSavePreflight = (data: { date: Date; hours: string; pageNumber?: string }) => {
     const pageInfo = data.pageNumber ? ` - Page: ${data.pageNumber}` : '';
-    toast.success(`${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
+    
+    if (isApplicableFARsTask) {
+      toast.success(`FAR knowledge details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
+    } else {
+      toast.success(`${item.title} details saved: ${format(data.date, 'MMMM d, yyyy')} - ${data.hours} hours${pageInfo}`);
+    }
     
     // Add parent task title to the data for displaying in dialog title
     const parentItem = isFlightProficiencyTask ? item : null;
-    const knowledgeParentTitle = isKnowledgeTask ? item.title : null;
+    const knowledgeParentTitle = (isKnowledgeTask || isApplicableFARsTask) ? item.title : null;
     
     const completeData = {
       ...data,

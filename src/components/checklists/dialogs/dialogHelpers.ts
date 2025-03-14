@@ -1,31 +1,34 @@
 
-// Helper functions to identify dialog types
+import { ChecklistItemData } from '../ChecklistItem';
 
-export const isLicenseOrMedicalNameDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'Name as it appears on Certificate' || 
-         itemTitle === 'Name as it appears on Medical';
+export const isLicenseOrMedicalNameDialog = (title: string) => {
+  return title === 'Name as it appears on Certificate' || title === 'Name as it appears on Medical';
 };
 
-export const isDateDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'Date of Issuance';
+export const isDateDialog = (title: string) => {
+  return title === 'Date of Issuance' || title === 'Date of Examination';
 };
 
-export const isCertificateNumberDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'Certificate Number';
+export const isCertificateNumberDialog = (title: string) => {
+  return title === 'Certificate Number';
 };
 
-export const isFTNDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'FTN# (FAA Tracking Number)';
+export const isFTNDialog = (title: string) => {
+  return title === 'FTN# (FAA Tracking Number)';
 };
 
-export const isKnowledgeTestResultsDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'PAR Knowledge Test Results';
+export const isKnowledgeTestResultsDialog = (title: string) => {
+  return title === 'PAR Knowledge Test Results';
 };
 
-export const isTrainingDialog = (itemTitle: string): boolean => {
-  return itemTitle === 'Flight' || itemTitle === 'Ground';
+export const isAeronauticalKnowledgeFARDialog = (title: string) => {
+  return title === '(1) Applicable FAR\'s: private pilot privileges, limitations, and flight operations';
 };
 
-export const isExperienceDialog = (category?: string): boolean => {
+export const isTrainingDialog = (title: string) => {
+  return title === 'Flight' || title === 'Ground';
+};
+
+export const isExperienceDialog = (category?: string) => {
   return category === 'experience';
 };
