@@ -155,20 +155,6 @@ export const initialChecklistData: ChecklistGroupData[] = [
     id: '5',
     title: 'Aeronautical Knowledge FAR 61.105(b)',
     items: [
-      { id: '501', title: '(1) Applicable Federal Aviation Regulations', isCompleted: false, category: 'knowledge' },
-      { id: '502', title: '(2) Accident reporting requirements', isCompleted: false, category: 'knowledge' },
-      { id: '503', title: '(3) Use of the applicable portions of the AIM', isCompleted: false, category: 'knowledge' },
-      { id: '504', title: '(4) Use of aeronautical charts', isCompleted: false, category: 'knowledge' },
-      { id: '505', title: '(5) Radio communication procedures', isCompleted: false, category: 'knowledge' },
-      { id: '506', title: '(6) Recognition of critical weather situations', isCompleted: false, category: 'knowledge' },
-      { id: '507', title: '(7) Safe and efficient operation of aircraft', isCompleted: false, category: 'knowledge' },
-      { id: '508', title: '(8) Weight and balance computations', isCompleted: false, category: 'knowledge' },
-      { id: '509', title: '(9) Performance charts and limitations', isCompleted: false, category: 'knowledge' },
-      { id: '510', title: '(10) Effects of exceeding aircraft limitations', isCompleted: false, category: 'knowledge' },
-      { id: '511', title: '(11) Principles of aerodynamics, powerplants and aircraft systems', isCompleted: false, category: 'knowledge' },
-      { id: '512', title: '(12) Stall awareness, spin entry, spins, and spin recovery techniques', isCompleted: false, category: 'knowledge' },
-      { id: '513', title: '(13) Aeronautical decision making and judgment', isCompleted: false, category: 'knowledge' },
-      { id: '514', title: '(14) Preflight action', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
