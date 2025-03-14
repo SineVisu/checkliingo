@@ -160,6 +160,7 @@ export const initialChecklistData: ChecklistGroupData[] = [
       { id: '602', title: '(3) Use of the applicable portions of the AIM and FAA advisory circulars', isCompleted: false, category: 'knowledge' },
       { id: '603', title: '(4) Use of charts for VFR navigation, using pilotage, dead reckoning, and navigation systems', isCompleted: false, category: 'knowledge' },
       { id: '604', title: '(5) Radio communication procedures', isCompleted: false, category: 'knowledge' },
+      { id: '605', title: '(6) Critical weather situations during ground and flight, windshear avoidance and the use of weather reports and forecasts', isCompleted: false, category: 'knowledge' },
       { id: '515', title: 'PAR Knowledge Test Results', isCompleted: false, category: 'knowledge' }
     ]
   },
