@@ -43,6 +43,9 @@ export const useSubtaskHandling = ({
   
   // Check if it's the Critical Weather Situations task
   const isCriticalWeatherSituationsTask = item.id === '605';
+  
+  // Check if it's the Safe Operation Aircraft task
+  const isSafeOperationAircraftTask = item.id === '606';
 
   // Check if item is an Aeronautical Experience task (category experience)
   const isExperienceTask = item.category === 'experience';
@@ -60,7 +63,8 @@ export const useSubtaskHandling = ({
          '(3) Use of the applicable portions of the AIM and FAA advisory circulars',
          '(4) Use of charts for VFR navigation, using pilotage, dead reckoning, and navigation systems',
          '(5) Radio communication procedures',
-         '(6) Critical weather situations during ground and flight, windshear avoidance and the use of weather reports and forecasts'
+         '(6) Critical weather situations during ground and flight, windshear avoidance and the use of weather reports and forecasts',
+         '(7) Safe and efficient operation of aircraft, including collision avoidance and recognition/avoidance of wake turbulence'
         ].includes(item.title)) {
       setDialogOpen(true);
       return;
@@ -78,7 +82,8 @@ export const useSubtaskHandling = ({
     // For knowledge tasks, allow direct completion but show dialog for entering data
     if (isKnowledgeTask || isApplicableFARsTask || isNTSBAccidentTask || 
         isAIMAdvisoryCircularsTask || isVFRNavigationChartsTask || 
-        isRadioCommunicationProceduresTask || isCriticalWeatherSituationsTask) {
+        isRadioCommunicationProceduresTask || isCriticalWeatherSituationsTask ||
+        isSafeOperationAircraftTask) {
       setDialogOpen(true);
       return;
     }

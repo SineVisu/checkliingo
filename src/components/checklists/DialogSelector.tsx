@@ -13,7 +13,8 @@ import {
   isAIMAdvisoryCircularsDialog,
   isVFRNavigationChartsDialog,
   isRadioCommunicationProceduresDialog,
-  isCriticalWeatherSituationsDialog
+  isCriticalWeatherSituationsDialog,
+  isSafeOperationAircraftDialog
 } from './dialogs/dialogHelpers';
 import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
@@ -27,6 +28,7 @@ import AIMAdvisoryCircularsDialogWrapper from './dialogs/AIMAdvisoryCircularsDia
 import VFRNavigationChartsDialogWrapper from './dialogs/VFRNavigationChartsDialogWrapper';
 import RadioCommunicationDialogWrapper from './dialogs/RadioCommunicationDialogWrapper';
 import CriticalWeatherSituationsDialogWrapper from './dialogs/CriticalWeatherSituationsDialogWrapper';
+import SafeOperationDialogWrapper from './dialogs/SafeOperationDialogWrapper';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -105,6 +107,15 @@ const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
   
   if (isCriticalWeatherSituationsDialog(itemTitle)) {
     return <CriticalWeatherSituationsDialogWrapper 
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSavePreflight={props.onSavePreflight}
+      initialValue={props.initialValue}
+    />;
+  }
+  
+  if (isSafeOperationAircraftDialog(itemTitle)) {
+    return <SafeOperationDialogWrapper 
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSavePreflight={props.onSavePreflight}

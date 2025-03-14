@@ -1,4 +1,3 @@
-
 import { ChecklistItemData } from '../ChecklistItem';
 
 export const isLicenseOrMedicalNameDialog = (title: string) => {
@@ -51,4 +50,8 @@ export const isTrainingDialog = (title: string) => {
 
 export const isExperienceDialog = (category?: string) => {
   return category === 'experience';
+};
+
+export const isSafeOperationAircraftDialog = (itemTitle: string): boolean => {
+  return itemTitle === "(7) Safe and efficient operation of aircraft, including collision avoidance and recognition/avoidance of wake turbulence";
 };
