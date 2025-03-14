@@ -64,3 +64,8 @@ export const isDensityAltitudeDialog = (itemTitle: string): boolean => {
 export const isWeightBalanceComputationsDialog = (itemTitle: string): boolean => {
   return itemTitle === "(9) Weight and balance computations";
 };
+
+export const isAerodynamicsPowerplantsDialog = (itemTitle: string): boolean => {
+  return itemTitle === "(10) Principles of aerodynamics, powerplants, and aircraft systems";
+};
+
