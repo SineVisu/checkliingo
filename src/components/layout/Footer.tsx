@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { Home, List, Trophy, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +11,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChecklistContext } from '@/context/ChecklistContext';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  activeTab?: 'home' | 'lists' | 'achievements' | 'profile';
+}
+
+const Footer: React.FC<FooterProps> = ({ 
+  activeTab = 'home'
+}) => {
   const { setFilterCategory, filterCategory } = useContext(ChecklistContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleFilterSelect = (category: string | null) => {
     setFilterCategory(category);
+    // If we're not on the home page, navigate there
+    if (location.pathname !== '/') {
+      navigate('/');
+    }
+  };
+
+  const navigateToPage = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -23,15 +40,18 @@ const Footer: React.FC = () => {
         <NavButton 
           icon={<Home className="h-5 w-5" />} 
           label="Home" 
-          active={filterCategory === null}
-          onClick={() => handleFilterSelect(null)}
+          active={activeTab === 'home'}
+          onClick={() => {
+            navigateToPage('/');
+            setFilterCategory(null);
+          }}
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all ${
-                filterCategory ? 'text-primary' : 'text-muted-foreground'
+                activeTab === 'lists' || filterCategory ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               <div>
@@ -70,12 +90,14 @@ const Footer: React.FC = () => {
         <NavButton 
           icon={<Trophy className="h-5 w-5" />} 
           label="Achievements" 
-          active={false}
+          active={activeTab === 'achievements'}
+          onClick={() => navigateToPage('/achievements')}
         />
         <NavButton 
           icon={<User className="h-5 w-5" />} 
           label="Profile" 
-          active={false}
+          active={activeTab === 'profile'}
+          onClick={() => navigateToPage('/profile')}
         />
       </div>
     </footer>

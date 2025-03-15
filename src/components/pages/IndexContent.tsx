@@ -1,4 +1,3 @@
-
 import React, { useState, useContext, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -26,13 +25,10 @@ const IndexContent: React.FC = () => {
     acknowledgeMiddleNameDiscrepancy
   } = useContext(ChecklistContext);
 
-  // Track achievements in localStorage
   useEffect(() => {
-    // Check for identification achievement
     const identificationComplete = areIdentificationTasksComplete(checklists);
     
     if (identificationComplete) {
-      // Store achievement in localStorage
       const achievements = JSON.parse(localStorage.getItem('achievements') || '{}');
       if (!achievements.identificationComplete) {
         achievements.identificationComplete = {
@@ -151,7 +147,7 @@ const IndexContent: React.FC = () => {
         onCaptureMedical={handleCaptureMedical}
       />
       
-      <Footer />
+      <Footer activeTab="home" />
 
       <CaptureDialogs 
         licenseCaptureOpen={licenseCaptureOpen}
