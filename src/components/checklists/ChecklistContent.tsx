@@ -1,5 +1,5 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import ChecklistGroup from '@/components/checklists/ChecklistGroup';
 import ChecklistProgress from '@/components/checklists/ChecklistProgress';
 import CaptureButtons from '@/components/checklists/CaptureButtons';
@@ -7,6 +7,9 @@ import ChecklistHeader from '@/components/checklists/ChecklistHeader';
 import EmptyState from '@/components/ui/EmptyState';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import { toast } from 'sonner';
+import AchievementDialog from './AchievementDialog';
+import IdentificationAchievementIcon from './IdentificationAchievementIcon';
+import { areIdentificationTasksComplete } from './dialogs/dialogHelpers';
 
 interface ChecklistContentProps {
   streak: number;
@@ -26,6 +29,26 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
     setChecklists,
     filterCategory
   } = useContext(ChecklistContext);
+
+  const [showIdentificationAchievement, setShowIdentificationAchievement] = useState(false);
+  const [identificationCompleted, setIdentificationCompleted] = useState(false);
+
+  // Check for identification completion
+  useEffect(() => {
+    const isComplete = areIdentificationTasksComplete(checklists);
+    
+    // If identified tasks are complete and we haven't shown the achievement yet
+    if (isComplete && !identificationCompleted) {
+      setShowIdentificationAchievement(true);
+      setIdentificationCompleted(true);
+      
+      // Show a toast notification as well
+      toast.success("Achievement Unlocked!", {
+        description: "Well Done! Identification is complete!",
+        position: "top-center",
+      });
+    }
+  }, [checklists, identificationCompleted]);
 
   // Modified filtering logic to include 'medical' category when 'identification' is selected
   const filteredChecklists = filterCategory
@@ -127,6 +150,15 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
       ) : (
         <EmptyState />
       )}
+
+      {/* Achievement Dialog */}
+      <AchievementDialog
+        isOpen={showIdentificationAchievement}
+        onClose={() => setShowIdentificationAchievement(false)}
+        title="Identification Complete!"
+        description="Well Done! You've completed all identification requirements. You've earned a bronze set of Pilot's wings."
+        icon={<IdentificationAchievementIcon />}
+      />
     </main>
   );
 };

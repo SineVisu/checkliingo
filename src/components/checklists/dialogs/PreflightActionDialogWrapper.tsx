@@ -7,13 +7,15 @@ interface PreflightActionDialogWrapperProps {
   onClose: () => void;
   onSavePreflight: (data: { date: Date; hours: string; pageNumber?: string }) => void;
   initialValue?: any;
+  title?: string;
 }
 
 const PreflightActionDialogWrapper: React.FC<PreflightActionDialogWrapperProps> = ({
   isOpen,
   onClose,
   onSavePreflight,
-  initialValue
+  initialValue,
+  title
 }) => {
   return (
     <PreflightActionDialog
@@ -25,6 +27,7 @@ const PreflightActionDialogWrapper: React.FC<PreflightActionDialogWrapperProps> 
           ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
           : undefined
       }
+      title={title}
     />
   );
 };

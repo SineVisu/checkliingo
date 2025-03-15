@@ -1,3 +1,4 @@
+
 import { ChecklistItemData } from '../ChecklistItem';
 
 export const isLicenseOrMedicalNameDialog = (title: string) => {
@@ -78,4 +79,30 @@ export const isAeronauticalDecisionMakingDialog = (itemTitle: string): boolean =
 
 export const isPreflightActionDialog = (itemTitle: string): boolean => {
   return itemTitle === '(13) Preflight action that includes - (i) How to obtain information on runway lengths at airports of intended use, data on takeoff and landing distances, weather reports and forecasts, and fuel requirements; and (ii) How to plan for alternatives if the planned flight cannot be completed or delays are encountered.';
+};
+
+// Check if all identification-related tasks are complete
+export const areIdentificationTasksComplete = (checklists: any[]): boolean => {
+  // Find the pilot's certificate group (id: '1')
+  const pilotCertGroup = checklists.find(group => group.id === '1');
+  // Find the medical certificate group (id: '2')
+  const medicalCertGroup = checklists.find(group => group.id === '2');
+  // Find the FTN group (usually id: '3' or look for a specific item title)
+  const ftnItem = checklists.flatMap(group => group.items).find(item => item.title === 'FTN# (FAA Tracking Number)');
+
+  // Check if all required certificate items are complete
+  const certComplete = pilotCertGroup?.items
+    .filter(item => ['101', '102', '103'].includes(item.id))
+    .every(item => item.isCompleted);
+  
+  // Check if medical certificate name and date are complete
+  const medicalComplete = medicalCertGroup?.items
+    .filter(item => ['201', '202'].includes(item.id))
+    .every(item => item.isCompleted);
+  
+  // Check if FTN is complete
+  const ftnComplete = ftnItem?.isCompleted;
+
+  // All three conditions must be true
+  return Boolean(certComplete && medicalComplete && ftnComplete);
 };
