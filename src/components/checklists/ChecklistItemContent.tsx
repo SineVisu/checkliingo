@@ -59,7 +59,7 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
         
         {item.value && (
           <p className="text-xs text-gray-500 mt-1">
-            <ValueDisplay value={item.value} />
+            <ValueDisplay value={item.value} itemTitle={item.title} />
           </p>
         )}
         
