@@ -19,13 +19,15 @@ interface PreflightActionDialogProps {
   onClose: () => void;
   onSave: (data: { date: Date; hours: string; pageNumber: string }) => void;
   initialValues?: { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string };
+  title?: string;
 }
 
 const PreflightActionDialog: React.FC<PreflightActionDialogProps> = ({
   isOpen,
   onClose,
   onSave,
-  initialValues
+  initialValues,
+  title = "Ground Training" // Default title if none provided
 }) => {
   const [date, setDate] = useState<Date | undefined>(initialValues?.date);
   const [hours, setHours] = useState<string>(initialValues?.hours || '');
@@ -77,7 +79,7 @@ const PreflightActionDialog: React.FC<PreflightActionDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ground Training</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
             Enter the date of completion and hours for this training.
           </DialogDescription>
