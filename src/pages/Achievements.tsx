@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Award } from 'lucide-react';
+import { Award, Cloud } from 'lucide-react';
 import { ChecklistProvider } from '@/context/ChecklistContext';
 import { initialChecklistData } from '@/data/initialChecklistData';
 import Header from '@/components/layout/Header';
@@ -42,6 +42,9 @@ const Achievements = () => {
     setAchievements(updatedAchievements);
   }, []);
   
+  // Filter for earned achievements
+  const earnedAchievements = achievements.filter(achievement => achievement.earnedAt);
+  
   return (
     <ChecklistProvider initialData={initialChecklistData}>
       <div className="min-h-screen flex flex-col pb-16 bg-gradient-to-b from-background to-muted">
@@ -53,9 +56,9 @@ const Achievements = () => {
             <h1 className="text-2xl font-bold">Achievements</h1>
           </div>
           
-          {achievements.length > 0 ? (
+          {earnedAchievements.length > 0 ? (
             <div className="space-y-4">
-              {achievements.map(achievement => (
+              {earnedAchievements.map(achievement => (
                 <AchievementCard 
                   key={achievement.id} 
                   achievement={achievement} 
@@ -63,10 +66,10 @@ const Achievements = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <Award className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-1">No achievements yet</h3>
-              <p className="text-muted-foreground">Complete tasks to earn achievements</p>
+            <div className="text-center py-12 bg-white/70 rounded-2xl p-6 shadow-sm glass-panel animate-fade-in">
+              <Cloud className="h-16 w-16 text-blue-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-3">No achievements yet</h3>
+              <p className="text-muted-foreground">Complete one task at a time and start earning achievements.</p>
             </div>
           )}
         </main>
