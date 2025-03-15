@@ -156,7 +156,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
         isOpen={showIdentificationAchievement}
         onClose={() => setShowIdentificationAchievement(false)}
         title="Identification Complete!"
-        description="Well Done! You've completed all identification requirements. You've earned a bronze set of Pilot's wings."
+        description="Well Done! You've completed all identification requirements."
         icon={<IdentificationAchievementIcon />}
       />
     </main>

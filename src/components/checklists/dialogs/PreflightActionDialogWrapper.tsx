@@ -27,7 +27,6 @@ const PreflightActionDialogWrapper: React.FC<PreflightActionDialogWrapperProps> 
           ? initialValue as { date?: Date; hours?: string; pageNumber?: string; parentTaskTitle?: string }
           : undefined
       }
-      title={title}
     />
   );
 };
