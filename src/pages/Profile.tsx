@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { User, Edit2, Award } from 'lucide-react';
+import { User, Edit2, Award, Stethoscope } from 'lucide-react';
 import { ChecklistProvider } from '@/context/ChecklistContext';
 import { initialChecklistData } from '@/data/initialChecklistData';
 import Header from '@/components/layout/Header';
@@ -12,12 +12,20 @@ import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ChecklistContext } from '@/context/ChecklistContext';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 
 const ProfileContent = () => {
   const { checklists, licenseName, setChecklists } = useContext(ChecklistContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingCertification, setIsEditingCertification] = useState(false);
   const [pilotCertification, setPilotCertification] = useState('');
+  const [medicalClass, setMedicalClass] = useState<string>('');
   
   const extractNames = (fullName?: string) => {
     if (!fullName) return { firstName: '', lastName: '' };
@@ -76,6 +84,13 @@ const ProfileContent = () => {
     
     toast.success("Certification updated successfully", {
       description: "Your current pilot certification information has been saved."
+    });
+  };
+
+  const handleMedicalClassChange = (value: string) => {
+    setMedicalClass(value);
+    toast.success("Medical class updated", {
+      description: `Your medical certification has been set to ${value}.`
     });
   };
   
@@ -233,6 +248,34 @@ const ProfileContent = () => {
             )}
           </div>
         )}
+      </div>
+      
+      <div className="bg-white rounded-xl p-6 shadow">
+        <div className="flex items-center gap-2 mb-4">
+          <Stethoscope className="h-5 w-5 text-primary" />
+          <h2 className="text-lg font-medium">Medical Certification</h2>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="medical-class">Medical Class</Label>
+            <Select value={medicalClass} onValueChange={handleMedicalClassChange}>
+              <SelectTrigger id="medical-class" className="w-full">
+                <SelectValue placeholder="Select your medical class" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="First Class">First Class</SelectItem>
+                <SelectItem value="Second Class">Second Class</SelectItem>
+                <SelectItem value="Third Class">Third Class</SelectItem>
+              </SelectContent>
+            </Select>
+            {medicalClass && (
+              <p className="text-sm text-muted-foreground mt-2">
+                Current medical: {medicalClass}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
       
       <div className="bg-white rounded-xl p-6 shadow">
