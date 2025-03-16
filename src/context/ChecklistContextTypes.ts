@@ -19,7 +19,6 @@ export interface ChecklistContextType {
   filterCategory: string | null;
   setFilterCategory: (category: string | null) => void;
   isMobile: boolean;
-  saveChecklistData: () => void;
 }
 
 export const defaultContextValue: ChecklistContextType = {
@@ -40,5 +39,4 @@ export const defaultContextValue: ChecklistContextType = {
   filterCategory: null,
   setFilterCategory: () => {},
   isMobile: false,
-  saveChecklistData: () => {},
 };
