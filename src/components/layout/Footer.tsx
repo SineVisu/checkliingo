@@ -1,6 +1,6 @@
 
 import React, { useContext } from 'react';
-import { Home, List, Trophy, User } from 'lucide-react';
+import { Home, List, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -12,7 +12,7 @@ import {
 import { ChecklistContext } from '@/context/ChecklistContext';
 
 interface FooterProps {
-  activeTab?: 'home' | 'lists' | 'achievements' | 'profile';
+  activeTab?: 'home' | 'lists' | 'profile';
 }
 
 const Footer: React.FC<FooterProps> = ({ 
@@ -87,12 +87,6 @@ const Footer: React.FC<FooterProps> = ({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <NavButton 
-          icon={<Trophy className="h-5 w-5" />} 
-          label="Achievements" 
-          active={activeTab === 'achievements'}
-          onClick={() => navigateToPage('/achievements')}
-        />
         <NavButton 
           icon={<User className="h-5 w-5" />} 
           label="Profile" 

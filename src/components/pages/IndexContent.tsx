@@ -1,11 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+
+import React, { useState, useContext } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ChecklistContent from '@/components/checklists/ChecklistContent';
 import CaptureDialogs from '@/components/checklists/CaptureDialogs';
 import { toast } from "sonner";
 import { ChecklistContext } from '@/context/ChecklistContext';
-import { areIdentificationTasksComplete } from '@/components/checklists/dialogs/dialogHelpers';
 
 const IndexContent: React.FC = () => {
   const [streak, setStreak] = useState(3);
@@ -24,22 +24,6 @@ const IndexContent: React.FC = () => {
     acknowledgeNameDiscrepancy,
     acknowledgeMiddleNameDiscrepancy
   } = useContext(ChecklistContext);
-
-  useEffect(() => {
-    const identificationComplete = areIdentificationTasksComplete(checklists);
-    
-    if (identificationComplete) {
-      const achievements = JSON.parse(localStorage.getItem('achievements') || '{}');
-      if (!achievements.identificationComplete) {
-        achievements.identificationComplete = {
-          earnedAt: new Date().toISOString(),
-          title: "Identification Complete",
-          description: "Completed all identification requirements"
-        };
-        localStorage.setItem('achievements', JSON.stringify(achievements));
-      }
-    }
-  }, [checklists]);
 
   const handleCreateNewChecklist = () => {
     const newId = `group-${Date.now()}`;

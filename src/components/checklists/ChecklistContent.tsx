@@ -7,10 +7,7 @@ import ChecklistHeader from '@/components/checklists/ChecklistHeader';
 import EmptyState from '@/components/ui/EmptyState';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import { toast } from 'sonner';
-import AchievementDialog from './AchievementDialog';
 import CompletionDialog from './CompletionDialog';
-import IdentificationAchievementIcon from './IdentificationAchievementIcon';
-import { areIdentificationTasksComplete } from './dialogs/dialogHelpers';
 
 interface ChecklistContentProps {
   streak: number;
@@ -31,26 +28,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
     filterCategory
   } = useContext(ChecklistContext);
 
-  const [showIdentificationAchievement, setShowIdentificationAchievement] = useState(false);
-  const [identificationCompleted, setIdentificationCompleted] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
-
-  // Check for identification completion
-  useEffect(() => {
-    const isComplete = areIdentificationTasksComplete(checklists);
-    
-    // If identified tasks are complete and we haven't shown the achievement yet
-    if (isComplete && !identificationCompleted) {
-      setShowIdentificationAchievement(true);
-      setIdentificationCompleted(true);
-      
-      // Show a toast notification as well
-      toast.success("Achievement Unlocked!", {
-        description: "Well Done! Identification is complete!",
-        position: "top-center",
-      });
-    }
-  }, [checklists, identificationCompleted]);
 
   // Check if all tasks are completed
   useEffect(() => {
@@ -168,15 +146,6 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
       ) : (
         <EmptyState />
       )}
-
-      {/* Achievement Dialog */}
-      <AchievementDialog
-        isOpen={showIdentificationAchievement}
-        onClose={() => setShowIdentificationAchievement(false)}
-        title="Identification Complete!"
-        description="Well Done! You've completed all identification requirements."
-        icon={<IdentificationAchievementIcon />}
-      />
 
       {/* Completion Dialog */}
       <CompletionDialog
