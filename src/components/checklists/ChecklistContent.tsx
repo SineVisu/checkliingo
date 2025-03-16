@@ -8,6 +8,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import { toast } from 'sonner';
 import AchievementDialog from './AchievementDialog';
+import CompletionDialog from './CompletionDialog';
 import IdentificationAchievementIcon from './IdentificationAchievementIcon';
 import { areIdentificationTasksComplete } from './dialogs/dialogHelpers';
 
@@ -32,6 +33,7 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
 
   const [showIdentificationAchievement, setShowIdentificationAchievement] = useState(false);
   const [identificationCompleted, setIdentificationCompleted] = useState(false);
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
   // Check for identification completion
   useEffect(() => {
@@ -49,6 +51,22 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
       });
     }
   }, [checklists, identificationCompleted]);
+
+  // Check if all tasks are completed
+  useEffect(() => {
+    if (checklists.length > 0) {
+      const totalTasks = checklists.reduce((acc, group) => acc + group.items.length, 0);
+      const completedTasks = checklists.reduce(
+        (acc, group) => acc + group.items.filter(item => item.isCompleted).length, 
+        0
+      );
+      
+      // If all tasks are completed and we haven't shown the completion dialog yet
+      if (totalTasks > 0 && completedTasks === totalTasks && !showCompletionDialog) {
+        setShowCompletionDialog(true);
+      }
+    }
+  }, [checklists, showCompletionDialog]);
 
   // Modified filtering logic to include 'medical' category when 'identification' is selected
   const filteredChecklists = filterCategory
@@ -158,6 +176,12 @@ const ChecklistContent: React.FC<ChecklistContentProps> = ({
         title="Identification Complete!"
         description="Well Done! You've completed all identification requirements."
         icon={<IdentificationAchievementIcon />}
+      />
+
+      {/* Completion Dialog */}
+      <CompletionDialog
+        isOpen={showCompletionDialog}
+        onClose={() => setShowCompletionDialog(false)}
       />
     </main>
   );
