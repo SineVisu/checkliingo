@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useContext } from 'react';
-import { User, Edit2 } from 'lucide-react';
+import { User, Edit2, Award } from 'lucide-react';
 import { ChecklistProvider } from '@/context/ChecklistContext';
 import { initialChecklistData } from '@/data/initialChecklistData';
 import Header from '@/components/layout/Header';
@@ -8,6 +7,7 @@ import Footer from '@/components/layout/Footer';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -16,13 +16,13 @@ import { ChecklistContext } from '@/context/ChecklistContext';
 const ProfileContent = () => {
   const { checklists, licenseName, setChecklists } = useContext(ChecklistContext);
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingCertification, setIsEditingCertification] = useState(false);
+  const [pilotCertification, setPilotCertification] = useState('');
   
-  // Extract first and last name from the formatted pilot certificate name
   const extractNames = (fullName?: string) => {
     if (!fullName) return { firstName: '', lastName: '' };
     
     const parts = fullName.split(',').map(part => part.trim());
-    // Traditionally certificate names are formatted as "Last, First, Middle"
     if (parts.length >= 2) {
       return {
         lastName: parts[0] || '',
@@ -30,7 +30,6 @@ const ProfileContent = () => {
       };
     }
     
-    // Fallback to simple split by space if no commas
     const spaceParts = fullName.split(' ');
     return {
       firstName: spaceParts[0] || '',
@@ -46,8 +45,13 @@ const ProfileContent = () => {
       lastName
     }
   });
+
+  const certificationForm = useForm({
+    defaultValues: {
+      certification: pilotCertification
+    }
+  });
   
-  // Update form values when licenseName changes
   useEffect(() => {
     if (!isEditing) {
       const { firstName, lastName } = extractNames(licenseName);
@@ -59,13 +63,19 @@ const ProfileContent = () => {
   }, [licenseName, isEditing, form]);
   
   const onSubmit = (data: { firstName: string; lastName: string }) => {
-    // Save profile information
     setIsEditing(false);
     
-    // Just save the profile data - don't update the certificate information
-    // This way we don't affect the checklist tasks
     toast.success("Profile updated successfully", {
       description: "Your profile information has been saved."
+    });
+  };
+
+  const onSubmitCertification = (data: { certification: string }) => {
+    setPilotCertification(data.certification);
+    setIsEditingCertification(false);
+    
+    toast.success("Certification updated successfully", {
+      description: "Your current pilot certification information has been saved."
     });
   };
   
@@ -151,6 +161,76 @@ const ProfileContent = () => {
                 Name as it appears on your pilot certificate
               </p>
             </div>
+          </div>
+        )}
+      </div>
+      
+      <div className="bg-white rounded-xl p-6 shadow">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Award className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-medium">Current Pilot Certification</h2>
+          </div>
+          
+          {!isEditingCertification && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setIsEditingCertification(true)}
+              className="flex items-center gap-1"
+            >
+              <Edit2 className="h-4 w-4" />
+              Edit
+            </Button>
+          )}
+        </div>
+        
+        {isEditingCertification ? (
+          <Form {...certificationForm}>
+            <form onSubmit={certificationForm.handleSubmit(onSubmitCertification)} className="space-y-4">
+              <FormField
+                control={certificationForm.control}
+                name="certification"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Certification Details</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Enter your current pilot certification details (e.g., Student Pilot, Private Pilot, Commercial Pilot, etc.)"
+                        className="min-h-[100px]"
+                        {...field} 
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              
+              <div className="flex justify-end gap-2 pt-2">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => {
+                    setIsEditingCertification(false);
+                    certificationForm.reset({
+                      certification: pilotCertification
+                    });
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Save Certification</Button>
+              </div>
+            </form>
+          </Form>
+        ) : (
+          <div>
+            {pilotCertification ? (
+              <p className="text-base">{pilotCertification}</p>
+            ) : (
+              <p className="text-muted-foreground italic">
+                No certification information added yet. Click 'Edit' to add your current pilot certification.
+              </p>
+            )}
           </div>
         )}
       </div>
