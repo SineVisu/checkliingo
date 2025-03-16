@@ -7,6 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue 
+} from "@/components/ui/select";
 
 export const PersonalInfoSection = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -18,7 +25,8 @@ export const PersonalInfoSection = () => {
   const form = useForm({
     defaultValues: {
       firstName: initialProfile.firstName || '',
-      lastName: initialProfile.lastName || ''
+      lastName: initialProfile.lastName || '',
+      trainingMethod: initialProfile.trainingMethod || ''
     }
   });
   
@@ -27,19 +35,21 @@ export const PersonalInfoSection = () => {
       // Reset form to the current values when canceling edit
       form.reset({
         firstName: initialProfile.firstName || '',
-        lastName: initialProfile.lastName || ''
+        lastName: initialProfile.lastName || '',
+        trainingMethod: initialProfile.trainingMethod || ''
       });
     }
   }, [isEditing, form]);
   
-  const onSubmit = (data: { firstName: string; lastName: string }) => {
+  const onSubmit = (data: { firstName: string; lastName: string; trainingMethod: string }) => {
     setIsEditing(false);
     
     // Save to localStorage
     localStorage.setItem('userProfile', JSON.stringify({
       ...initialProfile,
       firstName: data.firstName,
-      lastName: data.lastName
+      lastName: data.lastName,
+      trainingMethod: data.trainingMethod
     }));
     
     toast.success("Profile updated successfully", {
@@ -97,6 +107,32 @@ export const PersonalInfoSection = () => {
               )}
             />
             
+            <FormField
+              control={form.control}
+              name="trainingMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>How are you learning to fly?</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your training method" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="part61">With a Part 61 Flight School</SelectItem>
+                      <SelectItem value="part141">With a Part 141 Flight School</SelectItem>
+                      <SelectItem value="independent">With an independent Flight Instructor</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            
             <div className="flex justify-end gap-2 pt-2">
               <Button 
                 type="button" 
@@ -118,6 +154,17 @@ export const PersonalInfoSection = () => {
             <Label className="text-sm text-muted-foreground">Name</Label>
             <p className="text-lg font-medium">
               {form.getValues().firstName} {form.getValues().lastName}
+            </p>
+          </div>
+          
+          <div>
+            <Label className="text-sm text-muted-foreground">Training Method</Label>
+            <p className="text-base">
+              {form.getValues().trainingMethod === 'part61' && 'With a Part 61 Flight School'}
+              {form.getValues().trainingMethod === 'part141' && 'With a Part 141 Flight School'}
+              {form.getValues().trainingMethod === 'independent' && 'With an independent Flight Instructor'}
+              {form.getValues().trainingMethod === 'other' && 'Other'}
+              {!form.getValues().trainingMethod && 'Not specified'}
             </p>
           </div>
         </div>
