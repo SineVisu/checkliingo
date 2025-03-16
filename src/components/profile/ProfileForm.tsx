@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Select,
   SelectContent,
@@ -122,6 +123,43 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ form, onSubmit, onCanc
             </FormItem>
           )}
         />
+        
+        <div className="border-t border-gray-200 pt-4 mt-4">
+          <FormField
+            control={form.control}
+            name="trainingAirport"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>At what airport do you most commonly train?</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Airport name or code (e.g., KJFK)" 
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="airportAddress"
+            render={({ field }) => (
+              <FormItem className="mt-2">
+                <FormLabel>Airport Address</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    placeholder="Enter airport address" 
+                    className="resize-none"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         
         <div className="flex justify-end gap-2 pt-2">
           <Button 

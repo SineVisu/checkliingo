@@ -6,7 +6,9 @@ export const profileSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Please enter a valid email address"),
   trainingMethod: z.string().optional(),
-  learnMoreAboutFlyber: z.boolean().optional().default(false)
+  learnMoreAboutFlyber: z.boolean().optional().default(false),
+  trainingAirport: z.string().optional(),
+  airportAddress: z.string().optional()
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;

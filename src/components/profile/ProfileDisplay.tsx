@@ -43,6 +43,26 @@ export const ProfileDisplay: React.FC<ProfileDisplayProps> = ({ profile }) => {
           {!profile.trainingMethod && 'Not specified'}
         </p>
       </div>
+      
+      {(profile.trainingAirport || profile.airportAddress) && (
+        <div className="border-t border-gray-200 pt-4 mt-4">
+          <Label className="text-sm text-muted-foreground">Training Airport</Label>
+          {profile.trainingAirport && (
+            <p className="text-base font-medium">
+              {profile.trainingAirport}
+            </p>
+          )}
+          
+          {profile.airportAddress && (
+            <div className="mt-1">
+              <Label className="text-sm text-muted-foreground">Address</Label>
+              <p className="text-base whitespace-pre-line">
+                {profile.airportAddress}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
