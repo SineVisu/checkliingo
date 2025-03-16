@@ -14,12 +14,7 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
   children, 
   initialData 
 }) => {
-  // Initialize state with data from localStorage or use initialData if nothing is saved
-  const [checklists, setChecklists] = useState<ChecklistGroupData[]>(() => {
-    const savedData = localStorage.getItem('checklistData');
-    return savedData ? JSON.parse(savedData) : initialData;
-  });
-  
+  const [checklists, setChecklists] = useState<ChecklistGroupData[]>(initialData);
   const [filterCategory, setFilterCategory] = useState<string | null>(null);
   const isMobile = useIsMobile();
   
@@ -27,11 +22,6 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     checklists, 
     setChecklists 
   });
-  
-  // Save checklists to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('checklistData', JSON.stringify(checklists));
-  }, [checklists]);
   
   // Apply mobile-specific optimizations
   useEffect(() => {
