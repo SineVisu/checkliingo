@@ -4,9 +4,11 @@ import { User, Edit2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { 
   Select,
   SelectContent,
@@ -15,6 +17,15 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 
+const profileSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Please enter a valid email address"),
+  trainingMethod: z.string().optional()
+});
+
+type ProfileFormValues = z.infer<typeof profileSchema>;
+
 export const PersonalInfoSection = () => {
   const [isEditing, setIsEditing] = useState(false);
   
@@ -22,10 +33,12 @@ export const PersonalInfoSection = () => {
   const savedProfile = localStorage.getItem('userProfile');
   const initialProfile = savedProfile ? JSON.parse(savedProfile) : {};
   
-  const form = useForm({
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
       firstName: initialProfile.firstName || '',
       lastName: initialProfile.lastName || '',
+      email: initialProfile.email || '',
       trainingMethod: initialProfile.trainingMethod || ''
     }
   });
@@ -36,12 +49,13 @@ export const PersonalInfoSection = () => {
       form.reset({
         firstName: initialProfile.firstName || '',
         lastName: initialProfile.lastName || '',
+        email: initialProfile.email || '',
         trainingMethod: initialProfile.trainingMethod || ''
       });
     }
   }, [isEditing, form]);
   
-  const onSubmit = (data: { firstName: string; lastName: string; trainingMethod: string }) => {
+  const onSubmit = (data: ProfileFormValues) => {
     setIsEditing(false);
     
     // Save to localStorage
@@ -49,6 +63,7 @@ export const PersonalInfoSection = () => {
       ...initialProfile,
       firstName: data.firstName,
       lastName: data.lastName,
+      email: data.email,
       trainingMethod: data.trainingMethod
     }));
     
@@ -90,6 +105,7 @@ export const PersonalInfoSection = () => {
                   <FormControl>
                     <Input placeholder="First name" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -103,6 +119,25 @@ export const PersonalInfoSection = () => {
                   <FormControl>
                     <Input placeholder="Last name" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="email" 
+                      placeholder="your.email@example.com" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -129,6 +164,7 @@ export const PersonalInfoSection = () => {
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -154,6 +190,13 @@ export const PersonalInfoSection = () => {
             <Label className="text-sm text-muted-foreground">Name</Label>
             <p className="text-lg font-medium">
               {form.getValues().firstName} {form.getValues().lastName}
+            </p>
+          </div>
+          
+          <div>
+            <Label className="text-sm text-muted-foreground">Email</Label>
+            <p className="text-base">
+              {form.getValues().email || 'Not specified'}
             </p>
           </div>
           
