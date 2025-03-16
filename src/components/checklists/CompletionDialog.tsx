@@ -62,6 +62,22 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
       // For now, we'll simulate sending by logging and showing a success message
       console.log("Sending email with data:", emailData);
       
+      // Save completed checklist data with timestamp
+      const completedChecklistData = {
+        completedAt: new Date().toISOString(),
+        checklist: checklistData
+      };
+      
+      // Get previous completions or initialize empty array
+      const previousCompletions = localStorage.getItem('completedChecklists') 
+        ? JSON.parse(localStorage.getItem('completedChecklists') || '[]') 
+        : [];
+      
+      // Add new completion to array and save back to localStorage
+      localStorage.setItem('completedChecklists', 
+        JSON.stringify([...previousCompletions, completedChecklistData])
+      );
+      
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
