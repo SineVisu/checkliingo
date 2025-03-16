@@ -8,52 +8,39 @@ import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-interface PersonalInfoProps {
-  licenseName?: string;
-}
-
-export const PersonalInfoSection = ({ licenseName }: PersonalInfoProps) => {
+export const PersonalInfoSection = () => {
   const [isEditing, setIsEditing] = useState(false);
   
-  const extractNames = (fullName?: string) => {
-    if (!fullName) return { firstName: '', lastName: '' };
-    
-    const parts = fullName.split(',').map(part => part.trim());
-    if (parts.length >= 2) {
-      return {
-        lastName: parts[0] || '',
-        firstName: parts.slice(1).join(' ') || ''
-      };
-    }
-    
-    const spaceParts = fullName.split(' ');
-    return {
-      firstName: spaceParts[0] || '',
-      lastName: spaceParts.slice(1).join(' ') || ''
-    };
-  };
-  
-  const { firstName, lastName } = extractNames(licenseName);
+  // Initialize with empty values or from localStorage
+  const savedProfile = localStorage.getItem('userProfile');
+  const initialProfile = savedProfile ? JSON.parse(savedProfile) : {};
   
   const form = useForm({
     defaultValues: {
-      firstName,
-      lastName
+      firstName: initialProfile.firstName || '',
+      lastName: initialProfile.lastName || ''
     }
   });
   
   useEffect(() => {
     if (!isEditing) {
-      const { firstName, lastName } = extractNames(licenseName);
+      // Reset form to the current values when canceling edit
       form.reset({
-        firstName,
-        lastName
+        firstName: initialProfile.firstName || '',
+        lastName: initialProfile.lastName || ''
       });
     }
-  }, [licenseName, isEditing, form]);
+  }, [isEditing, form]);
   
   const onSubmit = (data: { firstName: string; lastName: string }) => {
     setIsEditing(false);
+    
+    // Save to localStorage
+    localStorage.setItem('userProfile', JSON.stringify({
+      ...initialProfile,
+      firstName: data.firstName,
+      lastName: data.lastName
+    }));
     
     toast.success("Profile updated successfully", {
       description: "Your profile information has been saved."
@@ -131,14 +118,6 @@ export const PersonalInfoSection = ({ licenseName }: PersonalInfoProps) => {
             <Label className="text-sm text-muted-foreground">Name</Label>
             <p className="text-lg font-medium">
               {form.getValues().firstName} {form.getValues().lastName}
-            </p>
-          </div>
-          
-          <div>
-            <Label className="text-sm text-muted-foreground">Certificate Name</Label>
-            <p className="text-base">{licenseName || "Not provided"}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Name as it appears on your pilot certificate
             </p>
           </div>
         </div>
