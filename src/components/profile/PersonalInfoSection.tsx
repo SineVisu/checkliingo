@@ -22,7 +22,8 @@ export const PersonalInfoSection = () => {
       lastName: initialProfile.lastName || '',
       email: initialProfile.email || '',
       trainingMethod: initialProfile.trainingMethod || '',
-      learnMoreAboutFlyber: initialProfile.learnMoreAboutFlyber || false
+      learnMoreAboutFlyber: initialProfile.learnMoreAboutFlyber || false,
+      trainingAirport: initialProfile.trainingAirport || ''
     }
   });
   
@@ -34,7 +35,8 @@ export const PersonalInfoSection = () => {
         lastName: initialProfile.lastName || '',
         email: initialProfile.email || '',
         trainingMethod: initialProfile.trainingMethod || '',
-        learnMoreAboutFlyber: initialProfile.learnMoreAboutFlyber || false
+        learnMoreAboutFlyber: initialProfile.learnMoreAboutFlyber || false,
+        trainingAirport: initialProfile.trainingAirport || ''
       });
     }
   }, [isEditing, form]);
@@ -49,7 +51,8 @@ export const PersonalInfoSection = () => {
       lastName: data.lastName,
       email: data.email,
       trainingMethod: data.trainingMethod,
-      learnMoreAboutFlyber: data.learnMoreAboutFlyber
+      learnMoreAboutFlyber: data.learnMoreAboutFlyber,
+      trainingAirport: data.trainingAirport
     }));
     
     toast.success("Profile updated successfully", {

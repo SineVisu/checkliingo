@@ -1,11 +1,9 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import { 
   Select,
   SelectContent,
@@ -134,24 +132,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ form, onSubmit, onCanc
                 <FormControl>
                   <Input 
                     placeholder="Airport name or code (e.g., KJFK)" 
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="airportAddress"
-            render={({ field }) => (
-              <FormItem className="mt-2">
-                <FormLabel>Airport Address</FormLabel>
-                <FormControl>
-                  <Textarea 
-                    placeholder="Enter airport address" 
-                    className="resize-none"
                     {...field} 
                   />
                 </FormControl>

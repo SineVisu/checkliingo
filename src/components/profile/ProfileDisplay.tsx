@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Label } from "@/components/ui/label";
 import { ProfileFormValues } from './ProfileSchema';
@@ -44,23 +43,12 @@ export const ProfileDisplay: React.FC<ProfileDisplayProps> = ({ profile }) => {
         </p>
       </div>
       
-      {(profile.trainingAirport || profile.airportAddress) && (
+      {profile.trainingAirport && (
         <div className="border-t border-gray-200 pt-4 mt-4">
           <Label className="text-sm text-muted-foreground">Training Airport</Label>
-          {profile.trainingAirport && (
-            <p className="text-base font-medium">
-              {profile.trainingAirport}
-            </p>
-          )}
-          
-          {profile.airportAddress && (
-            <div className="mt-1">
-              <Label className="text-sm text-muted-foreground">Address</Label>
-              <p className="text-base whitespace-pre-line">
-                {profile.airportAddress}
-              </p>
-            </div>
-          )}
+          <p className="text-base font-medium">
+            {profile.trainingAirport}
+          </p>
         </div>
       )}
     </div>
