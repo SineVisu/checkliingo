@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Stethoscope } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -10,23 +10,12 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { saveToStorage, getFromStorage, STORAGE_KEYS } from '@/utils/storage';
 
 export const MedicalSection = () => {
   const [medicalClass, setMedicalClass] = useState<string>('');
   
-  // Load saved medical class on initial render
-  useEffect(() => {
-    const savedMedicalClass = getFromStorage(STORAGE_KEYS.MEDICAL_CLASS);
-    if (savedMedicalClass) {
-      setMedicalClass(savedMedicalClass);
-    }
-  }, []);
-  
   const handleMedicalClassChange = (value: string) => {
     setMedicalClass(value);
-    saveToStorage(STORAGE_KEYS.MEDICAL_CLASS, value);
-    
     toast.success("Medical class updated", {
       description: `Your medical certification has been set to ${value}.`
     });

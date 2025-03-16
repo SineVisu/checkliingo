@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { saveToStorage, getFromStorage, STORAGE_KEYS } from '@/utils/storage';
 
 interface PersonalInfoProps {
   licenseName?: string;
@@ -34,23 +33,7 @@ export const PersonalInfoSection = ({ licenseName }: PersonalInfoProps) => {
     };
   };
   
-  // Get initial values from localStorage or extract from licenseName
-  const getInitialValues = () => {
-    const storedFirstName = getFromStorage(STORAGE_KEYS.PROFILE_FIRST_NAME);
-    const storedLastName = getFromStorage(STORAGE_KEYS.PROFILE_LAST_NAME);
-    
-    if (storedFirstName && storedLastName) {
-      return {
-        firstName: storedFirstName,
-        lastName: storedLastName
-      };
-    }
-    
-    // Fall back to extracted names if nothing in localStorage
-    return extractNames(licenseName);
-  };
-  
-  const { firstName, lastName } = getInitialValues();
+  const { firstName, lastName } = extractNames(licenseName);
   
   const form = useForm({
     defaultValues: {
@@ -61,15 +44,15 @@ export const PersonalInfoSection = ({ licenseName }: PersonalInfoProps) => {
   
   useEffect(() => {
     if (!isEditing) {
-      const initialValues = getInitialValues();
-      form.reset(initialValues);
+      const { firstName, lastName } = extractNames(licenseName);
+      form.reset({
+        firstName,
+        lastName
+      });
     }
   }, [licenseName, isEditing, form]);
   
   const onSubmit = (data: { firstName: string; lastName: string }) => {
-    saveToStorage(STORAGE_KEYS.PROFILE_FIRST_NAME, data.firstName);
-    saveToStorage(STORAGE_KEYS.PROFILE_LAST_NAME, data.lastName);
-    
     setIsEditing(false);
     
     toast.success("Profile updated successfully", {

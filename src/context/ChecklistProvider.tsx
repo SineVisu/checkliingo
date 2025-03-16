@@ -1,7 +1,7 @@
 
 import React, { useState, ReactNode, useEffect } from 'react';
 import { ChecklistContext } from './ChecklistContext';
-import { useNameDiscrepancy } from '@/hooks/nameDiscrepancy/useNameDiscrepancy';
+import { useNameDiscrepancy } from '@/hooks/useNameDiscrepancy';
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 import { useIsMobile } from '@/hooks/use-mobile';
 
