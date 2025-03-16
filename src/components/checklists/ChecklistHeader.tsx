@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import StreakCounter from '@/components/common/StreakCounter';
+import { ChecklistContext } from '@/context/ChecklistContext';
 
 interface ChecklistHeaderProps {
   title: string;
@@ -12,9 +13,10 @@ interface ChecklistHeaderProps {
 const ChecklistHeader: React.FC<ChecklistHeaderProps> = ({ 
   title, 
   completedTasks, 
-  totalTasks, 
-  streak 
+  totalTasks 
 }) => {
+  const { saveChecklistData } = useContext(ChecklistContext);
+  
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
@@ -23,7 +25,7 @@ const ChecklistHeader: React.FC<ChecklistHeaderProps> = ({
           {completedTasks} of {totalTasks} tasks completed
         </p>
       </div>
-      <StreakCounter count={streak} />
+      <StreakCounter onSave={saveChecklistData} />
     </div>
   );
 };

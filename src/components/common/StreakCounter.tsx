@@ -1,18 +1,22 @@
 
 import React from 'react';
-import { Flame } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 interface StreakCounterProps {
-  count: number;
+  onSave: () => void;
 }
 
-const StreakCounter: React.FC<StreakCounterProps> = ({ count }) => {
+const StreakCounter: React.FC<StreakCounterProps> = ({ onSave }) => {
   return (
-    <div className="flex items-center bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-full animate-pop">
-      <Flame className="h-5 w-5 mr-2 animate-pulse-gentle" />
+    <div 
+      className="flex items-center bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-full cursor-pointer hover:opacity-90 transition-opacity"
+      onClick={onSave}
+      role="button"
+      aria-label="Save checklist data"
+    >
+      <Save className="h-5 w-5 mr-2" />
       <div className="flex flex-col">
-        <span className="text-xs font-medium opacity-90">Current Streak</span>
-        <span className="text-lg font-bold -mt-1">{count} days</span>
+        <span className="text-sm font-medium">Save checklist data</span>
       </div>
     </div>
   );

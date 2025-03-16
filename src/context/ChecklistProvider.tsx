@@ -1,9 +1,10 @@
 
-import React, { useState, ReactNode, useEffect } from 'react';
+import React, { useState, ReactNode, useEffect, useCallback } from 'react';
 import { ChecklistContext } from './ChecklistContext';
 import { useNameDiscrepancy } from '@/hooks/useNameDiscrepancy';
 import { ChecklistGroupData } from '@/components/checklists/ChecklistGroup';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { toast } from 'sonner';
 
 interface ChecklistProviderProps {
   children: ReactNode;
@@ -31,12 +32,28 @@ export const ChecklistProvider: React.FC<ChecklistProviderProps> = ({
     }
   }, [isMobile]);
   
+  // Save checklist data function
+  const saveChecklistData = useCallback(() => {
+    try {
+      localStorage.setItem('flyber-checklists', JSON.stringify(checklists));
+      toast.success("Checklist saved", {
+        description: "Your progress has been saved successfully."
+      });
+    } catch (error) {
+      console.error("Error saving checklist data:", error);
+      toast.error("Failed to save", {
+        description: "There was a problem saving your checklist data."
+      });
+    }
+  }, [checklists]);
+  
   const value = {
     checklists,
     setChecklists,
     filterCategory,
     setFilterCategory,
     isMobile,
+    saveChecklistData,
     ...nameDiscrepancyState
   };
 
