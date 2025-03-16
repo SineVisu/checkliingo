@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Select,
   SelectContent,
@@ -21,7 +22,8 @@ const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Please enter a valid email address"),
-  trainingMethod: z.string().optional()
+  trainingMethod: z.string().optional(),
+  learnMoreAboutFlyber: z.boolean().optional().default(false)
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -39,7 +41,8 @@ export const PersonalInfoSection = () => {
       firstName: initialProfile.firstName || '',
       lastName: initialProfile.lastName || '',
       email: initialProfile.email || '',
-      trainingMethod: initialProfile.trainingMethod || ''
+      trainingMethod: initialProfile.trainingMethod || '',
+      learnMoreAboutFlyber: initialProfile.learnMoreAboutFlyber || false
     }
   });
   
@@ -50,7 +53,8 @@ export const PersonalInfoSection = () => {
         firstName: initialProfile.firstName || '',
         lastName: initialProfile.lastName || '',
         email: initialProfile.email || '',
-        trainingMethod: initialProfile.trainingMethod || ''
+        trainingMethod: initialProfile.trainingMethod || '',
+        learnMoreAboutFlyber: initialProfile.learnMoreAboutFlyber || false
       });
     }
   }, [isEditing, form]);
@@ -64,13 +68,18 @@ export const PersonalInfoSection = () => {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      trainingMethod: data.trainingMethod
+      trainingMethod: data.trainingMethod,
+      learnMoreAboutFlyber: data.learnMoreAboutFlyber
     }));
     
     toast.success("Profile updated successfully", {
       description: "Your profile information has been saved."
     });
   };
+  
+  // Watch the email field to conditionally show the checkbox
+  const email = form.watch("email");
+  const hasEmail = email && email.trim().length > 0;
   
   return (
     <div className="bg-white rounded-xl p-6 shadow">
@@ -142,6 +151,28 @@ export const PersonalInfoSection = () => {
               )}
             />
             
+            {hasEmail && (
+              <FormField
+                control={form.control}
+                name="learnMoreAboutFlyber"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-2 bg-muted/20">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="cursor-pointer">
+                        I would like to learn more about Flyber
+                      </FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            )}
+            
             <FormField
               control={form.control}
               name="trainingMethod"
@@ -199,6 +230,15 @@ export const PersonalInfoSection = () => {
               {form.getValues().email || 'Not specified'}
             </p>
           </div>
+          
+          {form.getValues().email && form.getValues().learnMoreAboutFlyber && (
+            <div>
+              <Label className="text-sm text-muted-foreground">Preferences</Label>
+              <p className="text-base">
+                Subscribed to Flyber updates
+              </p>
+            </div>
+          )}
           
           <div>
             <Label className="text-sm text-muted-foreground">Training Method</Label>
