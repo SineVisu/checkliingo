@@ -26,7 +26,7 @@ interface ChecklistItemProps {
 const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete }) => {
   const { dialogOpen, setDialogOpen, expandedSubtasks, setExpandedSubtasks, animating, setAnimating } = useChecklistItemState();
   
-  const { handleToggle, areAllSubtasksCompleted } = useSubtaskHandling({
+  const { handleToggle, areAllSubtasksCompleted, hasSubtaskWithInputData } = useSubtaskHandling({
     item,
     onToggleComplete,
     setAnimating,
@@ -42,8 +42,10 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   // Check if this is a flight proficiency task (in group 4)
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
   
-  // Determine if the item should appear completed based on subtasks
-  const isVisuallyCompleted = item.isCompleted || (isFlightProficiencyTask && item.subtasks && areAllSubtasksCompleted());
+  // Determine if the item should appear completed based on subtasks or input data
+  const isVisuallyCompleted = item.isCompleted || 
+    (isFlightProficiencyTask && item.subtasks && areAllSubtasksCompleted()) ||
+    (!isFlightProficiencyTask && item.subtasks && hasSubtaskWithInputData());
 
   return (
     <>
@@ -59,6 +61,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           expandedSubtasks={expandedSubtasks}
           setExpandedSubtasks={setExpandedSubtasks}
           areAllSubtasksCompleted={areAllSubtasksCompleted}
+          hasSubtaskWithInputData={hasSubtaskWithInputData}
           isVisuallyCompleted={isVisuallyCompleted}
         />
         

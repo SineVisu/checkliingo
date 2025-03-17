@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { ChecklistItemData } from '@/components/checklists/ChecklistItem';
@@ -132,15 +133,32 @@ export const useSubtaskHandling = ({
     return item.subtasks.every(subtask => subtask.isCompleted);
   };
 
-  // Update main task status when all subtasks are completed
+  // Check if any subtask has input data
+  const hasSubtaskWithInputData = () => {
+    if (!item.subtasks || item.subtasks.length === 0) return false;
+    return item.subtasks.some(subtask => 
+      subtask.isCompleted && subtask.value !== undefined && subtask.value !== null
+    );
+  };
+
+  // Update main task status when subtasks are completed or have input data
   useEffect(() => {
-    if (item.subtasks && item.subtasks.length > 0 && areAllSubtasksCompleted() && !item.isCompleted) {
-      // Automatically complete flight proficiency tasks when all subtasks are completed
-      if (isFlightProficiencyTask) {
+    if (item.subtasks && item.subtasks.length > 0 && !item.isCompleted) {
+      // For flight proficiency tasks, require all subtasks to be completed
+      if (isFlightProficiencyTask && areAllSubtasksCompleted()) {
         setTimeout(() => {
           onToggleComplete(item.id, true);
           toast.success(`${item.title} completed!`, {
             description: "Both Flight and Ground subtasks are now complete.",
+          });
+        }, 500); // Small delay to allow animations to complete
+      }
+      // For other tasks, mark as complete if any subtask has input data
+      else if (!isFlightProficiencyTask && hasSubtaskWithInputData()) {
+        setTimeout(() => {
+          onToggleComplete(item.id, true);
+          toast.success(`${item.title} completed!`, {
+            description: "Task marked complete based on subtask data.",
           });
         }, 500); // Small delay to allow animations to complete
       }
@@ -149,6 +167,7 @@ export const useSubtaskHandling = ({
 
   return {
     handleToggle,
-    areAllSubtasksCompleted
+    areAllSubtasksCompleted,
+    hasSubtaskWithInputData
   };
 };

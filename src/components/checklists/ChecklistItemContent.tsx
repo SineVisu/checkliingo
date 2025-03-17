@@ -11,6 +11,7 @@ interface ChecklistItemContentProps {
   expandedSubtasks: boolean;
   setExpandedSubtasks: React.Dispatch<React.SetStateAction<boolean>>;
   areAllSubtasksCompleted: () => boolean;
+  hasSubtaskWithInputData?: () => boolean;
   isVisuallyCompleted?: boolean;
 }
 
@@ -20,12 +21,15 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
   expandedSubtasks,
   setExpandedSubtasks,
   areAllSubtasksCompleted,
+  hasSubtaskWithInputData,
   isVisuallyCompleted
 }) => {
   // If isVisuallyCompleted is provided, use it; otherwise fall back to checking subtasks or item.isCompleted
   const isCompleted = isVisuallyCompleted !== undefined 
     ? isVisuallyCompleted 
-    : (item.subtasks && item.subtasks.length > 0 ? areAllSubtasksCompleted() : item.isCompleted);
+    : (item.subtasks && item.subtasks.length > 0 
+        ? hasSubtaskWithInputData?.() || areAllSubtasksCompleted() 
+        : item.isCompleted);
 
   return (
     <div className="flex-1 flex items-center">
