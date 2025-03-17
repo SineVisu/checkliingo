@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Menu, User, Home, List } from 'lucide-react';
+import { Menu, User, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -34,13 +34,6 @@ const Header: React.FC = () => {
               >
                 <Home className="h-4 w-4" />
                 Home
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => handleNavigate('/')}
-              >
-                <List className="h-4 w-4" />
-                Lists
               </DropdownMenuItem>
               <DropdownMenuItem 
                 className="flex items-center gap-2 cursor-pointer"
