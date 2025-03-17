@@ -1,46 +1,9 @@
 
 import React from 'react';
-import { 
-  isLicenseOrMedicalNameDialog,
-  isDateDialog,
-  isCertificateNumberDialog,
-  isFTNDialog,
-  isKnowledgeTestResultsDialog,
-  isAeronauticalKnowledgeFARDialog,
-  isNTSBAccidentReportingDialog,
-  isTrainingDialog,
-  isExperienceDialog,
-  isAIMAdvisoryCircularsDialog,
-  isVFRNavigationChartsDialog,
-  isRadioCommunicationProceduresDialog,
-  isCriticalWeatherSituationsDialog,
-  isSafeOperationAircraftDialog,
-  isDensityAltitudeDialog,
-  isWeightBalanceComputationsDialog,
-  isAerodynamicsPowerplantsDialog,
-  isStallAwarenessDialog,
-  isAeronauticalDecisionMakingDialog,
-  isPreflightActionDialog
-} from './dialogs/dialogHelpers';
-import LicenseNameDialogWrapper from './dialogs/LicenseNameDialogWrapper';
-import IssuanceDateDialogWrapper from './dialogs/IssuanceDateDialogWrapper';
-import CertificateNumberDialogWrapper from './dialogs/CertificateNumberDialogWrapper';
-import FTNDialogWrapper from './dialogs/FTNDialogWrapper';
-import KnowledgeTestResultsDialogWrapper from './dialogs/KnowledgeTestResultsDialogWrapper';
-import PreflightPreparationDialogWrapper from './dialogs/PreflightPreparationDialogWrapper';
-import LogbookPageDialogWrapper from './dialogs/LogbookPageDialogWrapper';
-import NTSBAccidentReportingDialogWrapper from './dialogs/NTSBAccidentReportingDialogWrapper';
-import AIMAdvisoryCircularsDialogWrapper from './dialogs/AIMAdvisoryCircularsDialogWrapper';
-import VFRNavigationChartsDialogWrapper from './dialogs/VFRNavigationChartsDialogWrapper';
-import RadioCommunicationDialogWrapper from './dialogs/RadioCommunicationDialogWrapper';
-import CriticalWeatherSituationsDialogWrapper from './dialogs/CriticalWeatherSituationsDialogWrapper';
-import SafeOperationDialogWrapper from './dialogs/SafeOperationDialogWrapper';
-import DensityAltitudeDialogWrapper from './dialogs/DensityAltitudeDialogWrapper';
-import WeightBalanceComputationsDialogWrapper from './dialogs/WeightBalanceComputationsDialogWrapper';
-import AerodynamicsPowerplantsDialogWrapper from './dialogs/AerodynamicsPowerplantsDialogWrapper';
-import StallAwarenessDialogWrapper from './dialogs/StallAwarenessDialogWrapper';
-import AeronauticalDecisionMakingDialogWrapper from './dialogs/AeronauticalDecisionMakingDialogWrapper';
-import PreflightActionDialogWrapper from './dialogs/PreflightActionDialogWrapper';
+import { IdentificationDialogSelector } from './dialogs/selectors/IdentificationDialogSelector';
+import { KnowledgeTestDialogSelector } from './dialogs/selectors/KnowledgeTestDialogSelector';
+import { AeronauticalKnowledgeDialogSelector } from './dialogs/selectors/AeronauticalKnowledgeDialogSelector';
+import { FlightOperationsDialogSelector } from './dialogs/selectors/FlightOperationsDialogSelector';
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -58,145 +21,15 @@ interface DialogSelectorProps {
 }
 
 const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
-  const { itemTitle, category } = props;
-  
-  if (isLicenseOrMedicalNameDialog(itemTitle)) {
-    return <LicenseNameDialogWrapper {...props} />;
-  }
-  
-  if (isDateDialog(itemTitle)) {
-    return <IssuanceDateDialogWrapper {...props} />;
-  }
-
-  if (isCertificateNumberDialog(itemTitle)) {
-    return <CertificateNumberDialogWrapper {...props} />;
-  }
-
-  if (isFTNDialog(itemTitle)) {
-    return <FTNDialogWrapper {...props} />;
-  }
-
-  if (isKnowledgeTestResultsDialog(itemTitle)) {
-    return <KnowledgeTestResultsDialogWrapper {...props} />;
-  }
-
-  if (isNTSBAccidentReportingDialog(itemTitle)) {
-    return <NTSBAccidentReportingDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-
-  if (isAIMAdvisoryCircularsDialog(itemTitle)) {
-    return <AIMAdvisoryCircularsDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isVFRNavigationChartsDialog(itemTitle)) {
-    return <VFRNavigationChartsDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isRadioCommunicationProceduresDialog(itemTitle)) {
-    return <RadioCommunicationDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isCriticalWeatherSituationsDialog(itemTitle)) {
-    return <CriticalWeatherSituationsDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isSafeOperationAircraftDialog(itemTitle)) {
-    return <SafeOperationDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isDensityAltitudeDialog(itemTitle)) {
-    return <DensityAltitudeDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isWeightBalanceComputationsDialog(itemTitle)) {
-    return <WeightBalanceComputationsDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isAerodynamicsPowerplantsDialog(itemTitle)) {
-    return <AerodynamicsPowerplantsDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isStallAwarenessDialog(itemTitle)) {
-    return <StallAwarenessDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-
-  if (isAeronauticalDecisionMakingDialog(itemTitle)) {
-    return <AeronauticalDecisionMakingDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-  
-  if (isPreflightActionDialog(itemTitle)) {
-    return <PreflightActionDialogWrapper 
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-      onSavePreflight={props.onSavePreflight}
-      initialValue={props.initialValue}
-    />;
-  }
-
-  if (isAeronauticalKnowledgeFARDialog(itemTitle) || isTrainingDialog(itemTitle)) {
-    return <PreflightPreparationDialogWrapper {...props} />;
-  }
-
-  if (isExperienceDialog(category)) {
-    return <LogbookPageDialogWrapper {...props} />;
-  }
-
-  return null;
+  // Try each category of dialogs in sequence
+  return (
+    <>
+      <IdentificationDialogSelector {...props} />
+      <KnowledgeTestDialogSelector {...props} />
+      <AeronauticalKnowledgeDialogSelector {...props} />
+      <FlightOperationsDialogSelector {...props} />
+    </>
+  );
 };
 
 export default DialogSelector;
