@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { DialogRegistry } from './DialogRegistry';
 import SafeOperationDialogWrapper from '../SafeOperationDialogWrapper';
 import DensityAltitudeDialogWrapper from '../DensityAltitudeDialogWrapper';

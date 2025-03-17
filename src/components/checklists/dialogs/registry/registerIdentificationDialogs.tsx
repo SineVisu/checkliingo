@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { DialogRegistry } from './DialogRegistry';
 import LicenseNameDialogWrapper from '../LicenseNameDialogWrapper';
 import IssuanceDateDialogWrapper from '../IssuanceDateDialogWrapper';

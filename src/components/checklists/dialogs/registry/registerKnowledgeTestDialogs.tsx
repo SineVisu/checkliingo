@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { DialogRegistry } from './DialogRegistry';
 import KnowledgeTestResultsDialogWrapper from '../KnowledgeTestResultsDialogWrapper';
 import { isKnowledgeTestResultsDialog } from '../dialogHelpers';
