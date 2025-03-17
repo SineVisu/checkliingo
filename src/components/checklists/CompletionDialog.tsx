@@ -2,9 +2,11 @@
 import React, { useState, useContext } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Trophy, Mail, X, FileCheck } from 'lucide-react';
+import { Trophy, Mail, X, FileCheck, Download } from 'lucide-react';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import { toast } from 'sonner';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface CompletionDialogProps {
   isOpen: boolean;
@@ -17,15 +19,129 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
 }) => {
   const [hasPaid, setHasPaid] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const { checklists } = useContext(ChecklistContext);
+  
+  const generatePDF = () => {
+    setIsGeneratingPDF(true);
+    
+    try {
+      // Create new PDF document
+      const doc = new jsPDF();
+      
+      // Add title
+      doc.setFontSize(20);
+      doc.text('Flyber - Private Pilot Checklist', 105, 15, { align: 'center' });
+      
+      // Add current date
+      const currentDate = new Date().toLocaleDateString();
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${currentDate}`, 105, 25, { align: 'center' });
+      
+      let yPosition = 35;
+      const pageWidth = doc.internal.pageSize.width;
+      
+      // Process each checklist group
+      checklists.forEach((group, groupIndex) => {
+        // Check if we need a new page
+        if (yPosition > 260) {
+          doc.addPage();
+          yPosition = 15;
+        }
+        
+        // Add group title
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(group.title, 14, yPosition);
+        yPosition += 8;
+        
+        // Prepare table data for this group
+        const tableData = group.items.map(item => {
+          return [
+            item.title,
+            item.isCompleted ? 'Completed' : 'Incomplete',
+            item.value ? (
+              typeof item.value === 'object' 
+                ? JSON.stringify(item.value).replace(/[{}"]/g, '').replace(/,/g, ', ') 
+                : item.value.toString()
+            ) : 'N/A',
+            '' // Instructor initials column
+          ];
+        });
+        
+        // Add the table
+        autoTable(doc, {
+          startY: yPosition,
+          head: [['Task', 'Status', 'Value', 'Instructor Initials']],
+          body: tableData,
+          theme: 'grid',
+          headStyles: { fillColor: [255, 165, 0] }, // Orange header
+          columnStyles: {
+            0: { cellWidth: 80 }, // Task column
+            1: { cellWidth: 30 }, // Status column
+            2: { cellWidth: 'auto' }, // Value column
+            3: { cellWidth: 30 }  // Instructor initials column
+          },
+          didDrawPage: (data) => {
+            // Add footer
+            doc.setFontSize(10);
+            doc.text('Flyber Checklist - Page ' + doc.internal.getNumberOfPages(), pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+          }
+        });
+        
+        // Update Y position after table
+        yPosition = (doc as any).lastAutoTable.finalY + 15;
+      });
+      
+      // Add signature sections at the end
+      if (yPosition > 220) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Endorsements', 14, yPosition);
+      yPosition += 10;
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'normal');
+      doc.text('Flight Instructor Signature:', 14, yPosition);
+      
+      // Draw signature line
+      doc.line(60, yPosition + 5, 180, yPosition + 5);
+      yPosition += 15;
+      
+      doc.text('Instructor Certificate Number:', 14, yPosition);
+      doc.line(70, yPosition + 5, 180, yPosition + 5);
+      yPosition += 15;
+      
+      doc.text('Expiration Date:', 14, yPosition);
+      doc.line(50, yPosition + 5, 120, yPosition + 5);
+      
+      // Save the PDF
+      doc.save('flyber-pilot-checklist.pdf');
+      
+      toast.success("PDF Generated Successfully", {
+        description: "Your checklist PDF has been generated and downloaded."
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to generate PDF", {
+        description: "There was a problem creating your PDF. Please try again."
+      });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
   
   const handleGeneratePDF = () => {
     // In a real implementation, this would trigger Apple Pay
     // For now, we'll simulate a successful payment
     setTimeout(() => {
       setHasPaid(true);
-      // Send email automatically after payment
-      sendCompletionEmail();
+      // Generate PDF automatically after payment
+      generatePDF();
     }, 1000);
   };
   
@@ -90,6 +206,10 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
     onClose();
   };
   
+  const handleDownloadPDF = () => {
+    generatePDF();
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
@@ -117,13 +237,21 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
             <Button 
               onClick={handleGeneratePDF} 
               className="w-full bg-green-600 hover:bg-green-700 gap-2"
-              disabled={isSendingEmail}
+              disabled={isGeneratingPDF}
             >
               <FileCheck className="h-4 w-4" />
-              Generate my certified PDF ($9.99)
+              {isGeneratingPDF ? "Generating your PDF..." : "Generate my certified PDF ($9.99)"}
             </Button>
           ) : (
             <>
+              <Button 
+                onClick={handleDownloadPDF} 
+                className="w-full bg-green-600 hover:bg-green-700 gap-2"
+                disabled={isGeneratingPDF}
+              >
+                <Download className="h-4 w-4" />
+                {isGeneratingPDF ? "Generating PDF..." : "Download PDF Again"}
+              </Button>
               <Button 
                 onClick={handleNotifyDPE} 
                 className="w-full gap-2"
