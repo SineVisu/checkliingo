@@ -25,10 +25,12 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
   isVisuallyCompleted
 }) => {
   // If isVisuallyCompleted is provided, use it; otherwise fall back to checking subtasks or item.isCompleted
+  // For individual items without subtasks, they are completed if isCompleted is true
+  // For items with subtasks, they are completed if all subtasks are completed OR the parent is directly marked complete
   const isCompleted = isVisuallyCompleted !== undefined 
     ? isVisuallyCompleted 
     : (item.subtasks && item.subtasks.length > 0 
-        ? hasSubtaskWithInputData?.() || areAllSubtasksCompleted() 
+        ? areAllSubtasksCompleted() 
         : item.isCompleted);
 
   return (

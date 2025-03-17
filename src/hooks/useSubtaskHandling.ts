@@ -137,33 +137,42 @@ export const useSubtaskHandling = ({
   const hasSubtaskWithInputData = () => {
     if (!item.subtasks || item.subtasks.length === 0) return false;
     return item.subtasks.some(subtask => 
-      subtask.isCompleted && subtask.value !== undefined && subtask.value !== null
+      subtask.value !== undefined && subtask.value !== null
     );
   };
 
-  // Update main task status when subtasks are completed or have input data
+  // Mark subtasks as complete when they have data
+  useEffect(() => {
+    // Auto-complete subtasks that have data
+    if (item.subtasks) {
+      item.subtasks.forEach(subtask => {
+        if (subtask.value && !subtask.isCompleted) {
+          // Mark the subtask as complete if it has data but isn't already completed
+          setTimeout(() => {
+            onToggleComplete(subtask.id, true, subtask.value);
+            toast.success(`${subtask.title} completed!`, {
+              description: "Subtask marked complete based on entered data.",
+            });
+          }, 300);
+        }
+      });
+    }
+  }, [item.subtasks]);
+
+  // Update main task status when ALL subtasks are completed
   useEffect(() => {
     if (item.subtasks && item.subtasks.length > 0 && !item.isCompleted) {
-      // For flight proficiency tasks, require all subtasks to be completed
-      if (isFlightProficiencyTask && areAllSubtasksCompleted()) {
+      // Only mark parent task complete when ALL subtasks are completed
+      if (areAllSubtasksCompleted()) {
         setTimeout(() => {
           onToggleComplete(item.id, true);
           toast.success(`${item.title} completed!`, {
-            description: "Both Flight and Ground subtasks are now complete.",
-          });
-        }, 500); // Small delay to allow animations to complete
-      }
-      // For other tasks, mark as complete if any subtask has input data
-      else if (!isFlightProficiencyTask && hasSubtaskWithInputData()) {
-        setTimeout(() => {
-          onToggleComplete(item.id, true);
-          toast.success(`${item.title} completed!`, {
-            description: "Task marked complete based on subtask data.",
+            description: "All subtasks are now complete.",
           });
         }, 500); // Small delay to allow animations to complete
       }
     }
-  }, [item.subtasks, item.isCompleted, item.id, item.title, isFlightProficiencyTask, onToggleComplete]);
+  }, [item.subtasks, item.isCompleted, item.id, item.title, onToggleComplete]);
 
   return {
     handleToggle,

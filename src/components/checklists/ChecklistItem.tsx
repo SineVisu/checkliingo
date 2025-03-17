@@ -42,10 +42,11 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
   // Check if this is a flight proficiency task (in group 4)
   const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
   
-  // Determine if the item should appear completed based on subtasks or input data
+  // Determine if the item should appear visually completed 
+  // For all items with subtasks, they should only appear completed if ALL subtasks are completed
+  // OR if the item itself is marked as completed
   const isVisuallyCompleted = item.isCompleted || 
-    (isFlightProficiencyTask && item.subtasks && areAllSubtasksCompleted()) ||
-    (!isFlightProficiencyTask && item.subtasks && hasSubtaskWithInputData());
+    (item.subtasks && item.subtasks.length > 0 && areAllSubtasksCompleted());
 
   return (
     <>
