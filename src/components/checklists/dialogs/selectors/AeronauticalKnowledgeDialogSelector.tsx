@@ -24,6 +24,8 @@ interface AeronauticalKnowledgeDialogSelectorProps {
   initialValue?: any;
 }
 
+// Note: This component is kept for backward compatibility but is no longer used directly.
+// Dialog selection is now handled by the DialogRegistry
 export const AeronauticalKnowledgeDialogSelector: React.FC<AeronauticalKnowledgeDialogSelectorProps> = (props) => {
   const { itemTitle } = props;
   

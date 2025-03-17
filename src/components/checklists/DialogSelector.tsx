@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { IdentificationDialogSelector } from './dialogs/selectors/IdentificationDialogSelector';
-import { KnowledgeTestDialogSelector } from './dialogs/selectors/KnowledgeTestDialogSelector';
-import { AeronauticalKnowledgeDialogSelector } from './dialogs/selectors/AeronauticalKnowledgeDialogSelector';
-import { FlightOperationsDialogSelector } from './dialogs/selectors/FlightOperationsDialogSelector';
+import { DialogRegistry } from './dialogs/registry/DialogRegistry';
+import { registerDialogs } from './dialogs/registry/registerDialogs';
+
+// Make sure all dialogs are registered
+registerDialogs();
 
 interface DialogSelectorProps {
   itemTitle: string;
@@ -21,15 +22,16 @@ interface DialogSelectorProps {
 }
 
 const DialogSelector: React.FC<DialogSelectorProps> = (props) => {
-  // Try each category of dialogs in sequence
-  return (
-    <>
-      <IdentificationDialogSelector {...props} />
-      <KnowledgeTestDialogSelector {...props} />
-      <AeronauticalKnowledgeDialogSelector {...props} />
-      <FlightOperationsDialogSelector {...props} />
-    </>
-  );
+  const { itemTitle, category } = props;
+  
+  // Find the registered dialog that matches the title and category
+  const dialogItem = DialogRegistry.findDialog(itemTitle, category);
+  
+  if (dialogItem) {
+    return dialogItem.component(props);
+  }
+  
+  return null;
 };
 
 export default DialogSelector;

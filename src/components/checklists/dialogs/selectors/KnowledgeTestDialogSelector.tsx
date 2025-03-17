@@ -11,6 +11,8 @@ interface KnowledgeTestDialogSelectorProps {
   initialValue?: any;
 }
 
+// Note: This component is kept for backward compatibility but is no longer used directly.
+// Dialog selection is now handled by the DialogRegistry
 export const KnowledgeTestDialogSelector: React.FC<KnowledgeTestDialogSelectorProps> = (props) => {
   const { itemTitle } = props;
   
