@@ -103,8 +103,10 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
           didDrawPage: (data) => {
             // Add footer
             doc.setFontSize(10);
-            // Using pageNumber as a workaround for the getCurrentPageInfo() type error
-            const pageNumber = doc.getNumberOfPages ? doc.getNumberOfPages() : doc.internal.getNumberOfPages ? doc.internal.getNumberOfPages() : 1;
+            // Use a safe way to get the current page number that works across jsPDF versions
+            const pageNumber = typeof doc.getNumberOfPages === 'function' 
+                  ? doc.getNumberOfPages() 
+                  : (doc.internal.pages ? doc.internal.pages.length - 1 : 1);
             doc.text('Flyber Checklist - Page ' + pageNumber, pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
           }
         });
