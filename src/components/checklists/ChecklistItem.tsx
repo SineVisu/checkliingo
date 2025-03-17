@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import ChecklistItemActions from './ChecklistItemActions';
@@ -38,6 +39,12 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
 
   const dialogCallbacks = useDialogCallbacks({ item, onToggleComplete });
 
+  // Check if this is a flight proficiency task (in group 4)
+  const isFlightProficiencyTask = item.id.startsWith('4') && !item.id.includes('-');
+  
+  // Determine if the item should appear completed based on subtasks
+  const isVisuallyCompleted = item.isCompleted || (isFlightProficiencyTask && item.subtasks && areAllSubtasksCompleted());
+
   return (
     <>
       <div 
@@ -52,6 +59,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ item, onToggleComplete })
           expandedSubtasks={expandedSubtasks}
           setExpandedSubtasks={setExpandedSubtasks}
           areAllSubtasksCompleted={areAllSubtasksCompleted}
+          isVisuallyCompleted={isVisuallyCompleted}
         />
         
         <ChecklistItemActions />

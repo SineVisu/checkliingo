@@ -11,6 +11,7 @@ interface ChecklistItemContentProps {
   expandedSubtasks: boolean;
   setExpandedSubtasks: React.Dispatch<React.SetStateAction<boolean>>;
   areAllSubtasksCompleted: () => boolean;
+  isVisuallyCompleted?: boolean;
 }
 
 const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
@@ -18,23 +19,21 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
   handleToggle,
   expandedSubtasks,
   setExpandedSubtasks,
-  areAllSubtasksCompleted
+  areAllSubtasksCompleted,
+  isVisuallyCompleted
 }) => {
+  // If isVisuallyCompleted is provided, use it; otherwise fall back to checking subtasks or item.isCompleted
+  const isCompleted = isVisuallyCompleted !== undefined 
+    ? isVisuallyCompleted 
+    : (item.subtasks && item.subtasks.length > 0 ? areAllSubtasksCompleted() : item.isCompleted);
+
   return (
     <div className="flex-1 flex items-center">
       <button 
         onClick={handleToggle} 
-        className={`checkbox-container mr-3 ${
-          item.subtasks && item.subtasks.length > 0 
-            ? areAllSubtasksCompleted() ? 'checked' : '' 
-            : item.isCompleted ? 'checked' : ''
-        }`}
+        className={`checkbox-container mr-3 ${isCompleted ? 'checked' : ''}`}
       >
-        <div className={`checkbox-circle ${
-          item.subtasks && item.subtasks.length > 0 
-            ? areAllSubtasksCompleted() ? 'border-success' : 'border-gray-300' 
-            : item.isCompleted ? 'border-success' : 'border-gray-300'
-        }`}>
+        <div className={`checkbox-circle ${isCompleted ? 'border-success' : 'border-gray-300'}`}>
           <Check className="h-3 w-3 text-white checkbox-icon" />
         </div>
       </button>
@@ -42,7 +41,7 @@ const ChecklistItemContent: React.FC<ChecklistItemContentProps> = ({
       <div className="flex-1">
         <div className="flex items-center">
           <p className={`font-medium transition-all duration-300 ${
-            item.isCompleted ? 'text-gray-800' : 'text-gray-800'
+            isCompleted ? 'text-gray-800' : 'text-gray-800'
           }`}>
             {item.title}
           </p>

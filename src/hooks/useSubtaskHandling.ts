@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { ChecklistItemData } from '@/components/checklists/ChecklistItem';
@@ -135,16 +134,18 @@ export const useSubtaskHandling = ({
 
   // Update main task status when all subtasks are completed
   useEffect(() => {
-    if (item.subtasks && areAllSubtasksCompleted() && !item.isCompleted) {
-      // Only automatically complete for flight proficiency tasks
+    if (item.subtasks && item.subtasks.length > 0 && areAllSubtasksCompleted() && !item.isCompleted) {
+      // Automatically complete flight proficiency tasks when all subtasks are completed
       if (isFlightProficiencyTask) {
-        onToggleComplete(item.id, true);
-        toast.success(`${item.title} completed!`, {
-          description: "Both Flight and Ground subtasks are now complete.",
-        });
+        setTimeout(() => {
+          onToggleComplete(item.id, true);
+          toast.success(`${item.title} completed!`, {
+            description: "Both Flight and Ground subtasks are now complete.",
+          });
+        }, 500); // Small delay to allow animations to complete
       }
     }
-  }, [item.subtasks, item.isCompleted]);
+  }, [item.subtasks, item.isCompleted, item.id, item.title, isFlightProficiencyTask, onToggleComplete]);
 
   return {
     handleToggle,
