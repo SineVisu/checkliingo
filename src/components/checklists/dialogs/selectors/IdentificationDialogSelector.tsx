@@ -22,8 +22,6 @@ interface IdentificationDialogSelectorProps {
   initialValue?: any;
 }
 
-// Note: This component is kept for backward compatibility but is no longer used directly.
-// Dialog selection is now handled by the DialogRegistry
 export const IdentificationDialogSelector: React.FC<IdentificationDialogSelectorProps> = (props) => {
   const { itemTitle } = props;
   
