@@ -85,7 +85,7 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
           didDrawPage: (data) => {
             // Add footer
             doc.setFontSize(10);
-            doc.text('Flyber Checklist - Page ' + doc.internal.getNumberOfPages(), pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+            doc.text('Flyber Checklist - Page ' + doc.internal.getCurrentPageInfo().pageNumber, pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
           }
         });
         
