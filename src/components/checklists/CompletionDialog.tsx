@@ -2,15 +2,24 @@
 import React, { useState, useContext } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Trophy, Mail, X, FileCheck, Download } from 'lucide-react';
+import { Trophy, Mail, X, FileCheck, Download, Send } from 'lucide-react';
 import { ChecklistContext } from '@/context/ChecklistContext';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { Input } from '@/components/ui/input';
+import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { Textarea } from '@/components/ui/textarea';
 
 interface CompletionDialogProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface NotificationFormData {
+  contactInfo: string;
+  message?: string;
 }
 
 const CompletionDialog: React.FC<CompletionDialogProps> = ({
@@ -20,7 +29,16 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
   const [hasPaid, setHasPaid] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [showNotificationForm, setShowNotificationForm] = useState(false);
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const { checklists } = useContext(ChecklistContext);
+  
+  const form = useForm<NotificationFormData>({
+    defaultValues: {
+      contactInfo: '',
+      message: 'I\'ve completed my private pilot checklist and am eligible for the practical test.'
+    }
+  });
   
   const generatePDF = () => {
     setIsGeneratingPDF(true);
@@ -85,7 +103,9 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
           didDrawPage: (data) => {
             // Add footer
             doc.setFontSize(10);
-            doc.text('Flyber Checklist - Page ' + doc.internal.getCurrentPageInfo().pageNumber, pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+            // Using pageNumber as a workaround for the getCurrentPageInfo() type error
+            const pageNumber = doc.getNumberOfPages ? doc.getNumberOfPages() : doc.internal.getNumberOfPages ? doc.internal.getNumberOfPages() : 1;
+            doc.text('Flyber Checklist - Page ' + pageNumber, pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
           }
         });
         
@@ -119,7 +139,11 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
       doc.text('Expiration Date:', 14, yPosition);
       doc.line(50, yPosition + 5, 120, yPosition + 5);
       
-      // Save the PDF
+      // Save the PDF as a blob for sending
+      const pdfBlob = doc.output('blob');
+      setPdfBlob(pdfBlob);
+      
+      // Also save/download the PDF directly
       doc.save('flyber-pilot-checklist.pdf');
       
       toast.success("PDF Generated Successfully", {
@@ -145,10 +169,13 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
     }, 1000);
   };
   
-  const sendCompletionEmail = async () => {
+  const sendNotification = async (data: NotificationFormData) => {
     setIsSendingEmail(true);
     
     try {
+      const contactInfo = data.contactInfo;
+      const message = data.message || '';
+      
       // Get profile data from localStorage
       const profileData = localStorage.getItem('userProfile') 
         ? JSON.parse(localStorage.getItem('userProfile') || '{}') 
@@ -164,29 +191,38 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
         }))
       }));
       
-      // Create email content
-      const emailData = {
-        to: 'info@flyber.co',
-        subject: 'Checklist Completed',
+      // Determine if it's an email or phone
+      const isEmail = contactInfo.includes('@');
+      
+      // Create notification content
+      const notificationData = {
+        to: isEmail ? contactInfo : 'sms:' + contactInfo, // Format for SMS if it's a phone number
+        subject: 'Pilot Checklist Completion Notification',
         content: {
           profile: profileData,
-          checklist: checklistData
-        }
+          checklist: checklistData,
+          message: message
+        },
+        pdfAttachment: pdfBlob ? true : false
       };
       
-      // In a real implementation, this would send the email via an API
+      // In a real implementation, this would send the email/SMS via an API
       // For now, we'll simulate sending by logging and showing a success message
-      console.log("Sending email with data:", emailData);
+      console.log("Sending notification with data:", notificationData);
       
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      toast.success("Completion email sent!", {
-        description: "Your checklist and profile data have been sent to Flyber.",
+      toast.success(`Notification sent to ${isEmail ? 'email' : 'phone'}!`, {
+        description: `Your checklist data has been sent to ${contactInfo}.`,
       });
+      
+      // Reset form and hide it
+      setShowNotificationForm(false);
+      form.reset();
     } catch (error) {
-      console.error("Error sending email:", error);
-      toast.error("Failed to send completion email", {
+      console.error("Error sending notification:", error);
+      toast.error("Failed to send notification", {
         description: "Please try again or contact support."
       });
     } finally {
@@ -195,14 +231,11 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
   };
   
   const handleNotifyDPE = () => {
-    // In a real implementation, this would handle the DPE notification
-    sendCompletionEmail();
-    onClose();
+    setShowNotificationForm(true);
   };
   
   const handleSkipNotification = () => {
-    // Send email anyway but close the dialog
-    sendCompletionEmail();
+    // Close the dialog
     onClose();
   };
   
@@ -232,46 +265,107 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col gap-3">
-          {!hasPaid ? (
-            <Button 
-              onClick={handleGeneratePDF} 
-              className="w-full bg-green-600 hover:bg-green-700 gap-2"
-              disabled={isGeneratingPDF}
-            >
-              <FileCheck className="h-4 w-4" />
-              {isGeneratingPDF ? "Generating your PDF..." : "Generate my certified PDF ($9.99)"}
-            </Button>
-          ) : (
-            <>
+        {showNotificationForm && hasPaid ? (
+          <div className="space-y-4 py-2">
+            <h3 className="text-lg font-medium text-center">Notify your DPE</h3>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(sendNotification)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="contactInfo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email or Phone Number</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter DPE email or phone number" 
+                          {...field} 
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Message (optional)</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Add a personal message" 
+                          className="resize-none"
+                          {...field} 
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="flex flex-col gap-2">
+                  <Button 
+                    type="submit" 
+                    className="w-full gap-2"
+                    disabled={isSendingEmail}
+                  >
+                    <Send className="h-4 w-4" />
+                    {isSendingEmail ? "Sending..." : "Send Notification"}
+                  </Button>
+                  
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full gap-2"
+                    onClick={() => setShowNotificationForm(false)}
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        ) : (
+          <DialogFooter className="flex flex-col gap-3">
+            {!hasPaid ? (
               <Button 
-                onClick={handleDownloadPDF} 
+                onClick={handleGeneratePDF} 
                 className="w-full bg-green-600 hover:bg-green-700 gap-2"
                 disabled={isGeneratingPDF}
               >
-                <Download className="h-4 w-4" />
-                {isGeneratingPDF ? "Generating PDF..." : "Download PDF Again"}
+                <FileCheck className="h-4 w-4" />
+                {isGeneratingPDF ? "Generating your PDF..." : "Generate my certified PDF ($9.99)"}
               </Button>
-              <Button 
-                onClick={handleNotifyDPE} 
-                className="w-full gap-2"
-                disabled={isSendingEmail}
-              >
-                <Mail className="h-4 w-4" />
-                {isSendingEmail ? "Sending email..." : "I want to notify my DPE I am eligible"}
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={handleSkipNotification} 
-                className="w-full gap-2"
-                disabled={isSendingEmail}
-              >
-                <X className="h-4 w-4" />
-                {isSendingEmail ? "Sending email..." : "I don't want to notify my DPE"}
-              </Button>
-            </>
-          )}
-        </DialogFooter>
+            ) : (
+              <>
+                <Button 
+                  onClick={handleDownloadPDF} 
+                  className="w-full bg-green-600 hover:bg-green-700 gap-2"
+                  disabled={isGeneratingPDF}
+                >
+                  <Download className="h-4 w-4" />
+                  {isGeneratingPDF ? "Generating PDF..." : "Download PDF Again"}
+                </Button>
+                <Button 
+                  onClick={handleNotifyDPE} 
+                  className="w-full gap-2"
+                >
+                  <Mail className="h-4 w-4" />
+                  I want to notify my DPE I am eligible
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleSkipNotification} 
+                  className="w-full gap-2"
+                >
+                  <X className="h-4 w-4" />
+                  I don't want to notify my DPE
+                </Button>
+              </>
+            )}
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );
