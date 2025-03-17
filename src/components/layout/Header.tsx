@@ -12,7 +12,7 @@ const Header: React.FC = () => {
             <Menu className="h-5 w-5" />
           </Button>
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Checklist
+            Flyber Checklist
           </h1>
         </div>
       </div>
